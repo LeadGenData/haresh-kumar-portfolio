@@ -670,7 +670,7 @@ function App() {
       <header className="header">
         <div className="container nav">
           <a href="#" className="logo">M. Haresh Kumar</a>
-          <ul className="nav-links" style={{ display: 'flex', alignItems: 'center' }}>
+          <ul className="nav-links">
             <li><a href="#hero">About</a></li>
             <li><a href="#story">My Story</a></li>
             <li><a href="#architecture">Blueprints</a></li>
