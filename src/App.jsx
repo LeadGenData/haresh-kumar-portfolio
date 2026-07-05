@@ -489,13 +489,13 @@ const CHAPTERS = [
   {
     id: 1,
     chapter: "Chapter 1",
-    label: "Data Operations at Scale",
-    title: "Sourcing & Delivery Foundation",
-    desc: "Led a 15-person data operations team responsible for sourcing, cleaning, validating, and delivering large-scale B2B contact datasets. Reported directly to senior directors and managed the quality standards that the entire business delivery pipeline depended on.",
+    label: "Data Quality & Operations",
+    title: "Sourcing & Validation Foundation",
+    desc: "Began my career in data operations, managing B2B data sourcing and running core validation check sweeps. Oversaw lead collection, de-duplication hygiene, and delivery files, ensuring high-quality client outputs.",
     stats: [
-      { label: "TEAM MEMBERS LED", value: "15 Senders" },
-      { label: "RECORDS AUDITED", value: "10M+" },
-      { label: "ROLE TYPE", value: "Operations Manager" }
+      { label: "RECORDS AUDITED", value: "500K+ Rows" },
+      { label: "HYGIENE METRIC", value: "99.8% Accuracy" },
+      { label: "ROLE TYPE", value: "Data Specialist" }
     ],
     icon: "⚙️"
   },
@@ -504,11 +504,11 @@ const CHAPTERS = [
     chapter: "Chapter 2",
     label: "Recognising the Limit",
     title: "The Friction of Manual Tasks",
-    desc: "Processes that should run in minutes took hours. Quality checks that should be automated required three people. Splicing manual CSV sheets together resulted in delivery delays. I lived the problems that modern data engineering is meant to solve.",
+    desc: "Worked directly with legacy spreadsheets and noticed massive operational friction. Repetitive formatting, manually syncing sheets, and validating emails took hours. I lived the problems that automation and proper data warehousing are meant to solve.",
     stats: [
       { label: "TIME SQUANDERED", value: "Hours / Day" },
-      { label: "MANUAL TASKS", value: "30+ Weekly" },
-      { label: "PERSPECTIVE", value: "Operations Friction" }
+      { label: "MANUAL TASKS", value: "Dozens Weekly" },
+      { label: "PERSPECTIVE", value: "Friction Analyst" }
     ],
     icon: "🔍"
   },
@@ -517,10 +517,10 @@ const CHAPTERS = [
     chapter: "Chapter 3",
     label: "The Technical Rebuild",
     title: "Serverless Pipelines & Cloud DW",
-    desc: "I rebuilt my technical stack from the ground up — Snowflake for cloud data warehousing, SQL for relational data modeling, Power BI for semantic dashboard analysis, and Apps Script + Cloudflare for serverless system integrations.",
+    desc: "Transitioned to building fully automated solutions. Rebuilt my technical stack around Snowflake for data warehousing, custom SQL streams for cleansing, Power BI for dashboards, and serverless Apps Script APIs for database integrations.",
     stats: [
       { label: "AUTOMATION SAVINGS", value: "95% Speedup" },
-      { label: "CLOUD WAREHOUSE", value: "Snowflake DPD" },
+      { label: "CLOUD WAREHOUSE", value: "Snowflake DWH" },
       { label: "INTEGRATION CORE", value: "REST API Proxy" }
     ],
     icon: "🚀"
@@ -915,16 +915,16 @@ function App() {
           {/* Stats Row */}
           <div className="stats-row stats-row-3 reveal reveal-delay-1" style={{ marginBottom: '72px' }}>
             <div className="stat-card">
-              <div className="stat-value">14+</div>
+              <div className="stat-value">3+</div>
               <div className="stat-label">Years of Experience</div>
             </div>
             <div className="stat-card">
-              <div className="stat-value">15</div>
-              <div className="stat-label">Team Members Led</div>
+              <div className="stat-value">12+</div>
+              <div className="stat-label">Pipelines Engineered</div>
             </div>
             <div className="stat-card">
-              <div className="stat-value">10M+</div>
-              <div className="stat-label">Records Managed</div>
+              <div className="stat-value">500K+</div>
+              <div className="stat-label">Data Rows Processed</div>
             </div>
           </div>
 
