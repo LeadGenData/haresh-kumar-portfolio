@@ -308,181 +308,7 @@ const InteractiveTerminal = () => {
   );
 };
 
-// ─── SQL Playground Component (Snowflake DWH Card) ───────────────────────
-const SqlPlayground = () => {
-  const [queryType, setQueryType] = useState('raw');
-  const [isRunning, setIsRunning] = useState(false);
-  const [results, setResults] = useState(null);
 
-  const runQuery = () => {
-    setIsRunning(true);
-    setResults(null);
-    setTimeout(() => {
-      setIsRunning(false);
-      if (queryType === 'raw') {
-        setResults({
-          headers: ['STAGE_NAME', 'RECORD_COUNT', 'FILE_FORMAT'],
-          rows: [
-            ['BRONZE_STG_LND', '1,248,302', 'JSON (Variant)'],
-            ['OUTLOOK_SENT_LND', '19,304', 'CSV / UTF-8'],
-            ['GSHEET_SYNC_LND', '1,793', 'API Payload']
-          ]
-        });
-      } else if (queryType === 'silver') {
-        setResults({
-          headers: ['TRANSACTION_ID', 'CLEANSED_DATE', 'CDC_ACTION', 'PCI_MASK'],
-          rows: [
-            ['TXN-90234', '2026-07-05', 'UPDATE', 'XXXX-XXXX-XXXX-1923'],
-            ['TXN-90235', '2026-07-05', 'INSERT', 'XXXX-XXXX-XXXX-4982'],
-            ['TXN-90236', '2026-07-05', 'INSERT', 'XXXX-XXXX-XXXX-0924']
-          ]
-        });
-      } else {
-        setResults({
-          headers: ['STAR_DIMENSION', 'HEALTH_SCORE', 'INDEX_USAGE'],
-          rows: [
-            ['DIM_CREDIT_FRAUD', '99.8%', '94.2% (Bitmap)'],
-            ['FACT_TRANSACTIONS', '100%', '98.5% (Clustered)'],
-            ['DIM_MERCHANTS', '97.2%', '91.0% (B-Tree)']
-          ]
-        });
-      }
-    }, 600);
-  };
-
-  return (
-    <div className="sql-playground-box">
-      <div className="flex gap-2 mb-2">
-        <select 
-          value={queryType} 
-          onChange={e => { setQueryType(e.target.value); setResults(null); }}
-          className="sql-selector"
-        >
-          <option value="raw">SELECT * FROM db.bronze.raw_landing_stages;</option>
-          <option value="silver">SELECT txn_id, date, cdc, cc_mask FROM db.silver.cleaned_txns LIMIT 3;</option>
-          <option value="gold">SELECT dim_table, health, index_rate FROM db.gold.metadata_star;</option>
-        </select>
-      </div>
-      <div className="sql-action-row">
-        <span className="text-[10px] text-gray-500 font-mono">DWH Environment: Snowflake DPD</span>
-        <button onClick={runQuery} className="sql-run-btn" disabled={isRunning}>
-          {isRunning ? 'Running...' : 'Run Query ⚡'}
-        </button>
-      </div>
-      {results && (
-        <div style={{ overflowX: 'auto' }}>
-          <table className="sql-results-table">
-            <thead>
-              <tr>
-                {results.headers.map((h, i) => <th key={i}>{h}</th>)}
-              </tr>
-            </thead>
-            <tbody>
-              {results.rows.map((row, rIdx) => (
-                <tr key={rIdx}>
-                  {row.map((cell, cIdx) => <td key={cIdx}>{cell}</td>)}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </div>
-  );
-};
-
-// ─── Revenue Leakage Calculator Component ────────────────────────────────
-const LeakageCalculator = () => {
-  const [leads, setLeads] = useState(250);
-  const leadValue = 150; // $150 per B2B lead value
-  const leakageRate = 0.28; // 28% typical leakage
-
-  const leakedLeads = Math.round(leads * leakageRate);
-  const revenueLoss = leakedLeads * leadValue;
-
-  return (
-    <div className="leakage-calc-container">
-      <div className="flex justify-between items-center text-xs font-semibold mb-2">
-        <span className="text-gray-400">Monthly Intake:</span>
-        <span className="calc-badge">{leads} Leads / Month</span>
-      </div>
-      <input 
-        type="range" 
-        min="50" 
-        max="1000" 
-        step="25"
-        value={leads} 
-        onChange={e => setLeads(Number(e.target.value))}
-        className="calc-range-slider"
-      />
-      <div className="leakage-stats-grid">
-        <div className="leakage-stat-card">
-          <h5>Leads Leaked (28%)</h5>
-          <p>{leakedLeads} / mo</p>
-        </div>
-        <div className="leakage-stat-card">
-          <h5>Revenue Leaked</h5>
-          <p style={{ color: '#F59E0B' }}>${revenueLoss.toLocaleString()}</p>
-        </div>
-      </div>
-      <div className="text-[10px] text-gray-500 font-mono mt-3 text-center">
-        *Based on typical 28% CRM leakage rate @ $150/lead value.
-      </div>
-    </div>
-  );
-};
-
-// ─── ER Analytics Staff Level Simulator ──────────────────────────────────
-const ErSimulator = () => {
-  const [staffLevel, setStaffLevel] = useState('medium');
-
-  const metrics = {
-    low: { waitTime: '26.8m', triageRate: '74.2%', staffing: 'Understaffed' },
-    medium: { waitTime: '14.2m', triageRate: '92.4%', staffing: 'Optimal' },
-    high: { waitTime: '6.5m', triageRate: '98.9%', staffing: 'Surge Ready' }
-  };
-
-  const selected = metrics[staffLevel];
-
-  return (
-    <div className="staff-sim-box">
-      <div className="staff-toggles">
-        <button 
-          onClick={() => setStaffLevel('low')} 
-          className={`staff-toggle-btn ${staffLevel === 'low' ? 'active' : ''}`}
-        >
-          Min Staff
-        </button>
-        <button 
-          onClick={() => setStaffLevel('medium')} 
-          className={`staff-toggle-btn ${staffLevel === 'medium' ? 'active' : ''}`}
-        >
-          Optimal Staff
-        </button>
-        <button 
-          onClick={() => setStaffLevel('high')} 
-          className={`staff-toggle-btn ${staffLevel === 'high' ? 'active' : ''}`}
-        >
-          Max Staff
-        </button>
-      </div>
-      
-      <div className="staff-gauge-box">
-        <div>
-          <div className="text-[9px] text-gray-500 font-mono">DAX WAIT TIME</div>
-          <div className="text-md font-extrabold text-blue-400">{selected.waitTime}</div>
-        </div>
-        <div className="text-right">
-          <div className="text-[9px] text-gray-500 font-mono">TRIAGE RATE</div>
-          <div className="text-md font-extrabold text-cyan-400">{selected.triageRate}</div>
-        </div>
-      </div>
-      <div className="text-[9px] text-gray-500 font-mono mt-3 text-center">
-        Status: <span style={{ color: staffLevel === 'low' ? '#ef4444' : staffLevel === 'medium' ? 'var(--accent-cyan)' : 'var(--accent-gold)' }}>{selected.staffing}</span>
-      </div>
-    </div>
-  );
-};
 
 // ─── Career Chapter Switcher Timeline Data ───────────────────────────────
 const CHAPTERS = [
@@ -935,16 +761,16 @@ function App() {
           {/* Stats Row */}
           <div className="stats-row stats-row-3 reveal reveal-delay-1" style={{ marginBottom: '72px' }}>
             <div className="stat-card">
-              <div className="stat-value">3+</div>
-              <div className="stat-label">Years of Experience</div>
+              <div className="stat-value">7+</div>
+              <div className="stat-label">GitHub Repositories</div>
             </div>
             <div className="stat-card">
-              <div className="stat-value">12+</div>
-              <div className="stat-label">Pipelines Engineered</div>
+              <div className="stat-value">8+</div>
+              <div className="stat-label">Core Tech Utilities</div>
             </div>
             <div className="stat-card">
-              <div className="stat-value">500K+</div>
-              <div className="stat-label">Data Rows Processed</div>
+              <div className="stat-value">4+</div>
+              <div className="stat-label">Automated Systems</div>
             </div>
           </div>
 
@@ -1240,9 +1066,6 @@ function App() {
               </div>
               <p className="proj-desc text-gray-400 text-sm mb-4 leading-relaxed">{PROJECTS[0].desc}</p>
               
-              {/* Interactive SQL Playground */}
-              <SqlPlayground />
-              
               <ul className="tag-list mt-4">
                 {PROJECTS[0].tags.map((tag, i) => <li key={i}>{tag}</li>)}
               </ul>
@@ -1270,9 +1093,6 @@ function App() {
               </div>
               <p className="proj-desc text-gray-400 text-sm mb-4 leading-relaxed">{PROJECTS[1].desc}</p>
               
-              {/* Interactive Staffing Simulator */}
-              <ErSimulator />
-
               <ul className="tag-list mt-4">
                 {PROJECTS[1].tags.map((tag, i) => <li key={i}>{tag}</li>)}
               </ul>
@@ -1301,9 +1121,6 @@ function App() {
               </div>
               <p className="proj-desc text-gray-400 text-sm mb-4 leading-relaxed">{PROJECTS[2].desc}</p>
               
-              {/* Interactive Loss Calculator */}
-              <LeakageCalculator />
-
               <ul className="tag-list mt-4">
                 {PROJECTS[2].tags.map((tag, i) => <li key={i}>{tag}</li>)}
               </ul>
@@ -1331,37 +1148,6 @@ function App() {
                 </div>
               </div>
               <p className="proj-desc text-gray-400 text-sm mb-4 leading-relaxed">{PROJECTS[3].desc}</p>
-
-              {/* CRM Live Console Preview Frame */}
-              <div style={{
-                background: '#040810',
-                border: '1px solid rgba(59, 130, 246, 0.12)',
-                borderRadius: '10px',
-                padding: '16px',
-                fontFamily: 'var(--font-mono)',
-                fontSize: '0.78rem',
-                color: 'var(--text-sub)',
-                boxShadow: 'inset 0 2px 10px rgba(0, 0, 0, 0.8)'
-              }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', paddingBottom: '8px', marginBottom: '12px' }}>
-                  <span className="text-blue-400 font-bold">Leads CRM Database</span>
-                  <span className="text-[10px] bg-green-500/10 text-green-400 px-2 py-0.5 rounded border border-green-500/20">Authorized Sync</span>
-                </div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', textAlign: 'center' }}>
-                  <div style={{ background: 'rgba(255, 255, 255, 0.02)', padding: '8px', borderRadius: '6px' }}>
-                    <div style={{ fontSize: '9px', color: 'var(--text-dim)' }}>TOTAL LEADS</div>
-                    <div className="font-extrabold text-white text-base">1,793</div>
-                  </div>
-                  <div style={{ background: 'rgba(255, 255, 255, 0.02)', padding: '8px', borderRadius: '6px' }}>
-                    <div style={{ fontSize: '9px', color: 'var(--text-dim)' }}>NEW INTAKE</div>
-                    <div className="font-extrabold text-blue-400 text-base">32</div>
-                  </div>
-                  <div style={{ background: 'rgba(255, 255, 255, 0.02)', padding: '8px', borderRadius: '6px' }}>
-                    <div style={{ fontSize: '9px', color: 'var(--text-dim)' }}>PITCHED QUEUE</div>
-                    <div className="font-extrabold text-cyan-400 text-base">1,408</div>
-                  </div>
-                </div>
-              </div>
 
               <ul className="tag-list mt-4">
                 {PROJECTS[3].tags.map((tag, i) => <li key={i}>{tag}</li>)}
@@ -1550,10 +1336,13 @@ function App() {
       </section>
 
       {/* FOOTER */}
-      <footer className="footer">
-        <div className="container">
-          <p className="footer-text">
-            &copy; {new Date().getFullYear()} M. Haresh Kumar · Engineered with <span>React &amp; Vite</span>
+      <footer className="footer" style={{ borderTop: '1px solid var(--border-color)', paddingTop: '32px', paddingBottom: '32px' }}>
+        <div className="container" style={{ textAlign: 'center' }}>
+          <p className="footer-text" style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+            &copy; {new Date().getFullYear()} M. Haresh Kumar · Styled with <span>React &amp; Vite</span>
+          </p>
+          <p style={{ fontSize: '0.72rem', color: 'var(--text-dim)', marginTop: '8px', fontStyle: 'italic', maxWidth: '600px', margin: '8px auto 0', lineHeight: '1.5' }}>
+            * This portfolio website design and layout was built leveraging AI assistance (Antigravity), representing my commitment to modern operational efficiency. All linked SQL, Python, and PowerShell repositories contain my handwritten data operations code.
           </p>
         </div>
       </footer>
