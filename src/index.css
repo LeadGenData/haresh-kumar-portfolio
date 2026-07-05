@@ -1,41 +1,41 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
 
 /* =======================================================
    PROFESSIONAL DESIGN SYSTEM — Deep Navy + Sapphire + Gold
    Inspired by: Palantir, Tableau, McKinsey Digital
    ======================================================= */
 :root {
-  --bg-primary:   #070B14;
-  --bg-secondary: #0C1220;
-  --bg-tertiary:  #121929;
-  --bg-card:      rgba(14, 20, 35, 0.85);
+  --bg-primary:   #040810;
+  --bg-secondary: #080d19;
+  --bg-tertiary:  #0d1424;
+  --bg-card:      rgba(10, 16, 32, 0.45);
 
-  --border-color: rgba(59, 130, 246, 0.12);
-  --border-hover: rgba(59, 130, 246, 0.35);
+  --border-color: rgba(59, 130, 246, 0.08);
+  --border-hover: rgba(59, 130, 246, 0.3);
 
   --accent-primary:      #3B82F6;
-  --accent-primary-glow: rgba(59, 130, 246, 0.18);
+  --accent-primary-glow: rgba(59, 130, 246, 0.15);
   --accent-primary-deep: #1D4ED8;
 
   --accent-secondary:      #6366F1;
-  --accent-secondary-glow: rgba(99, 102, 241, 0.18);
+  --accent-secondary-glow: rgba(99, 102, 241, 0.15);
 
   --accent-gold:      #F59E0B;
-  --accent-gold-glow: rgba(245, 158, 11, 0.15);
+  --accent-gold-glow: rgba(245, 158, 11, 0.12);
 
   --accent-cyan:      #22D3EE;
-  --accent-cyan-glow: rgba(34, 211, 238, 0.15);
+  --accent-cyan-glow: rgba(34, 211, 238, 0.12);
 
   --text-main:  #EFF6FF;
-  --text-sub:   #E2E8F0;
-  --text-muted: #94A3B8;
-  --text-dim:   #475569;
+  --text-sub:   #D1D5DB;
+  --text-muted: #9CA3AF;
+  --text-dim:   #6B7280;
 
-  --font-display: 'Outfit', -apple-system, sans-serif;
+  --font-display: 'Plus Jakarta Sans', -apple-system, sans-serif;
   --font-body:    'Inter', -apple-system, sans-serif;
   --font-mono:    'JetBrains Mono', monospace;
 
-  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   --transition-fast:   all 0.15s ease;
 
   --glow-primary: 0 0 24px rgba(59, 130, 246, 0.25);
@@ -476,3 +476,308 @@ textarea { resize:vertical; min-height:120px; }
   0%, 100% { filter: drop-shadow(0 0 2px rgba(34, 211, 238, 0.25)) drop-shadow(0 0 4px rgba(34, 211, 238, 0.1)); }
   50% { filter: drop-shadow(0 0 8px rgba(34, 211, 238, 0.55)) drop-shadow(0 0 14px rgba(34, 211, 238, 0.25)); }
 }
+
+/* =======================================================
+   BENTO GRID & INTERACTIVE WIDGET DESIGN SYSTEM
+   ======================================================= */
+
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.bento-col-2 {
+  grid-column: span 2;
+}
+
+.bento-col-3 {
+  grid-column: span 3;
+}
+
+.bento-row-2 {
+  grid-row: span 2;
+}
+
+/* Modern Glass Card style override */
+.glass-card {
+  background: rgba(10, 16, 32, 0.45);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Accent Numbers Behind Sections */
+.section-watermark {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-family: var(--font-display);
+  font-size: 8rem;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.015);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.02);
+}
+
+/* SQL Playground Styles */
+.sql-playground-box {
+  margin-top: 16px;
+  background: #040810;
+  border: 1px solid rgba(59, 130, 246, 0.12);
+  border-radius: 10px;
+  padding: 14px;
+  font-family: var(--font-mono);
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+.sql-selector {
+  width: 100%;
+  background: rgba(8, 12, 24, 0.8);
+  border: 1px solid rgba(59, 130, 246, 0.18);
+  padding: 10px 14px;
+  color: var(--text-main);
+  font-size: 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  outline: none;
+  font-family: var(--font-mono);
+  transition: var(--transition-fast);
+}
+.sql-selector:focus {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 10px var(--accent-primary-glow);
+}
+
+.sql-action-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.sql-run-btn {
+  background: linear-gradient(135deg, #3B82F6, #1D4ED8);
+  color: #fff;
+  border: none;
+  padding: 6px 16px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: var(--font-display);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+.sql-run-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
+  filter: brightness(1.1);
+}
+
+.sql-results-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+  font-size: 0.72rem;
+}
+.sql-results-table th {
+  padding: 8px 10px;
+  color: var(--accent-cyan);
+  text-align: left;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.08);
+  font-weight: 600;
+}
+.sql-results-table td {
+  padding: 8px 10px;
+  color: var(--text-sub);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+/* Revenue Leakage Slider Box */
+.leakage-calc-container {
+  margin-top: 16px;
+  background: rgba(8, 12, 24, 0.4);
+  border: 1px solid rgba(59, 130, 246, 0.1);
+  border-radius: 12px;
+  padding: 18px;
+}
+
+.calc-range-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(59, 130, 246, 0.15);
+  outline: none;
+  margin: 14px 0;
+}
+.calc-range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  cursor: pointer;
+  box-shadow: 0 0 10px var(--accent-primary-glow);
+  transition: var(--transition-fast);
+}
+.calc-range-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+.leakage-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 14px;
+}
+.leakage-stat-card {
+  background: #040810;
+  border: 1px solid rgba(59, 130, 246, 0.06);
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+}
+.leakage-stat-card h5 {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.leakage-stat-card p {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--accent-gold);
+}
+
+/* Staff Simulator (Healthcare Analytics) */
+.staff-sim-box {
+  margin-top: 16px;
+  background: rgba(8, 12, 24, 0.4);
+  border: 1px solid rgba(59, 130, 246, 0.1);
+  border-radius: 12px;
+  padding: 18px;
+}
+
+.staff-toggles {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.staff-toggle-btn {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+.staff-toggle-btn.active {
+  background: var(--accent-primary);
+  color: #fff;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 12px var(--accent-primary-glow);
+}
+
+.staff-gauge-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #040810;
+  border-radius: 8px;
+  padding: 12px;
+  border: 1px solid rgba(59, 130, 246, 0.05);
+}
+
+/* Modern Chapter Switcher Console */
+.chapter-console-container {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 28px;
+  align-items: stretch;
+}
+.chapter-tabs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.chapter-tab-item {
+  background: rgba(12, 18, 32, 0.5);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 16px 20px;
+  cursor: pointer;
+  text-align: left;
+  transition: var(--transition-smooth);
+}
+.chapter-tab-item:hover {
+  border-color: var(--border-hover);
+  background: rgba(59, 130, 246, 0.04);
+}
+.chapter-tab-item.active {
+  background: var(--bg-tertiary);
+  border-color: var(--accent-primary);
+  box-shadow: var(--glow-primary);
+}
+.chapter-tab-num {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.chapter-tab-title {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+.chapter-viewer-panel {
+  background: #040810;
+  border: 1px solid rgba(59, 130, 246, 0.15);
+  border-radius: 16px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: inset 0 2px 20px rgba(0, 0, 0, 0.9);
+}
+
+/* Media Query overrides for Bento Grid */
+@media(max-width:1024px) {
+  .bento-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .bento-col-2 {
+    grid-column: span 2;
+  }
+  .chapter-console-container {
+    grid-template-columns: 1fr;
+  }
+}
+@media(max-width:640px) {
+  .bento-grid {
+    grid-template-columns: 1fr;
+  }
+  .bento-col-2 {
+    grid-column: span 1;
+  }
+  .bento-col-3 {
+    grid-column: span 1;
+  }
+}
+

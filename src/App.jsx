@@ -308,6 +308,225 @@ const InteractiveTerminal = () => {
   );
 };
 
+// ─── SQL Playground Component (Snowflake DWH Card) ───────────────────────
+const SqlPlayground = () => {
+  const [queryType, setQueryType] = useState('raw');
+  const [isRunning, setIsRunning] = useState(false);
+  const [results, setResults] = useState(null);
+
+  const runQuery = () => {
+    setIsRunning(true);
+    setResults(null);
+    setTimeout(() => {
+      setIsRunning(false);
+      if (queryType === 'raw') {
+        setResults({
+          headers: ['STAGE_NAME', 'RECORD_COUNT', 'FILE_FORMAT'],
+          rows: [
+            ['BRONZE_STG_LND', '1,248,302', 'JSON (Variant)'],
+            ['OUTLOOK_SENT_LND', '19,304', 'CSV / UTF-8'],
+            ['GSHEET_SYNC_LND', '1,793', 'API Payload']
+          ]
+        });
+      } else if (queryType === 'silver') {
+        setResults({
+          headers: ['TRANSACTION_ID', 'CLEANSED_DATE', 'CDC_ACTION', 'PCI_MASK'],
+          rows: [
+            ['TXN-90234', '2026-07-05', 'UPDATE', 'XXXX-XXXX-XXXX-1923'],
+            ['TXN-90235', '2026-07-05', 'INSERT', 'XXXX-XXXX-XXXX-4982'],
+            ['TXN-90236', '2026-07-05', 'INSERT', 'XXXX-XXXX-XXXX-0924']
+          ]
+        });
+      } else {
+        setResults({
+          headers: ['STAR_DIMENSION', 'HEALTH_SCORE', 'INDEX_USAGE'],
+          rows: [
+            ['DIM_CREDIT_FRAUD', '99.8%', '94.2% (Bitmap)'],
+            ['FACT_TRANSACTIONS', '100%', '98.5% (Clustered)'],
+            ['DIM_MERCHANTS', '97.2%', '91.0% (B-Tree)']
+          ]
+        });
+      }
+    }, 600);
+  };
+
+  return (
+    <div className="sql-playground-box">
+      <div className="flex gap-2 mb-2">
+        <select 
+          value={queryType} 
+          onChange={e => { setQueryType(e.target.value); setResults(null); }}
+          className="sql-selector"
+        >
+          <option value="raw">SELECT * FROM db.bronze.raw_landing_stages;</option>
+          <option value="silver">SELECT txn_id, date, cdc, cc_mask FROM db.silver.cleaned_txns LIMIT 3;</option>
+          <option value="gold">SELECT dim_table, health, index_rate FROM db.gold.metadata_star;</option>
+        </select>
+      </div>
+      <div className="sql-action-row">
+        <span className="text-[10px] text-gray-500 font-mono">DWH Environment: Snowflake DPD</span>
+        <button onClick={runQuery} className="sql-run-btn" disabled={isRunning}>
+          {isRunning ? 'Running...' : 'Run Query ⚡'}
+        </button>
+      </div>
+      {results && (
+        <div style={{ overflowX: 'auto' }}>
+          <table className="sql-results-table">
+            <thead>
+              <tr>
+                {results.headers.map((h, i) => <th key={i}>{h}</th>)}
+              </tr>
+            </thead>
+            <tbody>
+              {results.rows.map((row, rIdx) => (
+                <tr key={rIdx}>
+                  {row.map((cell, cIdx) => <td key={cIdx}>{cell}</td>)}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ─── Revenue Leakage Calculator Component ────────────────────────────────
+const LeakageCalculator = () => {
+  const [leads, setLeads] = useState(250);
+  const leadValue = 150; // $150 per B2B lead value
+  const leakageRate = 0.28; // 28% typical leakage
+
+  const leakedLeads = Math.round(leads * leakageRate);
+  const revenueLoss = leakedLeads * leadValue;
+
+  return (
+    <div className="leakage-calc-container">
+      <div className="flex justify-between items-center text-xs font-semibold mb-2">
+        <span className="text-gray-400">Monthly Intake:</span>
+        <span className="calc-badge">{leads} Leads / Month</span>
+      </div>
+      <input 
+        type="range" 
+        min="50" 
+        max="1000" 
+        step="25"
+        value={leads} 
+        onChange={e => setLeads(Number(e.target.value))}
+        className="calc-range-slider"
+      />
+      <div className="leakage-stats-grid">
+        <div className="leakage-stat-card">
+          <h5>Leads Leaked (28%)</h5>
+          <p>{leakedLeads} / mo</p>
+        </div>
+        <div className="leakage-stat-card">
+          <h5>Revenue Leaked</h5>
+          <p style={{ color: '#F59E0B' }}>${revenueLoss.toLocaleString()}</p>
+        </div>
+      </div>
+      <div className="text-[10px] text-gray-500 font-mono mt-3 text-center">
+        *Based on typical 28% CRM leakage rate @ $150/lead value.
+      </div>
+    </div>
+  );
+};
+
+// ─── ER Analytics Staff Level Simulator ──────────────────────────────────
+const ErSimulator = () => {
+  const [staffLevel, setStaffLevel] = useState('medium');
+
+  const metrics = {
+    low: { waitTime: '26.8m', triageRate: '74.2%', staffing: 'Understaffed' },
+    medium: { waitTime: '14.2m', triageRate: '92.4%', staffing: 'Optimal' },
+    high: { waitTime: '6.5m', triageRate: '98.9%', staffing: 'Surge Ready' }
+  };
+
+  const selected = metrics[staffLevel];
+
+  return (
+    <div className="staff-sim-box">
+      <div className="staff-toggles">
+        <button 
+          onClick={() => setStaffLevel('low')} 
+          className={`staff-toggle-btn ${staffLevel === 'low' ? 'active' : ''}`}
+        >
+          Min Staff
+        </button>
+        <button 
+          onClick={() => setStaffLevel('medium')} 
+          className={`staff-toggle-btn ${staffLevel === 'medium' ? 'active' : ''}`}
+        >
+          Optimal Staff
+        </button>
+        <button 
+          onClick={() => setStaffLevel('high')} 
+          className={`staff-toggle-btn ${staffLevel === 'high' ? 'active' : ''}`}
+        >
+          Max Staff
+        </button>
+      </div>
+      
+      <div className="staff-gauge-box">
+        <div>
+          <div className="text-[9px] text-gray-500 font-mono">DAX WAIT TIME</div>
+          <div className="text-md font-extrabold text-blue-400">{selected.waitTime}</div>
+        </div>
+        <div className="text-right">
+          <div className="text-[9px] text-gray-500 font-mono">TRIAGE RATE</div>
+          <div className="text-md font-extrabold text-cyan-400">{selected.triageRate}</div>
+        </div>
+      </div>
+      <div className="text-[9px] text-gray-500 font-mono mt-3 text-center">
+        Status: <span style={{ color: staffLevel === 'low' ? '#ef4444' : staffLevel === 'medium' ? 'var(--accent-cyan)' : 'var(--accent-gold)' }}>{selected.staffing}</span>
+      </div>
+    </div>
+  );
+};
+
+// ─── Career Chapter Switcher Timeline Data ───────────────────────────────
+const CHAPTERS = [
+  {
+    id: 1,
+    chapter: "Chapter 1",
+    label: "Data Operations at Scale",
+    title: "Sourcing & Delivery Foundation",
+    desc: "Led a 15-person data operations team responsible for sourcing, cleaning, validating, and delivering large-scale B2B contact datasets. Reported directly to senior directors and managed the quality standards that the entire business delivery pipeline depended on.",
+    stats: [
+      { label: "TEAM MEMBERS LED", value: "15 Senders" },
+      { label: "RECORDS AUDITED", value: "10M+" },
+      { label: "ROLE TYPE", value: "Operations Manager" }
+    ],
+    icon: "⚙️"
+  },
+  {
+    id: 2,
+    chapter: "Chapter 2",
+    label: "Recognising the Limit",
+    title: "The Friction of Manual Tasks",
+    desc: "Processes that should run in minutes took hours. Quality checks that should be automated required three people. Splicing manual CSV sheets together resulted in delivery delays. I lived the problems that modern data engineering is meant to solve.",
+    stats: [
+      { label: "TIME SQUANDERED", value: "Hours / Day" },
+      { label: "MANUAL TASKS", value: "30+ Weekly" },
+      { label: "PERSPECTIVE", value: "Operations Friction" }
+    ],
+    icon: "🔍"
+  },
+  {
+    id: 3,
+    chapter: "Chapter 3",
+    label: "The Technical Rebuild",
+    title: "Serverless Pipelines & Cloud DW",
+    desc: "I rebuilt my technical stack from the ground up — Snowflake for cloud data warehousing, SQL for relational data modeling, Power BI for semantic dashboard analysis, and Apps Script + Cloudflare for serverless system integrations.",
+    stats: [
+      { label: "AUTOMATION SAVINGS", value: "95% Speedup" },
+      { label: "CLOUD WAREHOUSE", value: "Snowflake DPD" },
+      { label: "INTEGRATION CORE", value: "REST API Proxy" }
+    ],
+    icon: "🚀"
+  }
+];
+
 
 const AUTOMATION_STEPS = [
   {
@@ -532,6 +751,7 @@ function App() {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [formLoading, setFormLoading]   = useState(false);
   const [formError, setFormError]       = useState('');
+  const [activeChapterId, setActiveChapterId] = useState(1);
   const availabilitySpotlight = useMouseMoveSpotlight();
   const contactSpotlight = useMouseMoveSpotlight();
   const node1Spotlight = useMouseMoveSpotlight();
@@ -708,68 +928,58 @@ function App() {
             </div>
           </div>
 
-          {/* Timeline */}
-          <div className="story-layout">
-
-            {/* Left — Timeline */}
-            <div className="story-timeline">
-              <div className="story-node reveal">
-                <div className="story-node-dot" style={{ background: 'rgba(59,130,246,0.12)', border: '1px solid rgba(59,130,246,0.3)' }}>⚙️</div>
-                <div className="story-node-content">
-                  <div className="story-node-label" style={{ color: 'var(--accent-primary)' }}>Chapter 1 — The Foundation</div>
-                  <div className="story-node-title">Data Operations at Scale</div>
-                  <div className="story-node-desc">
-                    Led a 15-person data operations team responsible for sourcing, cleaning, validating, and delivering large-scale B2B contact datasets. Reported directly to senior directors and managed the quality standards that the entire business delivery pipeline depended on.
+          {/* Interactive Chapter Switcher Console */}
+          <div className="chapter-console-container reveal reveal-delay-2">
+            
+            {/* Left Tabs */}
+            <div className="chapter-tabs-list">
+              {CHAPTERS.map(ch => (
+                <button
+                  key={ch.id}
+                  onClick={() => setActiveChapterId(ch.id)}
+                  className={`chapter-tab-item ${activeChapterId === ch.id ? 'active' : ''}`}
+                  style={{ border: 'none' }}
+                >
+                  <div className="chapter-tab-num" style={{ color: activeChapterId === ch.id ? 'var(--accent-primary)' : 'var(--text-muted)' }}>
+                    ◆ {ch.chapter}
                   </div>
-                </div>
-              </div>
-
-              <div className="story-node reveal reveal-delay-1">
-                <div className="story-node-dot" style={{ background: 'rgba(99,102,241,0.12)', border: '1px solid rgba(99,102,241,0.3)' }}>🔍</div>
-                <div className="story-node-content">
-                  <div className="story-node-label" style={{ color: 'var(--accent-secondary)' }}>Chapter 2 — The Realisation</div>
-                  <div className="story-node-title">Recognising the Limit</div>
-                  <div className="story-node-desc">
-                    Processes that should run in minutes took hours. Quality checks that should be automated required three people. Reporting that should be real-time was always delayed. I lived the problem that modern data infrastructure solves — from the inside.
-                  </div>
-                </div>
-              </div>
-
-              <div className="story-node reveal reveal-delay-2">
-                <div className="story-node-dot" style={{ background: 'rgba(245,158,11,0.12)', border: '1px solid rgba(245,158,11,0.3)' }}>🚀</div>
-                <div className="story-node-content">
-                  <div className="story-node-label" style={{ color: 'var(--accent-gold)' }}>Chapter 3 — The Rebuild</div>
-                  <div className="story-node-title">Modern Stack, Real Problems</div>
-                  <div className="story-node-desc">
-                    I rebuilt my technical stack from the ground up — Snowflake for cloud warehousing, SQL for modeling, Power BI for executive dashboards, and Apps Script + Cloudflare for serverless automation. Not from a classroom. From problems I lived every day. The projects in this portfolio are the solutions I wish I had years ago.
-                  </div>
-                </div>
+                  <div className="chapter-tab-title">{ch.label}</div>
+                </button>
+              ))}
+              
+              {/* My Edge Note */}
+              <div className="glass-panel" style={{ borderColor: 'rgba(59,130,246,0.15)', marginTop: '12px' }}>
+                <p style={{ color: 'var(--text-sub)', fontSize: '0.82rem', lineHeight: '1.6', fontStyle: 'italic' }}>
+                  "I know the <strong style={{ color: 'var(--text-main)' }}>operational reality</strong> behind the data — the broken pipelines, the manual workarounds, the business cost of slow reporting."
+                </p>
               </div>
             </div>
 
-            {/* Right — Insight Panel */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', position: 'sticky', top: '96px' }} className="reveal reveal-delay-1">
-              <div className="glass-panel" style={{ borderColor: 'rgba(59,130,246,0.2)' }}>
-                <div style={{ fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--accent-primary)', marginBottom: '16px', fontFamily: 'var(--font-mono)' }}>
-                  ▸ My Edge
+            {/* Right Active Chapter Console Panel */}
+            <div className="chapter-viewer-panel">
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
+                  <div>
+                    <span style={{ fontSize: '9px', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>CONSOLE NODE ACTIVE</span>
+                    <h3 style={{ fontSize: '1.4rem', fontWeight: '800', color: 'var(--text-main)', marginTop: '4px', fontFamily: 'var(--font-display)' }}>
+                      {CHAPTERS.find(c => c.id === activeChapterId).title}
+                    </h3>
+                  </div>
+                  <span style={{ fontSize: '2rem' }}>{CHAPTERS.find(c => c.id === activeChapterId).icon}</span>
                 </div>
-                <p style={{ color: 'var(--text-sub)', fontSize: '1rem', lineHeight: '1.8', fontStyle: 'italic' }}>
-                  "Most analysts know the tools. I know the <strong style={{ color: 'var(--text-main)' }}>operational reality</strong> behind the data — the broken pipelines, the manual workarounds, the business cost of slow reporting. That's the perspective I bring to every system I build."
+                
+                <p style={{ fontSize: '0.92rem', color: 'var(--text-sub)', lineHeight: '1.7', marginBottom: '24px' }}>
+                  {CHAPTERS.find(c => c.id === activeChapterId).desc}
                 </p>
               </div>
 
-              <div className="glass-panel" style={{ borderColor: 'rgba(245,158,11,0.15)' }}>
-                <div style={{ fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--accent-gold)', marginBottom: '16px', fontFamily: 'var(--font-mono)' }}>
-                  ▸ Now Targeting
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                  {['Data Operations Analyst', 'Business Intelligence Analyst', 'Reporting & Analytics Analyst', 'Data Quality Analyst'].map((role, i) => (
-                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 14px', background: 'rgba(245,158,11,0.05)', borderRadius: '8px', border: '1px solid rgba(245,158,11,0.1)' }}>
-                      <span style={{ color: 'var(--accent-gold)', fontSize: '0.75rem' }}>→</span>
-                      <span style={{ color: 'var(--text-sub)', fontSize: '0.9rem', fontWeight: '500' }}>{role}</span>
-                    </div>
-                  ))}
-                </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '20px' }}>
+                {CHAPTERS.find(c => c.id === activeChapterId).stats.map((st, sIdx) => (
+                  <div key={sIdx} style={{ textAlign: 'center' }}>
+                    <div style={{ fontSize: '9px', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', marginBottom: '4px', textTransform: 'uppercase' }}>{st.label}</div>
+                    <div style={{ fontSize: '0.95rem', fontWeight: '800', color: activeChapterId === 3 ? 'var(--accent-cyan)' : activeChapterId === 2 ? 'var(--accent-gold)' : 'var(--accent-primary)' }}>{st.value}</div>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -976,7 +1186,8 @@ function App() {
 
       {/* PORTFOLIOS & PROJECTS SECTION */}
       <section id="projects">
-        <div className="container">
+        <div className="container relative">
+          <div className="section-watermark">03 WORK</div>
           <div style={{ textAlign: 'center', marginBottom: '48px' }} className="reveal">
             <h2 className="section-title">Analytical &amp; Automation Portfolios</h2>
             <p className="section-subtitle" style={{ margin: '0 auto' }}>
@@ -984,10 +1195,206 @@ function App() {
             </p>
           </div>
 
-          <div className="projects-grid">
-            {PROJECTS.map((proj, idx) => (
-              <ProjectCard proj={proj} key={idx} />
-            ))}
+          <div className="bento-grid">
+            
+            {/* CARD 1: Medallion Pipeline (Col Span 2) */}
+            <div 
+              ref={node1Spotlight.ref}
+              onMouseMove={node1Spotlight.onMouseMove}
+              className="spotlight-card bento-col-2 reveal"
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
+                <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+                  <div className="proj-icon-wrapper">
+                    <Database size={24} />
+                  </div>
+                  <div>
+                    <h3 className="proj-title" style={{ fontSize: '1.05rem', fontWeight: '700' }}>{PROJECTS[0].title}</h3>
+                    <span className="text-[10px] text-gray-500 font-mono tracking-wider uppercase">DWH ARCHITECTURE</span>
+                  </div>
+                </div>
+                <div className="proj-links">
+                  <a href={PROJECTS[0].githubLink} target="_blank" rel="noreferrer" title="Source Code"><Github size={20} /></a>
+                  <a href={PROJECTS[0].liveLink} target="_blank" rel="noreferrer" title="Live Site"><ExternalLink size={20} /></a>
+                </div>
+              </div>
+              <p className="proj-desc text-gray-400 text-sm mb-4 leading-relaxed">{PROJECTS[0].desc}</p>
+              
+              {/* Interactive SQL Playground */}
+              <SqlPlayground />
+              
+              <ul className="tag-list mt-4">
+                {PROJECTS[0].tags.map((tag, i) => <li key={i}>{tag}</li>)}
+              </ul>
+            </div>
+
+            {/* CARD 2: Hospital ER Analytics (Col Span 1) */}
+            <div 
+              ref={node2Spotlight.ref}
+              onMouseMove={node2Spotlight.onMouseMove}
+              className="spotlight-card reveal reveal-delay-1"
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
+                <div style={{ display: 'flex', gap: '14px', alignItems: 'center' }}>
+                  <div className="proj-icon-wrapper">
+                    <BarChart3 size={24} />
+                  </div>
+                  <div>
+                    <h3 className="proj-title" style={{ fontSize: '1.05rem', fontWeight: '700' }}>{PROJECTS[1].title}</h3>
+                    <span className="text-[10px] text-gray-500 font-mono tracking-wider uppercase">POWER BI / DAX</span>
+                  </div>
+                </div>
+                <div className="proj-links">
+                  <a href={PROJECTS[1].githubLink} target="_blank" rel="noreferrer" title="Source Code"><Github size={20} /></a>
+                </div>
+              </div>
+              <p className="proj-desc text-gray-400 text-sm mb-4 leading-relaxed">{PROJECTS[1].desc}</p>
+              
+              {/* Interactive Staffing Simulator */}
+              <ErSimulator />
+
+              <ul className="tag-list mt-4">
+                {PROJECTS[1].tags.map((tag, i) => <li key={i}>{tag}</li>)}
+              </ul>
+            </div>
+
+            {/* CARD 3: Revenue Leakage Calculator (Col Span 1) */}
+            <div 
+              ref={node3Spotlight.ref}
+              onMouseMove={node3Spotlight.onMouseMove}
+              className="spotlight-card reveal"
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
+                <div style={{ display: 'flex', gap: '14px', alignItems: 'center' }}>
+                  <div className="proj-icon-wrapper">
+                    <Cpu size={24} />
+                  </div>
+                  <div>
+                    <h3 className="proj-title" style={{ fontSize: '1.05rem', fontWeight: '700' }}>{PROJECTS[2].title}</h3>
+                    <span className="text-[10px] text-gray-500 font-mono tracking-wider uppercase">SYSTEMS AUTOMATION</span>
+                  </div>
+                </div>
+                <div className="proj-links">
+                  <a href={PROJECTS[2].githubLink} target="_blank" rel="noreferrer" title="Source Code"><Github size={20} /></a>
+                  <a href={PROJECTS[2].liveLink} target="_blank" rel="noreferrer" title="Live Site"><ExternalLink size={20} /></a>
+                </div>
+              </div>
+              <p className="proj-desc text-gray-400 text-sm mb-4 leading-relaxed">{PROJECTS[2].desc}</p>
+              
+              {/* Interactive Loss Calculator */}
+              <LeakageCalculator />
+
+              <ul className="tag-list mt-4">
+                {PROJECTS[2].tags.map((tag, i) => <li key={i}>{tag}</li>)}
+              </ul>
+            </div>
+
+            {/* CARD 4: Executive CRM Admin Portal (Col Span 2) */}
+            <div 
+              ref={node4Spotlight.ref}
+              onMouseMove={node4Spotlight.onMouseMove}
+              className="spotlight-card bento-col-2 reveal reveal-delay-1"
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
+                <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+                  <div className="proj-icon-wrapper">
+                    <Layers size={24} />
+                  </div>
+                  <div>
+                    <h3 className="proj-title" style={{ fontSize: '1.05rem', fontWeight: '700' }}>{PROJECTS[3].title}</h3>
+                    <span className="text-[10px] text-gray-500 font-mono tracking-wider uppercase">REACT CONSOLE</span>
+                  </div>
+                </div>
+                <div className="proj-links">
+                  <a href={PROJECTS[3].githubLink} target="_blank" rel="noreferrer" title="Source Code"><Github size={20} /></a>
+                  <a href={PROJECTS[3].liveLink} target="_blank" rel="noreferrer" title="Live Site"><ExternalLink size={20} /></a>
+                </div>
+              </div>
+              <p className="proj-desc text-gray-400 text-sm mb-4 leading-relaxed">{PROJECTS[3].desc}</p>
+
+              {/* CRM Live Console Preview Frame */}
+              <div style={{
+                background: '#040810',
+                border: '1px solid rgba(59, 130, 246, 0.12)',
+                borderRadius: '10px',
+                padding: '16px',
+                fontFamily: 'var(--font-mono)',
+                fontSize: '0.78rem',
+                color: 'var(--text-sub)',
+                boxShadow: 'inset 0 2px 10px rgba(0, 0, 0, 0.8)'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', paddingBottom: '8px', marginBottom: '12px' }}>
+                  <span className="text-blue-400 font-bold">Leads CRM Database</span>
+                  <span className="text-[10px] bg-green-500/10 text-green-400 px-2 py-0.5 rounded border border-green-500/20">Authorized Sync</span>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', textAlign: 'center' }}>
+                  <div style={{ background: 'rgba(255, 255, 255, 0.02)', padding: '8px', borderRadius: '6px' }}>
+                    <div style={{ fontSize: '9px', color: 'var(--text-dim)' }}>TOTAL LEADS</div>
+                    <div className="font-extrabold text-white text-base">1,793</div>
+                  </div>
+                  <div style={{ background: 'rgba(255, 255, 255, 0.02)', padding: '8px', borderRadius: '6px' }}>
+                    <div style={{ fontSize: '9px', color: 'var(--text-dim)' }}>NEW INTAKE</div>
+                    <div className="font-extrabold text-blue-400 text-base">32</div>
+                  </div>
+                  <div style={{ background: 'rgba(255, 255, 255, 0.02)', padding: '8px', borderRadius: '6px' }}>
+                    <div style={{ fontSize: '9px', color: 'var(--text-dim)' }}>PITCHED QUEUE</div>
+                    <div className="font-extrabold text-cyan-400 text-base">1,408</div>
+                  </div>
+                </div>
+              </div>
+
+              <ul className="tag-list mt-4">
+                {PROJECTS[3].tags.map((tag, i) => <li key={i}>{tag}</li>)}
+              </ul>
+            </div>
+
+            {/* CARD 5: SQL Warehouse (Col Span 1) */}
+            <div className="spotlight-card reveal flex flex-col justify-between h-full">
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
+                  <div style={{ display: 'flex', gap: '14px', alignItems: 'center' }}>
+                    <div className="proj-icon-wrapper">
+                      <Database size={24} />
+                    </div>
+                    <div>
+                      <h3 className="proj-title" style={{ fontSize: '1.05rem', fontWeight: '700' }}>{PROJECTS[4].title}</h3>
+                      <span className="text-[10px] text-gray-500 font-mono tracking-wider uppercase">SQL MODELING</span>
+                    </div>
+                  </div>
+                  <div className="proj-links">
+                    <a href={PROJECTS[4].githubLink} target="_blank" rel="noreferrer" title="Source Code"><Github size={20} /></a>
+                  </div>
+                </div>
+                <p className="proj-desc text-gray-400 text-sm mb-4 leading-relaxed">{PROJECTS[4].desc}</p>
+              </div>
+              <ul className="tag-list mt-auto">
+                {PROJECTS[4].tags.map((tag, i) => <li key={i}>{tag}</li>)}
+              </ul>
+            </div>
+
+            {/* CARD 6: Outlook Sync (Col Span 1) */}
+            <div className="spotlight-card reveal reveal-delay-1 flex flex-col justify-between h-full">
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
+                  <div style={{ display: 'flex', gap: '14px', alignItems: 'center' }}>
+                    <div className="proj-icon-wrapper">
+                      <Terminal size={24} />
+                    </div>
+                    <div>
+                      <h3 className="proj-title" style={{ fontSize: '1.05rem', fontWeight: '700' }}>{PROJECTS[5].title}</h3>
+                      <span className="text-[10px] text-gray-500 font-mono tracking-wider uppercase">SHELL AUTOMATION</span>
+                    </div>
+                  </div>
+                  <div className="proj-links">
+                    <a href={PROJECTS[5].githubLink} target="_blank" rel="noreferrer" title="Source Code"><Github size={20} /></a>
+                  </div>
+                </div>
+                <p className="proj-desc text-gray-400 text-sm mb-4 leading-relaxed">{PROJECTS[5].desc}</p>
+              </div>
+              <ul className="tag-list mt-auto">
+                {PROJECTS[5].tags.map((tag, i) => <li key={i}>{tag}</li>)}
+              </ul>
+            </div>
 
             {/* Special Bento Card: Availability / Connect */}
             <div 
@@ -1011,6 +1418,7 @@ function App() {
                 </a>
               </div>
             </div>
+
           </div>
         </div>
       </section>
