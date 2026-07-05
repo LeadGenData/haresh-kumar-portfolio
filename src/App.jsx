@@ -678,7 +678,7 @@ function App() {
             <li><a href="#contact">Contact</a></li>
             <li style={{ marginLeft: '12px' }}>
               <a 
-                href="/Haresh_Kumar_Resume.pdf" 
+                href="./Haresh_Kumar_Resume.pdf" 
                 download="Haresh_Kumar_Resume.pdf"
                 className="btn btn-secondary" 
                 style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 12px', borderRadius: '8px', fontSize: '0.8rem', borderColor: 'rgba(59, 130, 246, 0.2)', background: 'rgba(59, 130, 246, 0.04)' }}
@@ -704,7 +704,7 @@ function App() {
             <li><a href="#contact" onClick={() => setMenuOpen(false)}>Contact</a></li>
             <li style={{ marginTop: '16px' }}>
               <a 
-                href="/Haresh_Kumar_Resume.pdf" 
+                href="./Haresh_Kumar_Resume.pdf" 
                 download="Haresh_Kumar_Resume.pdf"
                 className="btn btn-secondary" 
                 style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: '8px', fontSize: '0.85rem' }}
