@@ -694,49 +694,49 @@ const PowerBiDashboardIllustration = () => (
 
 const PROJECTS = [
   {
-    title: "Credit Fraud Medallion Pipeline",
+    title: "Snowflake Medallion Pipeline",
     icon: <Database size={24} />,
-    desc: "End-to-end Snowflake data warehouse processing card transactions through Bronze, Silver, and Gold schemas. Integrates Streams/Tasks automation and PII dynamic masking.",
+    desc: "Production-ready credit transaction auditing pipeline in Snowflake. Automates change data capture (CDC) streams and tasks, normalizes semi-structured logs, and implements dynamic data masking to secure consumer credit card PII.",
     liveLink: "https://github.com/LeadGenData/Data-Analytics-Portfolio/tree/main/Snowflake-Medallion-Pipeline",
     githubLink: "https://github.com/LeadGenData/Data-Analytics-Portfolio/tree/main/Snowflake-Medallion-Pipeline",
     tags: ["Snowflake DWH", "Streams & Tasks", "Dynamic Data Masking", "SQL / DDL", "Power BI"]
   },
   {
-    title: "Hospital ER Analytics (Power BI)",
+    title: "Clinical Admissions Analytics",
     icon: <BarChart3 size={24} />,
-    desc: "An interactive Power BI dashboard analyzing emergency room wait times, patient triage flow, satisfactions scores, and hospital staffing requirements.",
+    desc: "Optimized clinical operations dashboard analyzing emergency admissions wait times. Integrates advanced DAX queries to dynamically calculate triage rate metrics, satisfaction trends, and recommend hospital staffing allocations.",
     liveLink: "https://github.com/LeadGenData/hospital-emergency-room-dashboard-Power-BI-",
     githubLink: "https://github.com/LeadGenData/hospital-emergency-room-dashboard-Power-BI-",
     tags: ["Power BI", "DAX", "Power Query (M)", "Healthcare BI", "Data Analysis"]
   },
   {
-    title: "Revenue Leakage Calculator",
+    title: "B2B Revenue Recovery Pipeline",
     icon: <Cpu size={24} />,
-    desc: "A client-side interactive audit tool with server-side Apps Script math execution. Generates unredacted custom 6-page PDF recovery plans and automates outreach.",
+    desc: "Serverless B2B lead auditing tool routing requests via Cloudflare Workers proxy to a Google Apps Script engine. Computes leakage statistics, compiles multi-page PDF performance audits on-the-fly, and triggers drip notifications.",
     liveLink: "https://bdl.dataconnectmail.com/",
     githubLink: "https://github.com/jamescluster35/revenue-leakage-calculator",
     tags: ["Google Apps Script", "Cloudflare Workers", "Vanilla HTML/CSS/JS", "PDF Engine"]
   },
   {
-    title: "Executive CRM Admin Portal",
+    title: "Leads Operations CRM Console",
     icon: <Layers size={24} />,
-    desc: "React-based CRM console featuring direct landing redirection, responsive KPI dashboard, case-insensitive lead filters, and custom search pipelines.",
+    desc: "Enterprise-grade React CRM portal managing client campaigns. Features custom state-persisted search filters, Google Sheets API synchronization, and real-time dashboard tracking for 1,790+ lead records.",
     liveLink: "https://jamescluster35.github.io/bdl-leads-pro-live/",
     githubLink: "https://github.com/jamescluster35/bdl-leads-pro-crm",
     tags: ["React 19", "Vite", "Zustand State", "REST API", "Vanilla CSS"]
   },
   {
-    title: "SQL Data Warehouse Model",
+    title: "Relational Schema Optimizer",
     icon: <Database size={24} />,
-    desc: "Data warehouse implementation of transaction logging. Features Star/Snowflake schemas, optimized index mapping, and custom SQL ETL scripts.",
+    desc: "Optimized relational warehouse modeling transaction logs in Oracle SQL. Implements high-performance Star schemas, clustered indexing, and clean ETL transformations for high-volume billing analyses.",
     liveLink: "https://github.com/LeadGenData/sql_data_warehouse_project",
     githubLink: "https://github.com/LeadGenData/sql_data_warehouse_project",
     tags: ["SQL Engine", "Oracle SQL", "Data Warehousing", "ETL Pipelines", "Star Schema"]
   },
   {
-    title: "Outlook Campaign Sync Utilities",
+    title: "Email Campaign Ingestion Sweeper",
     icon: <Terminal size={24} />,
-    desc: "PowerShell and Python scripts executing local Outlook sent-folder campaign parsing, email bounce sweepers, and automated CRM record updates.",
+    desc: "Production script suite automating email campaign auditing. Leverages Python and PowerShell Core to parse local Outlook folders, extract bounce alerts, and synchronize campaign status updates directly to Google Sheets database endpoints.",
     liveLink: null,
     githubLink: "https://github.com/jamescluster35/revenue-leakage-calculator/tree/main/scripts",
     tags: ["Python 3", "PowerShell Core", "Outlook COM API", "Automation"]
@@ -844,12 +844,22 @@ function App() {
       <header className="header">
         <div className="container nav">
           <a href="#" className="logo">M. Haresh Kumar</a>
-          <ul className="nav-links">
+          <ul className="nav-links" style={{ display: 'flex', alignItems: 'center' }}>
             <li><a href="#hero">About</a></li>
             <li><a href="#story">My Story</a></li>
             <li><a href="#architecture">Blueprints</a></li>
             <li><a href="#projects">Portfolio</a></li>
             <li><a href="#contact">Contact</a></li>
+            <li style={{ marginLeft: '12px' }}>
+              <a 
+                href="/Haresh_Kumar_Resume.pdf" 
+                download="Haresh_Kumar_Resume.pdf"
+                className="btn btn-secondary" 
+                style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 12px', borderRadius: '8px', fontSize: '0.8rem', borderColor: 'rgba(59, 130, 246, 0.2)', background: 'rgba(59, 130, 246, 0.04)' }}
+              >
+                <Download size={13} /> Resume
+              </a>
+            </li>
           </ul>
           <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle Menu">
             {menuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -866,6 +876,16 @@ function App() {
             <li><a href="#architecture" onClick={() => setMenuOpen(false)}>Blueprints</a></li>
             <li><a href="#projects" onClick={() => setMenuOpen(false)}>Portfolio</a></li>
             <li><a href="#contact" onClick={() => setMenuOpen(false)}>Contact</a></li>
+            <li style={{ marginTop: '16px' }}>
+              <a 
+                href="/Haresh_Kumar_Resume.pdf" 
+                download="Haresh_Kumar_Resume.pdf"
+                className="btn btn-secondary" 
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: '8px', fontSize: '0.85rem' }}
+              >
+                <Download size={14} /> Download Resume
+              </a>
+            </li>
           </ul>
         </div>
       )}
@@ -875,11 +895,11 @@ function App() {
         <div className="container hero-layout">
           <div className="reveal">
             <div className="hero-subtitle">
-              <Sparkles size={16} /> Data Analyst &amp; Systems Automation Specialist
+              <Sparkles size={16} /> Data Operations &amp; Systems Automation Specialist
             </div>
-            <h1 className="hero-title">Data Analytics &amp; Systems Automation</h1>
+            <h1 className="hero-title">Data Operations &amp; Systems Automation</h1>
             <p className="hero-desc">
-              I build interactive Power BI dashboards, clean SQL data warehouses, and serverless automation pipelines. I specialize in mapping business workflows, connecting data channels, and streamlining operational tasks.
+              I build clinical and financial reporting dashboards, clean SQL data warehouses, and serverless automation pipelines. I specialize in database hygiene, API endpoint proxying, and eliminating manual business task redundancies.
             </p>
             <div className="cta-group">
               <a href="#projects" className="btn btn-primary">
