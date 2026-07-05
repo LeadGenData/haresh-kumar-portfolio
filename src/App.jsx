@@ -315,39 +315,39 @@ const CHAPTERS = [
   {
     id: 1,
     chapter: "Chapter 1",
-    label: "Data Quality & Operations",
-    title: "Sourcing & Validation Foundation",
-    desc: "Began my career in data operations, managing B2B data sourcing and running core validation check sweeps. Oversaw lead collection, de-duplication hygiene, and delivery files, ensuring high-quality client outputs.",
+    label: "Operations & Delivery (Innovays)",
+    title: "Manager — Data & Delivery",
+    desc: "Led a core data operations and delivery team of 15+ members handling large enterprise accounts. Managed the processing and quality validation of 200K–300K+ monthly B2B records. Built Excel automation frameworks that reduced manual reporting cycles from 5 days down to 1 day.",
     stats: [
-      { label: "RECORDS AUDITED", value: "500K+ Rows" },
-      { label: "HYGIENE METRIC", value: "99.8% Accuracy" },
-      { label: "ROLE TYPE", value: "Data Specialist" }
+      { label: "TEAM MEMBERS LED", value: "15+ Senders" },
+      { label: "MONTHLY RECORDS", value: "200K - 300K+" },
+      { label: "EXPERIENCE", value: "14 Years 6 Mos" }
     ],
     icon: "⚙️"
   },
   {
     id: 2,
     chapter: "Chapter 2",
-    label: "Recognising the Limit",
-    title: "The Friction of Manual Tasks",
-    desc: "Worked directly with legacy spreadsheets and noticed massive operational friction. Repetitive formatting, manually syncing sheets, and validating emails took hours. I lived the problems that automation and proper data warehousing are meant to solve.",
+    label: "The Technical Pivot",
+    title: "Transition to Cloud & SQL",
+    desc: "Recognized the limits of spreadsheets and manual workflows. Modernized my technical stack by mastering SQL, database schemas, and cloud platforms. Earned verified badges in HackerRank Transact-SQL and completed Snowflake Hands-On Essentials workshops.",
     stats: [
-      { label: "TIME SQUANDERED", value: "Hours / Day" },
-      { label: "MANUAL TASKS", value: "Dozens Weekly" },
-      { label: "PERSPECTIVE", value: "Friction Analyst" }
+      { label: "SQL CERTIFICATION", value: "HackerRank SQL" },
+      { label: "SNOWFLAKE WORKSHOPS", value: "3 Certificates" },
+      { label: "FOCUS AREA", value: "Data Modeling" }
     ],
     icon: "🔍"
   },
   {
     id: 3,
     chapter: "Chapter 3",
-    label: "The Technical Rebuild",
-    title: "Serverless Pipelines & Cloud DW",
-    desc: "Transitioned to building fully automated solutions. Rebuilt my technical stack around Snowflake for data warehousing, custom SQL streams for cleansing, Power BI for dashboards, and serverless Apps Script APIs for database integrations.",
+    label: "Consulting & Automation (Ariviga)",
+    title: "Data Consultant & Systems Builder",
+    desc: "Deploying Snowflake pipelines (Streams & Tasks), Power BI dashboards, and custom serverless web applications. Building Cloudflare API Workers, React leads dashboards, and custom Python/PowerShell scripts to parse Outlook folder bounce logs.",
     stats: [
-      { label: "AUTOMATION SAVINGS", value: "95% Speedup" },
-      { label: "CLOUD WAREHOUSE", value: "Snowflake DWH" },
-      { label: "INTEGRATION CORE", value: "REST API Proxy" }
+      { label: "CURRENT ROLE", value: "Data Consultant" },
+      { label: "PLATFORMS USED", value: "React / Workers" },
+      { label: "BI METRICS", value: "Power BI / DAX" }
     ],
     icon: "🚀"
   }
@@ -761,16 +761,16 @@ function App() {
           {/* Stats Row */}
           <div className="stats-row stats-row-3 reveal reveal-delay-1" style={{ marginBottom: '72px' }}>
             <div className="stat-card">
-              <div className="stat-value">7+</div>
-              <div className="stat-label">GitHub Repositories</div>
+              <div className="stat-value">14+</div>
+              <div className="stat-label">Years in Data Operations</div>
             </div>
             <div className="stat-card">
-              <div className="stat-value">8+</div>
-              <div className="stat-label">Core Tech Utilities</div>
+              <div className="stat-value">15+</div>
+              <div className="stat-label">Team Members Led</div>
             </div>
             <div className="stat-card">
-              <div className="stat-value">4+</div>
-              <div className="stat-label">Automated Systems</div>
+              <div className="stat-value">300K+</div>
+              <div className="stat-label">Monthly Records Managed</div>
             </div>
           </div>
 
