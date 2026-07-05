@@ -1,53 +1,495 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import './App.css';
-import { 
-  Github, 
-  Mail, 
-  ExternalLink, 
-  Terminal, 
-  Cpu, 
-  Layers, 
-  Database, 
-  ArrowRight, 
+import {
+  Github,
+  Mail,
+  ExternalLink,
+  Terminal,
+  Cpu,
+  Layers,
+  Database,
+  ArrowRight,
   MessageSquare,
   Lock,
   Globe,
   Settings,
-  Sparkles
+  Sparkles,
+  BarChart3,
+  TrendingUp,
+  Award,
+  Download,
+  Menu,
+  X
 } from 'lucide-react';
 
-const ARCH_STEPS = [
+// ─── Canvas Particle Background ───────────────────────────────────────────
+const DataNodeBackground = () => {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    
+    let animationFrameId;
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
+
+    const particles = [];
+    const particleCount = Math.min(50, Math.floor((width * height) / 32000));
+    
+    let mouse = { x: null, y: null, radius: 130 };
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.vx = (Math.random() - 0.5) * 0.3;
+        this.vy = (Math.random() - 0.5) * 0.3;
+        this.radius = Math.random() * 1.5 + 0.8;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        
+        if (this.x < 0 || this.x > width) this.vx *= -1;
+        if (this.y < 0 || this.y > height) this.vy *= -1;
+
+        if (mouse.x && mouse.y) {
+          const dx = this.x - mouse.x;
+          const dy = this.y - mouse.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < mouse.radius) {
+            const force = (mouse.radius - dist) / mouse.radius;
+            this.x += (dx / dist) * force * 1.2;
+            this.y += (dy / dist) * force * 1.2;
+          }
+        }
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(59, 130, 246, 0.4)';
+        ctx.fill();
+      }
+    }
+
+    for (let i = 0; i < particleCount; i++) {
+      particles.push(new Particle());
+    }
+
+    const drawConnections = () => {
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 110) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `rgba(59, 130, 246, ${0.11 * (1 - dist / 110)})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+      }
+    };
+
+    const animate = () => {
+      ctx.clearRect(0, 0, width, height);
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      drawConnections();
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    const handleResize = () => {
+      if (!canvas) return;
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    };
+
+    const handleMouseMove = (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    };
+
+    const handleMouseLeave = () => {
+      mouse.x = null;
+      mouse.y = null;
+    };
+
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseleave', handleMouseLeave);
+
+    animate();
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, []);
+
+  return <canvas ref={canvasRef} className="canvas-bg" />;
+};
+
+// ─── Mouse Spotlight Ref Hook ─────────────────────────────────────────────
+const useMouseMoveSpotlight = () => {
+  const cardRef = useRef(null);
+
+  const handleMouseMove = useCallback((e) => {
+    const card = cardRef.current;
+    if (!card) return;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    card.style.setProperty('--mouse-x', `${x}px`);
+    card.style.setProperty('--mouse-y', `${y}px`);
+  }, []);
+
+  return { ref: cardRef, onMouseMove: handleMouseMove };
+};
+
+// ─── Project Card Spotlight Component ─────────────────────────────────────
+const ProjectCard = ({ proj }) => {
+  const { ref, onMouseMove } = useMouseMoveSpotlight();
+  return (
+    <div 
+      ref={ref} 
+      onMouseMove={onMouseMove} 
+      className="spotlight-card reveal flex flex-col justify-between h-full"
+    >
+      <div>
+        <div className="proj-header mb-4">
+          <div className="proj-icon-wrapper">
+            {proj.icon}
+          </div>
+          <div className="proj-links">
+            {proj.githubLink && (
+              <a href={proj.githubLink} target="_blank" rel="noreferrer" title="Source Code">
+                <Github size={20} />
+              </a>
+            )}
+            {proj.liveLink && (
+              <a href={proj.liveLink} target="_blank" rel="noreferrer" title="Live Site">
+                <ExternalLink size={20} />
+              </a>
+            )}
+          </div>
+        </div>
+        <h3 className="proj-title mb-2">{proj.title}</h3>
+        <p className="proj-desc text-gray-400 text-sm mb-4 leading-relaxed">{proj.desc}</p>
+      </div>
+      <ul className="tag-list mt-auto">
+        {proj.tags.map((tag, tIdx) => (
+          <li key={tIdx}>{tag}</li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+// ─── Interactive Terminal Console Component ───────────────────────────────
+const InteractiveTerminal = () => {
+  const [logs, setLogs] = useState([
+    { type: 'info', text: 'system_initialize --target=haresh_portfolio' },
+    { type: 'success', text: '✔ Data Ingestion Staging running (Snowflake integration active)' },
+    { type: 'success', text: '✔ Power BI DAX semantic connector: ONLINE' }
+  ]);
+  const [inputVal, setInputVal] = useState('');
+  const bodyRef = useRef(null);
+
+  const appendLog = (type, text) => {
+    setLogs(prev => [...prev, { type, text }]);
+    setTimeout(() => {
+      if (bodyRef.current) {
+        bodyRef.current.scrollTop = bodyRef.current.scrollHeight;
+      }
+    }, 50);
+  };
+
+  const handleCommand = (cmd) => {
+    const cleanCmd = cmd.trim().toLowerCase();
+    if (!cleanCmd) return;
+    
+    appendLog('cmd', `haresh@dwh:~$ ${cmd}`);
+
+    setTimeout(() => {
+      if (cleanCmd === 'help') {
+        appendLog('info', 'Available commands:\n  help         - Display commands menu\n  run pipeline - Execute Credit Fraud medallion ETL cycle\n  clear        - Clear console screen\n  dax          - Trigger wait-time metric aggregation');
+      } else if (cleanCmd === 'run pipeline') {
+        appendLog('warn', '⚡ Launching Snowflake Bronze landing stream...');
+        setTimeout(() => {
+          appendLog('success', '✔ Bronze staging complete: variant rows stored');
+          setTimeout(() => {
+            appendLog('success', '✔ CDC streams validated in Silver schema (deduped)');
+            setTimeout(() => {
+              appendLog('success', '✔ Star dimension schema merged. Gold rebuild: SUCCESS');
+            }, 500);
+          }, 500);
+        }, 400);
+      } else if (cleanCmd === 'clear') {
+        setLogs([]);
+      } else if (cleanCmd === 'dax') {
+        appendLog('info', 'Computing Power BI ER waiting times (DAX)...');
+        setTimeout(() => {
+          appendLog('success', '✔ Median Triage Wait time: 14.2 minutes (calculated)');
+          appendLog('success', '✔ Patient satisfaction score: 92.4% success rating');
+        }, 400);
+      } else {
+        appendLog('error', `bash: command not found: ${cmd}. Type 'help' to check options.`);
+      }
+    }, 150);
+
+    setInputVal('');
+  };
+
+  return (
+    <div className="terminal-container">
+      <div className="terminal-header">
+        <div className="terminal-dots">
+          <span className="terminal-dot" style={{ background: '#ef4444' }}></span>
+          <span className="terminal-dot" style={{ background: '#eab308' }}></span>
+          <span className="terminal-dot" style={{ background: '#22c55e' }}></span>
+        </div>
+        <div className="terminal-title">DWH_Engine_Console</div>
+        <div className="text-[10px] text-gray-500 font-mono">v1.1</div>
+      </div>
+      <div className="terminal-body" ref={bodyRef}>
+        {logs.map((log, i) => (
+          <div key={i} className="terminal-line">
+            {log.type === 'cmd' ? (
+              <span className="terminal-cmd">{log.text}</span>
+            ) : (
+              <span className={`terminal-output terminal-${log.type}`}>{log.text}</span>
+            )}
+          </div>
+        ))}
+        <div className="terminal-input-line">
+          <span className="terminal-prompt">haresh@dwh:~$</span>
+          <input
+            type="text"
+            value={inputVal}
+            onChange={e => setInputVal(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && handleCommand(inputVal)}
+            placeholder="Type 'help' or click a command..."
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: '#EFF6FF',
+              padding: 0,
+              fontSize: 'inherit',
+              fontFamily: 'inherit',
+              outline: 'none',
+              flex: 1
+            }}
+          />
+          <span className="terminal-cursor"></span>
+        </div>
+      </div>
+      <div style={{
+        display: 'flex',
+        gap: '6px',
+        padding: '10px 14px',
+        background: '#060a14',
+        borderTop: '1px solid rgba(59, 130, 246, 0.08)'
+      }}>
+        <button onClick={() => handleCommand('help')} className="btn btn-secondary" style={{ padding: '6px 12px', borderRadius: '6px', fontSize: '10px' }}>ℹ️ Help</button>
+        <button onClick={() => handleCommand('run pipeline')} className="btn btn-secondary" style={{ padding: '6px 12px', borderRadius: '6px', fontSize: '10px', color: 'var(--accent-cyan)', borderColor: 'rgba(34, 211, 238, 0.15)' }}>🚀 Run Medallion</button>
+        <button onClick={() => handleCommand('dax')} className="btn btn-secondary" style={{ padding: '6px 12px', borderRadius: '6px', fontSize: '10px', color: 'var(--accent-gold)', borderColor: 'rgba(245, 158, 11, 0.15)' }}>📈 DAX Metrics</button>
+      </div>
+    </div>
+  );
+};
+
+
+const AUTOMATION_STEPS = [
   {
     id: 1,
     title: "Client Intake & Math Engine",
     component: "Frontend / Apps Script",
     desc: "Prospects input metrics on the browser. The frontend offloads calculations to a secure, server-side Google Apps Script math engine to protect intellectual property.",
-    nodeHighlight: "client"
+    nodeHighlight: "node1"
   },
   {
     id: 2,
     title: "Secure API Proxy Gateway",
     component: "Cloudflare Workers",
     desc: "All traffic routes through a custom Cloudflare Workers proxy at /api. This hides the Google Apps Script endpoint, cleans HTTP headers, and enforces CORS protection.",
-    nodeHighlight: "proxy"
+    nodeHighlight: "node2"
   },
   {
     id: 3,
     title: "Bi-directional GSheets Database",
     component: "Google Sheets CRM",
     desc: "Leads and client checklist progress states are saved to Google Sheets. The API features self-healing checks to automatically restore missing columns.",
-    nodeHighlight: "database"
+    nodeHighlight: "node3"
   },
   {
     id: 4,
     title: "Multi-Channel Automated Nurturing",
     component: "Gmail Drip Engine",
     desc: "Apps Script triggers automatically compile customized 6-page PDF audits, schedule follow-up emails on Day 2 & Day 5, and link clients directly to their portal.",
-    nodeHighlight: "outreach"
+    nodeHighlight: "node4"
   }
 ];
 
+const BI_STEPS = [
+  {
+    id: 1,
+    title: "Bronze Ingestion Staging",
+    component: "Snowflake Stages / CSV / JSON",
+    desc: "Ingests raw, high-velocity card transaction logs from Snowflake stages into Bronze landing tables, capturing variant data fields.",
+    nodeHighlight: "node1"
+  },
+  {
+    id: 2,
+    title: "Silver Cleansing & Streams",
+    component: "SQL Queries / Table Joins",
+    desc: "Applies de-duplication windows, formats raw dates, standardizes currencies, and captures modifications using Snowflake Change Data Capture (CDC) Streams.",
+    nodeHighlight: "node2"
+  },
+  {
+    id: 3,
+    title: "Gold Schema & Data Masking",
+    component: "Star Schema / RLS / Masking",
+    desc: "Stages facts and dimensions in a Star schema. Applies dynamic data masking on credit card numbers to secure cardholder PII and complies with PCI-DSS.",
+    nodeHighlight: "node3"
+  },
+  {
+    id: 4,
+    title: "Fraud Analytics Dashboard",
+    component: "Power BI / DAX Semantic Layer",
+    desc: "Connects Power BI to Snowflake Gold views. Builds interactive fraud heatmaps, risk gauges, and calculations using optimized DAX expressions.",
+    nodeHighlight: "node4"
+  }
+];
+
+// Custom Inline SVG illustrations to replace AI-generated screenshot placeholders
+const SnowflakePipelineIllustration = () => (
+  <svg viewBox="0 0 400 160" width="100%" height="100%" style={{ background: '#090D1A', borderRadius: '8px', display: 'block' }}>
+    <rect width="100%" height="100%" fill="#070B14" />
+    <path d="M 0 40 L 400 40 M 0 80 L 400 80 M 0 120 L 400 120 M 100 0 L 100 180 M 200 0 L 200 180 M 300 0 L 300 180" stroke="rgba(59, 130, 246, 0.02)" strokeWidth="1" />
+    
+    <defs>
+      <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#3B82F6" stopOpacity="0.85" />
+        <stop offset="100%" stopColor="#1D4ED8" stopOpacity="0.85" />
+      </linearGradient>
+      <linearGradient id="purpleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#6366F1" stopOpacity="0.85" />
+        <stop offset="100%" stopColor="#4F46E5" stopOpacity="0.85" />
+      </linearGradient>
+      <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#F59E0B" stopOpacity="0.85" />
+        <stop offset="100%" stopColor="#D97706" stopOpacity="0.85" />
+      </linearGradient>
+    </defs>
+
+    {/* Connection Flow Lines */}
+    <path d="M 80 80 H 320" stroke="rgba(59, 130, 246, 0.12)" strokeWidth="4" />
+    <path d="M 80 80 H 320" stroke="url(#blueGrad)" strokeWidth="2" strokeDasharray="8 6" />
+
+    {/* Node 1: Ingestion */}
+    <g transform="translate(55, 80)">
+      <circle r="26" fill="#0C1220" stroke="rgba(59, 130, 246, 0.25)" strokeWidth="1" />
+      <circle r="18" fill="url(#blueGrad)" opacity="0.12" />
+      <path d="M -7 -7 H 7 V 7 H -7 Z" fill="none" stroke="#3B82F6" strokeWidth="1.5" />
+      <path d="M -4 -3 H 4 M -4 0 H 4 M -4 3 H 4" stroke="#3B82F6" strokeWidth="1" />
+      <text x="0" y="42" fill="#94A3B8" fontSize="8" fontFamily="monospace" textAnchor="middle">1. RAW STAGE</text>
+    </g>
+
+    {/* Node 2: Snowflake DWH */}
+    <g transform="translate(200, 80)">
+      <circle r="32" fill="#0C1220" stroke="rgba(99, 102, 241, 0.35)" strokeWidth="1.5" />
+      <circle r="24" fill="url(#purpleGrad)" opacity="0.12" />
+      
+      {/* Database Cylinder Icon */}
+      <g transform="translate(-12, -14)">
+        <path d="M 0 4 C 0 1, 24 1, 24 4 C 24 7, 0 7, 0 4 Z" fill="#6366F1" opacity="0.8" />
+        <path d="M 0 4 V 11 C 0 14, 24 14, 24 11 V 4" fill="none" stroke="#6366F1" strokeWidth="1.5" />
+        <path d="M 0 11 V 18 C 0 21, 24 21, 24 18 V 11" fill="none" stroke="#6366F1" strokeWidth="1.5" />
+        <path d="M 0 18 V 25 C 0 28, 24 28, 24 25 V 18" fill="none" stroke="#6366F1" strokeWidth="1.5" />
+      </g>
+      
+      <text x="0" y="48" fill="#EFF6FF" fontSize="8.5" fontFamily="monospace" fontWeight="bold" textAnchor="middle">2. SNOWFLAKE</text>
+    </g>
+
+    {/* Node 3: Analytics / BI */}
+    <g transform="translate(345, 80)">
+      <circle r="26" fill="#0C1220" stroke="rgba(245, 158, 11, 0.25)" strokeWidth="1" />
+      <circle r="18" fill="url(#goldGrad)" opacity="0.12" />
+      <path d="M -7 8 V -7 H -3 V 8 Z M 0 8 V -2 H 4 V 8 Z M 7 8 V 3 H 11 V 8 Z" fill="#F59E0B" />
+      <text x="0" y="42" fill="#94A3B8" fontSize="8" fontFamily="monospace" textAnchor="middle">3. BI REPORT</text>
+    </g>
+  </svg>
+);
+
+const PowerBiDashboardIllustration = () => (
+  <svg viewBox="0 0 400 160" width="100%" height="100%" style={{ background: '#090D1A', borderRadius: '8px', display: 'block' }}>
+    <rect width="100%" height="100%" fill="#070B14" />
+    <path d="M 0 30 L 400 30" stroke="rgba(59, 130, 246, 0.06)" strokeWidth="1" />
+    
+    <text x="16" y="19" fill="#EFF6FF" fontSize="9.5" fontFamily="sans-serif" fontWeight="bold">Hospital ER Analytics Dashboard</text>
+    
+    {/* Left Column: Progress Ring (Triage Rate) */}
+    <g transform="translate(70, 95)">
+      <circle r="36" fill="none" stroke="rgba(59, 130, 246, 0.05)" strokeWidth="6" />
+      <path d="M 0 -36 A 36 36 0 1 1 -25.4 25.4" fill="none" stroke="url(#blueGrad)" strokeWidth="6" strokeLinecap="round" />
+      <text x="0" y="4" fill="#3B82F6" fontSize="10.5" fontFamily="sans-serif" fontWeight="bold" textAnchor="middle">92.4%</text>
+      <text x="0" y="52" fill="#94A3B8" fontSize="8" fontFamily="sans-serif" textAnchor="middle">Triage Efficiency</text>
+    </g>
+
+    {/* Right Column: Wait Time Trend Chart */}
+    <g transform="translate(160, 48)">
+      <rect width="224" height="96" rx="6" fill="#0C1220" stroke="rgba(59, 130, 246, 0.06)" strokeWidth="1" />
+      <text x="12" y="16" fill="#94A3B8" fontSize="7.5" fontFamily="sans-serif">WAIT TIME TREND (24H)</text>
+      
+      <line x1="20" y1="36" x2="204" y2="36" stroke="rgba(59, 130, 246, 0.02)" strokeWidth="1" />
+      <line x1="20" y1="56" x2="204" y2="56" stroke="rgba(59, 130, 246, 0.02)" strokeWidth="1" />
+      <line x1="20" y1="76" x2="204" y2="76" stroke="rgba(59, 130, 246, 0.02)" strokeWidth="1" />
+      <line x1="20" y1="82" x2="204" y2="82" stroke="rgba(59, 130, 246, 0.08)" strokeWidth="1" />
+
+      <defs>
+        <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#22D3EE" stopOpacity="0.2" stopColorOpacity="0.2" />
+          <stop offset="100%" stopColor="#22D3EE" stopOpacity="0.0" stopColorOpacity="0" />
+        </linearGradient>
+      </defs>
+      
+      <path d="M 30 82 L 30 52 L 64 68 L 98 42 L 132 30 L 166 56 L 200 82 Z" fill="url(#areaGrad)" />
+      <path d="M 30 52 L 64 68 L 98 42 L 132 30 L 166 56 L 200 82" fill="none" stroke="#22D3EE" strokeWidth="2" strokeLinecap="round" />
+      
+      <circle cx="98" cy="42" r="2" fill="#22D3EE" />
+      <circle cx="132" cy="30" r="2" fill="#22D3EE" />
+      <text x="132" y="22" fill="#22D3EE" fontSize="8" fontFamily="sans-serif" fontWeight="bold" textAnchor="middle">14.2m</text>
+    </g>
+  </svg>
+);
+
 const PROJECTS = [
+  {
+    title: "Credit Fraud Medallion Pipeline",
+    icon: <Database size={24} />,
+    desc: "End-to-end Snowflake data warehouse processing card transactions through Bronze, Silver, and Gold schemas. Integrates Streams/Tasks automation and PII dynamic masking.",
+    liveLink: "https://github.com/LeadGenData/Data-Analytics-Portfolio/tree/main/Snowflake-Medallion-Pipeline",
+    githubLink: "https://github.com/LeadGenData/Data-Analytics-Portfolio/tree/main/Snowflake-Medallion-Pipeline",
+    tags: ["Snowflake DWH", "Streams & Tasks", "Dynamic Data Masking", "SQL / DDL", "Power BI"]
+  },
+  {
+    title: "Hospital ER Analytics (Power BI)",
+    icon: <BarChart3 size={24} />,
+    desc: "An interactive Power BI dashboard analyzing emergency room wait times, patient triage flow, satisfactions scores, and hospital staffing requirements.",
+    liveLink: "https://github.com/LeadGenData/hospital-emergency-room-dashboard-Power-BI-",
+    githubLink: "https://github.com/LeadGenData/hospital-emergency-room-dashboard-Power-BI-",
+    tags: ["Power BI", "DAX", "Power Query (M)", "Healthcare BI", "Data Analysis"]
+  },
   {
     title: "Revenue Leakage Calculator",
     icon: <Cpu size={24} />,
@@ -65,6 +507,14 @@ const PROJECTS = [
     tags: ["React 19", "Vite", "Zustand State", "REST API", "Vanilla CSS"]
   },
   {
+    title: "SQL Data Warehouse Model",
+    icon: <Database size={24} />,
+    desc: "Data warehouse implementation of transaction logging. Features Star/Snowflake schemas, optimized index mapping, and custom SQL ETL scripts.",
+    liveLink: "https://github.com/LeadGenData/sql_data_warehouse_project",
+    githubLink: "https://github.com/LeadGenData/sql_data_warehouse_project",
+    tags: ["SQL Engine", "Oracle SQL", "Data Warehousing", "ETL Pipelines", "Star Schema"]
+  },
+  {
     title: "Outlook Campaign Sync Utilities",
     icon: <Terminal size={24} />,
     desc: "PowerShell and Python scripts executing local Outlook sent-folder campaign parsing, email bounce sweepers, and automated CRM record updates.",
@@ -75,58 +525,145 @@ const PROJECTS = [
 ];
 
 function App() {
-  const [activeStep, setActiveStep] = useState(1);
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [pipelineType, setPipelineType] = useState('automation');
+  const [activeStep, setActiveStep]     = useState(1);
+  const [menuOpen, setMenuOpen]         = useState(false);
+  const [formData, setFormData]         = useState({ name: '', email: '', message: '' });
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [formLoading, setFormLoading]   = useState(false);
+  const [formError, setFormError]       = useState('');
+  const availabilitySpotlight = useMouseMoveSpotlight();
+  const contactSpotlight = useMouseMoveSpotlight();
+  const node1Spotlight = useMouseMoveSpotlight();
+  const node2Spotlight = useMouseMoveSpotlight();
+  const node3Spotlight = useMouseMoveSpotlight();
+  const node4Spotlight = useMouseMoveSpotlight();
+
+  useEffect(() => {
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.08
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+        }
+      });
+    }, observerOptions);
+
+    const revealElements = document.querySelectorAll('.reveal');
+    revealElements.forEach(el => observer.observe(el));
+
+    return () => {
+      revealElements.forEach(el => observer.unobserve(el));
+    };
+  }, []);
+
+  // ✅ Saves to "Haresh Portfolio - Contact Inquiries" Google Sheet
+  // ✅ Sends notification email to hareshmkumar9@gmail.com
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwLblcovVU2lQcXGlKkWN84am2QV-qU-OyGr60HYvB-eo5_q0A6i8hLG64vKiPW-gbX/exec";
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    setFormError('');
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.name && formData.email && formData.message) {
+    const { name, email, message } = formData;
+
+    if (!name || !email || !message) {
+      setFormError('Please fill in all fields before sending.');
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setFormError('Please enter a valid email address.');
+      return;
+    }
+
+    setFormLoading(true);
+    setFormError('');
+
+    try {
+      // Apps Script requires text/plain + no-cors to avoid CORS preflight
+      await fetch(APPS_SCRIPT_URL, {
+        method:  'POST',
+        mode:    'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body:    JSON.stringify({ name, email, message, source: 'Portfolio Website' })
+      });
+      // no-cors = can't read response; assume success if no exception thrown
       setFormSubmitted(true);
-      // Simulate form submission
-      setTimeout(() => {
-        setFormData({ name: '', email: '', message: '' });
-        setFormSubmitted(false);
-      }, 5000);
+      setFormData({ name: '', email: '', message: '' });
+      setTimeout(() => setFormSubmitted(false), 6000);
+    } catch (err) {
+      setFormError('Could not send. Please email hareshmkumar9@gmail.com directly.');
+    } finally {
+      setFormLoading(false);
     }
   };
 
-  const selectedStep = ARCH_STEPS.find(s => s.id === activeStep) || ARCH_STEPS[0];
+  const stepsList = pipelineType === 'automation' ? AUTOMATION_STEPS : BI_STEPS;
+  const selectedStep = stepsList.find(s => s.id === activeStep) || stepsList[0];
 
   return (
-    <div>
-      {/* HEADER */}
+    <div className="app-container">
+      {/* Dynamic Canvas Node Particle Field */}
+      <DataNodeBackground />
+
+      {/* Floating Glow Orbs & Grid Gradients */}
+      <div className="grid-bg"></div>
+      <div className="glow-orb orb-purple"></div>
+      <div className="glow-orb orb-cyan"></div>
+      <div className="glow-orb orb-orange"></div>
+
       <header className="header">
         <div className="container nav">
-          <a href="#" className="logo">James.Dev</a>
+          <a href="#" className="logo">M. Haresh Kumar</a>
           <ul className="nav-links">
             <li><a href="#hero">About</a></li>
-            <li><a href="#architecture">Architecture</a></li>
-            <li><a href="#projects">Systems</a></li>
+            <li><a href="#story">My Story</a></li>
+            <li><a href="#architecture">Blueprints</a></li>
+            <li><a href="#projects">Portfolio</a></li>
             <li><a href="#contact">Contact</a></li>
           </ul>
+          <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle Menu">
+            {menuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
         </div>
       </header>
+
+      {/* MOBILE MENU DRAWER OVERLAY */}
+      {menuOpen && (
+        <div className="mobile-menu-overlay" onClick={() => setMenuOpen(false)}>
+          <ul className="mobile-menu-links">
+            <li><a href="#hero" onClick={() => setMenuOpen(false)}>About</a></li>
+            <li><a href="#story" onClick={() => setMenuOpen(false)}>My Story</a></li>
+            <li><a href="#architecture" onClick={() => setMenuOpen(false)}>Blueprints</a></li>
+            <li><a href="#projects" onClick={() => setMenuOpen(false)}>Portfolio</a></li>
+            <li><a href="#contact" onClick={() => setMenuOpen(false)}>Contact</a></li>
+          </ul>
+        </div>
+      )}
 
       {/* HERO SECTION */}
       <section id="hero" className="hero-section">
         <div className="container hero-layout">
-          <div>
+          <div className="reveal">
             <div className="hero-subtitle">
-              <Sparkles size={16} /> Software Architect & Automation Specialist
+              <Sparkles size={16} /> Data Analyst &amp; Systems Automation Specialist
             </div>
-            <h1 className="hero-title">Engineering High-Yield Automation Systems</h1>
+            <h1 className="hero-title">Data Analytics &amp; Systems Automation</h1>
             <p className="hero-desc">
-              Specialized in serverless architectures, robust bi-directional API pipelines, and automated outreach engines. I build custom tools that drive operational efficiency and recover lost business revenue.
+              I build interactive Power BI dashboards, clean SQL data warehouses, and serverless automation pipelines. I specialize in mapping business workflows, connecting data channels, and streamlining operational tasks.
             </p>
             <div className="cta-group">
               <a href="#projects" className="btn btn-primary">
-                View Systems <ArrowRight size={18} />
+                View Portfolios <ArrowRight size={18} />
               </a>
               <a href="#contact" className="btn btn-secondary">
                 Get In Touch
@@ -134,77 +671,183 @@ function App() {
             </div>
           </div>
 
-          <div className="glass-panel pulse-glow-orange" style={{ padding: '32px' }}>
-            <h3 style={{ marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Terminal size={20} className="textColorAccent" style={{ color: 'var(--accent-orange)' }} /> Core Stack & Tooling
-            </h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <div>
-                <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', display: 'block', marginBottom: '6px', fontFamily: 'var(--font-mono)' }}>LANGUAGES</span>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                  <span className="tag-list" style={{ display: 'inline-flex' }}><span style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', padding: '4px 8px', borderRadius: '4px', fontSize: '0.8rem' }}>JavaScript (ES6+)</span></span>
-                  <span className="tag-list" style={{ display: 'inline-flex' }}><span style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', padding: '4px 8px', borderRadius: '4px', fontSize: '0.8rem' }}>Python 3</span></span>
-                  <span className="tag-list" style={{ display: 'inline-flex' }}><span style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', padding: '4px 8px', borderRadius: '4px', fontSize: '0.8rem' }}>PowerShell Core</span></span>
-                  <span className="tag-list" style={{ display: 'inline-flex' }}><span style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', padding: '4px 8px', borderRadius: '4px', fontSize: '0.8rem' }}>SQL</span></span>
-                </div>
-              </div>
-              <div>
-                <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', display: 'block', marginBottom: '6px', fontFamily: 'var(--font-mono)' }}>FRAMEWORKS / INFRASTRUCTURE</span>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                  <span className="tag-list" style={{ display: 'inline-flex' }}><span style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', padding: '4px 8px', borderRadius: '4px', fontSize: '0.8rem' }}>React / Vite</span></span>
-                  <span className="tag-list" style={{ display: 'inline-flex' }}><span style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', padding: '4px 8px', borderRadius: '4px', fontSize: '0.8rem' }}>Cloudflare Workers</span></span>
-                  <span className="tag-list" style={{ display: 'inline-flex' }}><span style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', padding: '4px 8px', borderRadius: '4px', fontSize: '0.8rem' }}>Google Apps Script</span></span>
-                  <span className="tag-list" style={{ display: 'inline-flex' }}><span style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', padding: '4px 8px', borderRadius: '4px', fontSize: '0.8rem' }}>Docker Containers</span></span>
-                </div>
-              </div>
-              <div>
-                <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', display: 'block', marginBottom: '6px', fontFamily: 'var(--font-mono)' }}>APIS & INTEGRATIONS</span>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                  <span className="tag-list" style={{ display: 'inline-flex' }}><span style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', padding: '4px 8px', borderRadius: '4px', fontSize: '0.8rem' }}>REST APIs</span></span>
-                  <span className="tag-list" style={{ display: 'inline-flex' }}><span style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', padding: '4px 8px', borderRadius: '4px', fontSize: '0.8rem' }}>Google Workspace</span></span>
-                  <span className="tag-list" style={{ display: 'inline-flex' }}><span style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', padding: '4px 8px', borderRadius: '4px', fontSize: '0.8rem' }}>Stripe API</span></span>
-                </div>
-              </div>
-            </div>
+          <div className="reveal reveal-delay-2">
+            <InteractiveTerminal />
           </div>
         </div>
       </section>
 
-      {/* SYSTEM ARCHITECTURE INTERACTIVE CANVAS */}
+
+      {/* DUAL INTERACTIVE BLUEPRINT SECTION */}
+      {/* MY STORY SECTION */}
+      <section id="story" style={{ background: 'var(--bg-primary)' }}>
+        <div className="container">
+          <div style={{ textAlign: 'center', marginBottom: '64px' }} className="reveal">
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: 'var(--accent-gold)', fontSize: '0.8rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '16px', padding: '5px 14px', background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.2)', borderRadius: '100px', fontFamily: 'var(--font-mono)' }}>
+              ◆ Career Journey
+            </div>
+            <h2 className="section-title">From Data Operations to Data Engineering</h2>
+            <p className="section-subtitle" style={{ margin: '0 auto' }}>
+              I didn't start in a classroom. I started in the real world — managing data at scale, leading teams, and delivering results directly to senior leadership.
+            </p>
+          </div>
+
+          {/* Stats Row */}
+          <div className="stats-row stats-row-3 reveal reveal-delay-1" style={{ marginBottom: '72px' }}>
+            <div className="stat-card">
+              <div className="stat-value">14+</div>
+              <div className="stat-label">Years of Experience</div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-value">15</div>
+              <div className="stat-label">Team Members Led</div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-value">10M+</div>
+              <div className="stat-label">Records Managed</div>
+            </div>
+          </div>
+
+          {/* Timeline */}
+          <div className="story-layout">
+
+            {/* Left — Timeline */}
+            <div className="story-timeline">
+              <div className="story-node reveal">
+                <div className="story-node-dot" style={{ background: 'rgba(59,130,246,0.12)', border: '1px solid rgba(59,130,246,0.3)' }}>⚙️</div>
+                <div className="story-node-content">
+                  <div className="story-node-label" style={{ color: 'var(--accent-primary)' }}>Chapter 1 — The Foundation</div>
+                  <div className="story-node-title">Data Operations at Scale</div>
+                  <div className="story-node-desc">
+                    Led a 15-person data operations team responsible for sourcing, cleaning, validating, and delivering large-scale B2B contact datasets. Reported directly to senior directors and managed the quality standards that the entire business delivery pipeline depended on.
+                  </div>
+                </div>
+              </div>
+
+              <div className="story-node reveal reveal-delay-1">
+                <div className="story-node-dot" style={{ background: 'rgba(99,102,241,0.12)', border: '1px solid rgba(99,102,241,0.3)' }}>🔍</div>
+                <div className="story-node-content">
+                  <div className="story-node-label" style={{ color: 'var(--accent-secondary)' }}>Chapter 2 — The Realisation</div>
+                  <div className="story-node-title">Recognising the Limit</div>
+                  <div className="story-node-desc">
+                    Processes that should run in minutes took hours. Quality checks that should be automated required three people. Reporting that should be real-time was always delayed. I lived the problem that modern data infrastructure solves — from the inside.
+                  </div>
+                </div>
+              </div>
+
+              <div className="story-node reveal reveal-delay-2">
+                <div className="story-node-dot" style={{ background: 'rgba(245,158,11,0.12)', border: '1px solid rgba(245,158,11,0.3)' }}>🚀</div>
+                <div className="story-node-content">
+                  <div className="story-node-label" style={{ color: 'var(--accent-gold)' }}>Chapter 3 — The Rebuild</div>
+                  <div className="story-node-title">Modern Stack, Real Problems</div>
+                  <div className="story-node-desc">
+                    I rebuilt my technical stack from the ground up — Snowflake for cloud warehousing, SQL for modeling, Power BI for executive dashboards, and Apps Script + Cloudflare for serverless automation. Not from a classroom. From problems I lived every day. The projects in this portfolio are the solutions I wish I had years ago.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right — Insight Panel */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', position: 'sticky', top: '96px' }} className="reveal reveal-delay-1">
+              <div className="glass-panel" style={{ borderColor: 'rgba(59,130,246,0.2)' }}>
+                <div style={{ fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--accent-primary)', marginBottom: '16px', fontFamily: 'var(--font-mono)' }}>
+                  ▸ My Edge
+                </div>
+                <p style={{ color: 'var(--text-sub)', fontSize: '1rem', lineHeight: '1.8', fontStyle: 'italic' }}>
+                  "Most analysts know the tools. I know the <strong style={{ color: 'var(--text-main)' }}>operational reality</strong> behind the data — the broken pipelines, the manual workarounds, the business cost of slow reporting. That's the perspective I bring to every system I build."
+                </p>
+              </div>
+
+              <div className="glass-panel" style={{ borderColor: 'rgba(245,158,11,0.15)' }}>
+                <div style={{ fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--accent-gold)', marginBottom: '16px', fontFamily: 'var(--font-mono)' }}>
+                  ▸ Now Targeting
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  {['Data Operations Analyst', 'Business Intelligence Analyst', 'Reporting & Analytics Analyst', 'Data Quality Analyst'].map((role, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 14px', background: 'rgba(245,158,11,0.05)', borderRadius: '8px', border: '1px solid rgba(245,158,11,0.1)' }}>
+                      <span style={{ color: 'var(--accent-gold)', fontSize: '0.75rem' }}>→</span>
+                      <span style={{ color: 'var(--text-sub)', fontSize: '0.9rem', fontWeight: '500' }}>{role}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ARCHITECTURE SECTION */}
       <section id="architecture" style={{ background: 'var(--bg-secondary)', borderTop: '1px solid var(--border-color)' }}>
         <div className="container">
-          <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-            <h2 className="section-title">Interactive System Blueprint</h2>
-            <p className="section-subtitle" style={{ margin: '0 auto' }}>
-              Click on the pipeline stages below to visualize the serverless, bi-directional architecture implemented to handle lead intake, database sync, and automation.
+          <div style={{ textAlign: 'center', marginBottom: '36px' }}>
+            <h2 className="section-title">Interactive System Blueprints</h2>
+            <p className="section-subtitle" style={{ margin: '0 auto 24px' }}>
+              Toggle between the two core architectures I design: serverless systems automation or cloud data engineering pipelines.
             </p>
+
+            {/* Toggle Buttons */}
+            <div style={{ display: 'inline-flex', gap: '12px', background: 'rgba(8, 9, 12, 0.6)', padding: '6px', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+              <button
+                onClick={() => { setPipelineType('automation'); setActiveStep(1); }}
+                style={{
+                  background: pipelineType === 'automation' ? 'var(--accent-orange)' : 'transparent',
+                  color: pipelineType === 'automation' ? '#ffffff' : 'var(--text-muted)',
+                  border: 'none',
+                  padding: '8px 16px',
+                  borderRadius: '6px',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  fontFamily: 'var(--font-display)',
+                  transition: 'var(--transition-smooth)'
+                }}
+              >
+                Systems Automation
+              </button>
+              <button
+                onClick={() => { setPipelineType('bi'); setActiveStep(1); }}
+                style={{
+                  background: pipelineType === 'bi' ? 'var(--accent-emerald)' : 'transparent',
+                  color: pipelineType === 'bi' ? '#ffffff' : 'var(--text-muted)',
+                  border: 'none',
+                  padding: '8px 16px',
+                  borderRadius: '6px',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  fontFamily: 'var(--font-display)',
+                  transition: 'var(--transition-smooth)'
+                }}
+              >
+                Cloud Data Engineering (Snowflake)
+              </button>
+            </div>
           </div>
 
           <div className="arch-grid">
             {/* Steps Controller */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              {ARCH_STEPS.map((step) => (
-                <div 
-                  key={step.id} 
-                  className="step-card" 
+              {stepsList.map((step) => (
+                <div
+                  key={step.id}
+                  className="step-card"
                   onClick={() => setActiveStep(step.id)}
-                  style={{ 
+                  style={{
                     cursor: 'pointer',
-                    borderColor: activeStep === step.id ? 'var(--accent-orange)' : 'var(--border-color)',
+                    borderColor: activeStep === step.id ? (pipelineType === 'automation' ? 'var(--accent-orange)' : 'var(--accent-emerald)') : 'var(--border-color)',
                     background: activeStep === step.id ? 'var(--bg-tertiary)' : 'rgba(23, 27, 38, 0.4)',
-                    boxShadow: activeStep === step.id ? 'var(--glow-shadow)' : 'none'
+                    boxShadow: activeStep === step.id ? (pipelineType === 'automation' ? 'var(--glow-shadow)' : '0 0 20px var(--accent-emerald-glow)') : 'none'
                   }}
                 >
                   <div className="step-num" style={{
-                    background: activeStep === step.id ? 'var(--accent-orange)' : 'var(--accent-orange-glow)',
-                    color: activeStep === step.id ? '#ffffff' : 'var(--accent-orange)'
+                    background: activeStep === step.id ? (pipelineType === 'automation' ? 'var(--accent-orange)' : 'var(--accent-emerald)') : 'var(--border-color)',
+                    color: '#ffffff'
                   }}>{step.id}</div>
                   <div className="step-info">
                     <h4>{step.title}</h4>
-                    <span style={{ fontSize: '0.75rem', color: 'var(--accent-emerald)', fontFamily: 'var(--font-mono)', display: 'block', marginBottom: '4px' }}>
+                    <span style={{ fontSize: '0.75rem', color: pipelineType === 'automation' ? 'var(--accent-emerald)' : 'var(--accent-orange)', fontFamily: 'var(--font-mono)', display: 'block', marginBottom: '4px' }}>
                       {step.component}
                     </span>
-                    <p>{step.desc}</p>
+                    <p style={{ fontSize: '0.9rem' }}>{step.desc}</p>
                   </div>
                 </div>
               ))}
@@ -213,77 +856,117 @@ function App() {
             {/* Visual Blueprint canvas */}
             <div className="diagram-card" style={{ height: '100%', minHeight: '380px', justifyContent: 'center' }}>
               <h4 style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', marginBottom: '16px', textTransform: 'uppercase' }}>
-                Pipeline Map
+                Pipeline Map ({pipelineType === 'automation' ? 'Automation' : 'Snowflake Medallion'})
               </h4>
-              
+
               <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', alignItems: 'center', position: 'relative' }}>
-                
-                {/* NODE 1: Browser */}
-                <div className="glass-panel" style={{ 
-                  width: '260px', 
-                  padding: '16px', 
-                  textAlign: 'center', 
-                  borderWidth: '2px',
-                  borderColor: selectedStep.nodeHighlight === 'client' ? 'var(--accent-orange)' : 'var(--border-color)',
-                  boxShadow: selectedStep.nodeHighlight === 'client' ? 'var(--glow-shadow)' : 'none'
-                }}>
-                  <Globe size={18} style={{ color: 'var(--accent-emerald)', marginBottom: '8px' }} />
-                  <h4 style={{ fontSize: '0.95rem' }}>Client Browser</h4>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Intake Form & Metrics</span>
-                </div>
 
-                {/* Arrow */}
-                <ArrowRight size={20} style={{ transform: 'rotate(90deg)', color: 'var(--border-color)' }} />
+                {/* NODE 1 */}
+                 <div 
+                   ref={node1Spotlight.ref}
+                   onMouseMove={node1Spotlight.onMouseMove}
+                   className={`spotlight-card ${selectedStep.nodeHighlight === 'node1' ? 'blueprint-pulse' : ''}`}
+                   style={{
+                     width: '260px',
+                     padding: '16px',
+                     textAlign: 'center',
+                     borderWidth: '2px',
+                     borderColor: selectedStep.nodeHighlight === 'node1' ? (pipelineType === 'automation' ? 'var(--accent-orange)' : 'var(--accent-emerald)') : 'var(--border-color)',
+                     boxShadow: selectedStep.nodeHighlight === 'node1' ? (pipelineType === 'automation' ? 'var(--glow-shadow)' : '0 0 20px var(--accent-emerald-glow)') : 'none',
+                     transition: 'all 0.3s ease'
+                   }}
+                 >
+                   {pipelineType === 'automation' ? <Globe size={18} style={{ color: 'var(--accent-emerald)', marginBottom: '8px' }} /> : <Settings size={18} style={{ color: 'var(--accent-orange)', marginBottom: '8px' }} />}
+                   <h4 style={{ fontSize: '0.95rem' }}>{pipelineType === 'automation' ? 'Client Browser' : 'Bronze Landing Staging'}</h4>
+                   <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{pipelineType === 'automation' ? 'Intake Form & Metrics' : 'JSON, CSV, Raw stages'}</span>
+                 </div>
 
-                {/* NODE 2: Gateway */}
-                <div className="glass-panel" style={{ 
-                  width: '260px', 
-                  padding: '16px', 
-                  textAlign: 'center', 
-                  borderWidth: '2px',
-                  borderColor: selectedStep.nodeHighlight === 'proxy' ? 'var(--accent-orange)' : 'var(--border-color)',
-                  boxShadow: selectedStep.nodeHighlight === 'proxy' ? 'var(--glow-shadow)' : 'none'
-                }}>
-                  <Lock size={18} style={{ color: 'var(--accent-orange)', marginBottom: '8px' }} />
-                  <h4 style={{ fontSize: '0.95rem' }}>API Proxy (Cloudflare)</h4>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>CORS & Endpoint Masking</span>
-                </div>
+                 {/* Arrow */}
+                 <ArrowRight 
+                   size={20} 
+                   className={selectedStep.nodeHighlight !== 'node1' ? 'blueprint-pulse' : ''} 
+                   style={{ 
+                     transform: 'rotate(90deg)', 
+                     color: selectedStep.nodeHighlight !== 'node1' ? (pipelineType === 'automation' ? 'var(--accent-orange)' : 'var(--accent-emerald)') : 'var(--border-color)',
+                     transition: 'all 0.3s ease'
+                   }} 
+                 />
 
-                {/* Arrow */}
-                <ArrowRight size={20} style={{ transform: 'rotate(90deg)', color: 'var(--border-color)' }} />
+                 {/* NODE 2 */}
+                 <div 
+                   ref={node2Spotlight.ref}
+                   onMouseMove={node2Spotlight.onMouseMove}
+                   className={`spotlight-card ${selectedStep.nodeHighlight === 'node2' ? 'blueprint-pulse' : ''}`}
+                   style={{
+                     width: '260px',
+                     padding: '16px',
+                     textAlign: 'center',
+                     borderWidth: '2px',
+                     borderColor: selectedStep.nodeHighlight === 'node2' ? (pipelineType === 'automation' ? 'var(--accent-orange)' : 'var(--accent-emerald)') : 'var(--border-color)',
+                     boxShadow: selectedStep.nodeHighlight === 'node2' ? (pipelineType === 'automation' ? 'var(--glow-shadow)' : '0 0 20px var(--accent-emerald-glow)') : 'none',
+                     transition: 'all 0.3s ease'
+                   }}
+                 >
+                   {pipelineType === 'automation' ? <Lock size={18} style={{ color: 'var(--accent-orange)', marginBottom: '8px' }} /> : <Database size={18} style={{ color: 'var(--accent-emerald)', marginBottom: '8px' }} />}
+                   <h4 style={{ fontSize: '0.95rem' }}>{pipelineType === 'automation' ? 'API Proxy (Cloudflare)' : 'Silver Cleansing & CDC'}</h4>
+                   <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{pipelineType === 'automation' ? 'CORS & Endpoint Masking' : 'De-duplication & Streams'}</span>
+                 </div>
 
-                {/* DOUBLE HORIZONTAL NODES */}
-                <div style={{ display: 'flex', gap: '24px', justifyContent: 'center', width: '100%' }}>
-                  
-                  {/* Database Node */}
-                  <div className="glass-panel" style={{ 
-                    width: '180px', 
-                    padding: '16px', 
-                    textAlign: 'center', 
-                    borderWidth: '2px',
-                    borderColor: selectedStep.nodeHighlight === 'database' ? 'var(--accent-orange)' : 'var(--border-color)',
-                    boxShadow: selectedStep.nodeHighlight === 'database' ? 'var(--glow-shadow)' : 'none'
-                  }}>
-                    <Database size={18} style={{ color: 'var(--accent-orange)', marginBottom: '8px' }} />
-                    <h4 style={{ fontSize: '0.9rem' }}>Sheets CRM</h4>
-                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Lead & Checklist DB</span>
-                  </div>
+                 {/* Arrow */}
+                 <ArrowRight 
+                   size={20} 
+                   className={(selectedStep.nodeHighlight === 'node3' || selectedStep.nodeHighlight === 'node4') ? 'blueprint-pulse' : ''} 
+                   style={{ 
+                     transform: 'rotate(90deg)', 
+                     color: (selectedStep.nodeHighlight === 'node3' || selectedStep.nodeHighlight === 'node4') ? (pipelineType === 'automation' ? 'var(--accent-orange)' : 'var(--accent-emerald)') : 'var(--border-color)',
+                     transition: 'all 0.3s ease'
+                   }} 
+                 />
 
-                  {/* Mail node */}
-                  <div className="glass-panel" style={{ 
-                    width: '180px', 
-                    padding: '16px', 
-                    textAlign: 'center', 
-                    borderWidth: '2px',
-                    borderColor: selectedStep.nodeHighlight === 'outreach' ? 'var(--accent-orange)' : 'var(--border-color)',
-                    boxShadow: selectedStep.nodeHighlight === 'outreach' ? 'var(--glow-shadow)' : 'none'
-                  }}>
-                    <Mail size={18} style={{ color: 'var(--accent-emerald)', marginBottom: '8px' }} />
-                    <h4 style={{ fontSize: '0.9rem' }}>Gmail Engines</h4>
-                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>PDF & Drip Campaign</span>
-                  </div>
+                 {/* DOUBLE HORIZONTAL NODES */}
+                 <div style={{ display: 'flex', gap: '24px', justifyContent: 'center', width: '100%' }}>
 
-                </div>
+                   {/* NODE 3 */}
+                   <div 
+                     ref={node3Spotlight.ref}
+                     onMouseMove={node3Spotlight.onMouseMove}
+                     className={`spotlight-card ${selectedStep.nodeHighlight === 'node3' ? 'blueprint-pulse' : ''}`}
+                     style={{
+                       width: '180px',
+                       padding: '16px',
+                       textAlign: 'center',
+                       borderWidth: '2px',
+                       borderColor: selectedStep.nodeHighlight === 'node3' ? (pipelineType === 'automation' ? 'var(--accent-orange)' : 'var(--accent-emerald)') : 'var(--border-color)',
+                       boxShadow: selectedStep.nodeHighlight === 'node3' ? (pipelineType === 'automation' ? 'var(--glow-shadow)' : '0 0 20px var(--accent-emerald-glow)') : 'none',
+                       transition: 'all 0.3s ease'
+                     }}
+                   >
+                     {pipelineType === 'automation' ? <Database size={18} style={{ color: 'var(--accent-orange)', marginBottom: '8px' }} /> : <Layers size={18} style={{ color: 'var(--accent-orange)', marginBottom: '8px' }} />}
+                     <h4 style={{ fontSize: '0.9rem' }}>{pipelineType === 'automation' ? 'Sheets CRM' : 'Gold Star Schema'}</h4>
+                     <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{pipelineType === 'automation' ? 'Lead & Checklist DB' : 'PII Masking & Dimensions'}</span>
+                   </div>
+
+                   {/* NODE 4 */}
+                   <div 
+                     ref={node4Spotlight.ref}
+                     onMouseMove={node4Spotlight.onMouseMove}
+                     className={`spotlight-card ${selectedStep.nodeHighlight === 'node4' ? 'blueprint-pulse' : ''}`}
+                     style={{
+                       width: '180px',
+                       padding: '16px',
+                       textAlign: 'center',
+                       borderWidth: '2px',
+                       borderColor: selectedStep.nodeHighlight === 'node4' ? (pipelineType === 'automation' ? 'var(--accent-orange)' : 'var(--accent-emerald)') : 'var(--border-color)',
+                       boxShadow: selectedStep.nodeHighlight === 'node4' ? (pipelineType === 'automation' ? 'var(--glow-shadow)' : '0 0 20px var(--accent-emerald-glow)') : 'none',
+                       transition: 'all 0.3s ease'
+                     }}
+                   >
+                     {pipelineType === 'automation' ? <Mail size={18} style={{ color: 'var(--accent-emerald)', marginBottom: '8px' }} /> : <BarChart3 size={18} style={{ color: 'var(--accent-emerald)', marginBottom: '8px' }} />}
+                     <h4 style={{ fontSize: '0.9rem' }}>{pipelineType === 'automation' ? 'Gmail Engines' : 'Executive BI Report'}</h4>
+                     <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{pipelineType === 'automation' ? 'PDF & Drip Campaign' : 'Power BI Risk Heatmaps'}</span>
+                   </div>
+
+                 </div>
 
               </div>
             </div>
@@ -291,68 +974,67 @@ function App() {
         </div>
       </section>
 
-      {/* SYSTEMS & PROJECTS SECTION */}
+      {/* PORTFOLIOS & PROJECTS SECTION */}
       <section id="projects">
         <div className="container">
-          <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-            <h2 className="section-title">Engineered Web Systems</h2>
+          <div style={{ textAlign: 'center', marginBottom: '48px' }} className="reveal">
+            <h2 className="section-title">Analytical &amp; Automation Portfolios</h2>
             <p className="section-subtitle" style={{ margin: '0 auto' }}>
-              Real-world systems built to solve operational bottlenecks, manage data pipelines, and automate marketing processes.
+              Real-world systems and Cloud Data Warehouses engineered to analyze metrics and automate operations.
             </p>
           </div>
 
           <div className="projects-grid">
             {PROJECTS.map((proj, idx) => (
-              <div key={idx} className="glass-panel proj-card">
-                <div className="proj-header">
-                  <div className="proj-icon-wrapper">
-                    {proj.icon}
-                  </div>
-                  <div className="proj-links">
-                    {proj.githubLink && (
-                      <a href={proj.githubLink} target="_blank" rel="noreferrer" title="Source Code">
-                        <Github size={20} />
-                      </a>
-                    )}
-                    {proj.liveLink && (
-                      <a href={proj.liveLink} target="_blank" rel="noreferrer" title="Live Site">
-                        <ExternalLink size={20} />
-                      </a>
-                    )}
-                  </div>
-                </div>
-                <h3 className="proj-title">{proj.title}</h3>
-                <p className="proj-desc">{proj.desc}</p>
-                <ul className="tag-list">
-                  {proj.tags.map((tag, tIdx) => (
-                    <li key={tIdx}>{tag}</li>
-                  ))}
-                </ul>
-              </div>
+              <ProjectCard proj={proj} key={idx} />
             ))}
+
+            {/* Special Bento Card: Availability / Connect */}
+            <div 
+              ref={availabilitySpotlight.ref}
+              onMouseMove={availabilitySpotlight.onMouseMove}
+              className="spotlight-card reveal reveal-delay-2" 
+              style={{ borderColor: 'rgba(245, 158, 11, 0.25)', background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.03), rgba(7, 11, 20, 0.85))' }}
+            >
+              <div className="proj-header mb-4">
+                <div className="proj-icon-wrapper" style={{ background: 'rgba(245, 158, 11, 0.08)', color: 'var(--accent-gold)', borderColor: 'rgba(245, 158, 11, 0.2)' }}>
+                  <Sparkles size={22} />
+                </div>
+              </div>
+              <h3 className="proj-title mb-2" style={{ color: 'var(--accent-gold)' }}>Open for Opportunities</h3>
+              <p className="proj-desc mb-4" style={{ color: 'var(--text-sub)' }}>
+                I am actively seeking roles in Data Operations, Business Intelligence, Systems Analytics, and Data Quality. Available for full-time direct hire or contract work.
+              </p>
+              <div style={{ marginTop: 'auto', paddingTop: '10px' }}>
+                <a href="#contact" className="btn btn-secondary" style={{ width: '100%', justifyContent: 'center', borderColor: 'rgba(245, 158, 11, 0.25)', color: 'var(--accent-gold)', background: 'rgba(245, 158, 11, 0.04)' }}>
+                  Start a Conversation →
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
+
       {/* CONTACT PORTAL */}
       <section id="contact" style={{ background: 'var(--bg-secondary)', borderBottom: 'none' }}>
         <div className="container">
-          <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '48px' }} className="reveal">
             <h2 className="section-title">Secure Contact Portal</h2>
             <p className="section-subtitle" style={{ margin: '0 auto' }}>
-              Interested in custom automations or systems development? Send an inquiry directly through this secure gateway.
+              Interested in Snowflake data warehousing, SQL modeling, or Power BI dashboard designs? Send an inquiry directly.
             </p>
           </div>
 
           <div className="contact-grid">
-            <div className="contact-info">
+            <div className="contact-info reveal">
               <div className="contact-card">
                 <div className="contact-icon-wrapper">
                   <Mail size={22} />
                 </div>
                 <div className="contact-details">
                   <h4>Email Support</h4>
-                  <p>jamescluster35@gmail.com</p>
+                  <p>hareshmkumar9@gmail.com</p>
                 </div>
               </div>
 
@@ -371,13 +1053,17 @@ function App() {
                   <Sparkles size={22} />
                 </div>
                 <div className="contact-details">
-                  <h4>Specialization</h4>
-                  <p>APIs, Google Ecosystem, Webapps</p>
+                  <h4>Focus Areas</h4>
+                  <p>Snowflake, Power BI, SQL Modeling</p>
                 </div>
               </div>
             </div>
 
-            <div className="glass-panel">
+            <div 
+              ref={contactSpotlight.ref}
+              onMouseMove={contactSpotlight.onMouseMove}
+              className="spotlight-card reveal reveal-delay-1"
+            >
               {formSubmitted ? (
                 <div style={{ textAlign: 'center', padding: '40px 0' }}>
                   <div className="contact-icon-wrapper" style={{ margin: '0 auto 20px', background: 'var(--accent-emerald-glow)', color: 'var(--accent-emerald)' }}>
@@ -392,37 +1078,36 @@ function App() {
                 <form className="contact-form" onSubmit={handleSubmit}>
                   <div className="form-group">
                     <label htmlFor="name">Full Name</label>
-                    <input 
-                      type="text" 
-                      id="name" 
-                      name="name" 
-                      value={formData.name} 
-                      onChange={handleInputChange} 
-                      placeholder="e.g. Owner" 
-                      required 
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      onChange={handleInputChange}
+                      placeholder="e.g. Hiring Manager"
+                      disabled={formLoading}
                     />
                   </div>
                   <div className="form-group">
                     <label htmlFor="email">Email Address</label>
-                    <input 
-                      type="email" 
-                      id="email" 
-                      name="email" 
-                      value={formData.email} 
-                      onChange={handleInputChange} 
-                      placeholder="e.g. business@example.com" 
-                      required 
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      placeholder="e.g. company@example.com"
+                      required
                     />
                   </div>
                   <div className="form-group">
                     <label htmlFor="message">Project Scope / Details</label>
-                    <textarea 
-                      id="message" 
-                      name="message" 
-                      value={formData.message} 
-                      onChange={handleInputChange} 
-                      rows="4" 
-                      placeholder="Outline your automation needs, systems to build, or general inquiries..." 
+                    <textarea
+                      id="message"
+                      name="message"
+                      value={formData.message}
+                      onChange={handleInputChange}
+                      rows="4"
+                      placeholder="Outline your database modeling needs, reporting metrics, or general inquiries..."
                       required
                     ></textarea>
                   </div>
@@ -440,7 +1125,7 @@ function App() {
       <footer className="footer">
         <div className="container">
           <p className="footer-text">
-            &copy; {new Date().getFullYear()} James.Dev · Engineered with <span>React &amp; Vite</span>
+            &copy; {new Date().getFullYear()} M. Haresh Kumar · Engineered with <span>React &amp; Vite</span>
           </p>
         </div>
       </footer>
