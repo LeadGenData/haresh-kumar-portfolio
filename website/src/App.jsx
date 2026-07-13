@@ -428,107 +428,242 @@ const BI_STEPS = [
   }
 ];
 
-// Custom Inline SVG illustrations to replace AI-generated screenshot placeholders
-const SnowflakePipelineIllustration = () => (
-  <svg viewBox="0 0 400 160" width="100%" height="100%" style={{ background: '#090D1A', borderRadius: '8px', display: 'block' }}>
-    <rect width="100%" height="100%" fill="#070B14" />
-    <path d="M 0 40 L 400 40 M 0 80 L 400 80 M 0 120 L 400 120 M 100 0 L 100 180 M 200 0 L 200 180 M 300 0 L 300 180" stroke="rgba(59, 130, 246, 0.02)" strokeWidth="1" />
-    
+// Interactive SVG blueprint showing Systems Automation flow
+const AutomationBlueprintDiagram = ({ activeStep }) => (
+  <svg viewBox="0 0 500 320" width="100%" height="100%" style={{ background: 'transparent', display: 'block' }}>
     <defs>
-      <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#3B82F6" stopOpacity="0.85" />
-        <stop offset="100%" stopColor="#1D4ED8" stopOpacity="0.85" />
-      </linearGradient>
-      <linearGradient id="purpleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#6366F1" stopOpacity="0.85" />
-        <stop offset="100%" stopColor="#4F46E5" stopOpacity="0.85" />
-      </linearGradient>
-      <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#F59E0B" stopOpacity="0.85" />
-        <stop offset="100%" stopColor="#D97706" stopOpacity="0.85" />
+      <filter id="glow-cyan" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="6" result="blur" />
+        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+      </filter>
+      <linearGradient id="grad-cyan" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#22d3ee" />
+        <stop offset="100%" stopColor="#0891b2" />
       </linearGradient>
     </defs>
 
-    {/* Connection Flow Lines */}
-    <path d="M 80 80 H 320" stroke="rgba(59, 130, 246, 0.12)" strokeWidth="4" />
-    <path d="M 80 80 H 320" stroke="url(#blueGrad)" strokeWidth="2" strokeDasharray="8 6" />
-
-    {/* Node 1: Ingestion */}
-    <g transform="translate(55, 80)">
-      <circle r="26" fill="#0C1220" stroke="rgba(59, 130, 246, 0.25)" strokeWidth="1" />
-      <circle r="18" fill="url(#blueGrad)" opacity="0.12" />
-      <path d="M -7 -7 H 7 V 7 H -7 Z" fill="none" stroke="#3B82F6" strokeWidth="1.5" />
-      <path d="M -4 -3 H 4 M -4 0 H 4 M -4 3 H 4" stroke="#3B82F6" strokeWidth="1" />
-      <text x="0" y="42" fill="#94A3B8" fontSize="8" fontFamily="monospace" textAnchor="middle">1. RAW STAGE</text>
+    {/* Background grids */}
+    <g opacity="0.03">
+      <path d="M0 40 H500 M0 80 H500 M0 120 H500 M0 160 H500 M0 200 H500 M0 240 H500 M0 280 H500" stroke="#3b82f6" strokeWidth="1" />
+      <path d="M50 0 V320 M100 0 V320 M150 0 V320 M200 0 V320 M250 0 V320 M300 0 V320 M350 0 V320 M400 0 V320 M450 0 V320" stroke="#3b82f6" strokeWidth="1" />
     </g>
 
-    {/* Node 2: Snowflake DWH */}
-    <g transform="translate(200, 80)">
-      <circle r="32" fill="#0C1220" stroke="rgba(99, 102, 241, 0.35)" strokeWidth="1.5" />
-      <circle r="24" fill="url(#purpleGrad)" opacity="0.12" />
-      
-      {/* Database Cylinder Icon */}
-      <g transform="translate(-12, -14)">
-        <path d="M 0 4 C 0 1, 24 1, 24 4 C 24 7, 0 7, 0 4 Z" fill="#6366F1" opacity="0.8" />
-        <path d="M 0 4 V 11 C 0 14, 24 14, 24 11 V 4" fill="none" stroke="#6366F1" strokeWidth="1.5" />
-        <path d="M 0 11 V 18 C 0 21, 24 21, 24 18 V 11" fill="none" stroke="#6366F1" strokeWidth="1.5" />
-        <path d="M 0 18 V 25 C 0 28, 24 28, 24 25 V 18" fill="none" stroke="#6366F1" strokeWidth="1.5" />
+    {/* Connection Flow Lines with active dash offsets */}
+    <path 
+      d="M 90 160 H 210" 
+      stroke={activeStep > 1 ? "#22d3ee" : "rgba(255,255,255,0.08)"} 
+      strokeWidth="2.5" 
+      fill="none"
+      className={activeStep > 1 ? "svg-flow-animation" : ""}
+    />
+
+    {/* Split paths */}
+    <path 
+      d="M 290 160 C 330 160, 330 90, 410 90" 
+      stroke={activeStep > 2 ? "#22d3ee" : "rgba(255,255,255,0.08)"} 
+      strokeWidth="2" 
+      fill="none"
+      className={activeStep > 2 ? "svg-flow-animation" : ""}
+    />
+    <path 
+      d="M 290 160 C 330 160, 330 230, 410 230" 
+      stroke={activeStep > 2 ? "#22d3ee" : "rgba(255,255,255,0.08)"} 
+      strokeWidth="2" 
+      fill="none"
+      className={activeStep > 2 ? "svg-flow-animation" : ""}
+    />
+
+    {/* Node 1: Browser */}
+    <g transform="translate(90, 160)">
+      <circle r="40" fill="#040810" stroke={activeStep === 1 ? "#22d3ee" : "rgba(255,255,255,0.08)"} strokeWidth={activeStep === 1 ? "2.5" : "1"} filter={activeStep === 1 ? "url(#glow-cyan)" : "none"} style={{ transition: 'all 0.3s' }} />
+      <circle r="32" fill="#080f1e" />
+      <rect x="-12" y="-10" width="24" height="17" rx="2" fill="none" stroke="#22d3ee" strokeWidth="1.5" />
+      <line x1="-12" y1="-4" x2="12" y2="-4" stroke="#22d3ee" strokeWidth="1" />
+      <circle cx="-8" cy="-7" r="0.8" fill="#ef4444" />
+      <circle cx="-5" cy="-7" r="0.8" fill="#eab308" />
+      <circle cx="-2" cy="-7" r="0.8" fill="#22c55e" />
+      <text x="0" y="3" fill="#cbd5e1" fontSize="6.5" fontFamily="sans-serif" textAnchor="middle">Metrics Intake</text>
+      <text x="0" y="54" fill={activeStep === 1 ? "#22d3ee" : "#64748b"} fontSize="8" fontFamily="monospace" fontWeight="600" textAnchor="middle">1. BROWSER FORM</text>
+    </g>
+
+    {/* Node 2: Workers */}
+    <g transform="translate(250, 160)">
+      <circle r="40" fill="#040810" stroke={activeStep === 2 ? "#22d3ee" : "rgba(255,255,255,0.08)"} strokeWidth={activeStep === 2 ? "2.5" : "1"} filter={activeStep === 2 ? "url(#glow-cyan)" : "none"} style={{ transition: 'all 0.3s' }} />
+      <circle r="32" fill="#080f1e" />
+      <g transform="translate(0, -3)" className={activeStep === 2 ? "svg-spin-animation" : ""}>
+        <circle cx="0" cy="0" r="9" fill="none" stroke="#22d3ee" strokeWidth="1.5" strokeDasharray="3 2" />
+        <circle cx="0" cy="0" r="4" fill="#22d3ee" />
       </g>
-      
-      <text x="0" y="48" fill="#EFF6FF" fontSize="8.5" fontFamily="monospace" fontWeight="bold" textAnchor="middle">2. SNOWFLAKE</text>
+      <text x="0" y="14" fill="#cbd5e1" fontSize="6.5" fontFamily="sans-serif" textAnchor="middle">CF API Workers</text>
+      <text x="0" y="54" fill={activeStep === 2 ? "#22d3ee" : "#64748b"} fontSize="8" fontFamily="monospace" fontWeight="600" textAnchor="middle">2. PROXY GATEWAY</text>
     </g>
 
-    {/* Node 3: Analytics / BI */}
-    <g transform="translate(345, 80)">
-      <circle r="26" fill="#0C1220" stroke="rgba(245, 158, 11, 0.25)" strokeWidth="1" />
-      <circle r="18" fill="url(#goldGrad)" opacity="0.12" />
-      <path d="M -7 8 V -7 H -3 V 8 Z M 0 8 V -2 H 4 V 8 Z M 7 8 V 3 H 11 V 8 Z" fill="#F59E0B" />
-      <text x="0" y="42" fill="#94A3B8" fontSize="8" fontFamily="monospace" textAnchor="middle">3. BI REPORT</text>
+    {/* Node 3: Sheets CRM */}
+    <g transform="translate(410, 90)">
+      <circle r="34" fill="#040810" stroke={activeStep === 3 ? "#22d3ee" : "rgba(255,255,255,0.08)"} strokeWidth={activeStep === 3 ? "2" : "1"} filter={activeStep === 3 ? "url(#glow-cyan)" : "none"} style={{ transition: 'all 0.3s' }} />
+      <circle r="27" fill="#080f1e" />
+      <rect x="-9" y="-8" width="18" height="15" fill="none" stroke="#22d3ee" strokeWidth="1.5" />
+      <line x1="-9" y1="-3" x2="9" y2="-3" stroke="#22d3ee" strokeWidth="1" />
+      <line x1="-9" y1="2" x2="9" y2="2" stroke="#22d3ee" strokeWidth="1" />
+      <line x1="-3" y1="-8" x2="-3" y2="7" stroke="#22d3ee" strokeWidth="1" />
+      <text x="0" y="46" fill={activeStep === 3 ? "#22d3ee" : "#64748b"} fontSize="8.5" fontFamily="monospace" fontWeight="600" textAnchor="middle">3. GOOGLE SHEETS</text>
+    </g>
+
+    {/* Node 4: Email */}
+    <g transform="translate(410, 230)">
+      <circle r="34" fill="#040810" stroke={activeStep === 4 ? "#22d3ee" : "rgba(255,255,255,0.08)"} strokeWidth={activeStep === 4 ? "2" : "1"} filter={activeStep === 4 ? "url(#glow-cyan)" : "none"} style={{ transition: 'all 0.3s' }} />
+      <circle r="27" fill="#080f1e" />
+      <rect x="-10" y="-7" width="20" height="14" rx="1.5" fill="none" stroke="#22d3ee" strokeWidth="1.5" />
+      <path d="M-10 -5 L0 1 L10 -5" fill="none" stroke="#22d3ee" strokeWidth="1.2" />
+      <text x="0" y="46" fill={activeStep === 4 ? "#22d3ee" : "#64748b"} fontSize="8.5" fontFamily="monospace" fontWeight="600" textAnchor="middle">4. EMAIL OUTREACH</text>
+    </g>
+  </svg>
+);
+
+// Interactive SVG blueprint showing Snowflake Medallion flow
+const SnowflakeBlueprintDiagram = ({ activeStep }) => (
+  <svg viewBox="0 0 500 320" width="100%" height="100%" style={{ background: 'transparent', display: 'block' }}>
+    <defs>
+      <filter id="glow-emerald" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="6" result="blur" />
+        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+      </filter>
+    </defs>
+
+    {/* Background grids */}
+    <g opacity="0.03">
+      <path d="M0 40 H500 M0 80 H500 M0 120 H500 M0 160 H500 M0 200 H500 M0 240 H500 M0 280 H500" stroke="#10b981" strokeWidth="1" />
+      <path d="M50 0 V320 M100 0 V320 M150 0 V320 M200 0 V320 M250 0 V320 M300 0 V320 M350 0 V320 M400 0 V320 M450 0 V320" stroke="#10b981" strokeWidth="1" />
+    </g>
+
+    {/* Connectors with flowing dashes */}
+    <path 
+      d="M 65 160 H 175" 
+      stroke={activeStep > 1 ? "#10b981" : "rgba(255,255,255,0.08)"} 
+      strokeWidth="2.5" 
+      fill="none"
+      className={activeStep > 1 ? "svg-flow-animation" : ""}
+    />
+    <path 
+      d="M 215 160 H 315" 
+      stroke={activeStep > 2 ? "#10b981" : "rgba(255,255,255,0.08)"} 
+      strokeWidth="2.5" 
+      fill="none"
+      className={activeStep > 2 ? "svg-flow-animation" : ""}
+    />
+    <path 
+      d="M 355 160 H 435" 
+      stroke={activeStep > 3 ? "#10b981" : "rgba(255,255,255,0.08)"} 
+      strokeWidth="2.5" 
+      fill="none"
+      className={activeStep > 3 ? "svg-flow-animation" : ""}
+    />
+
+    {/* Node 1: Bronze */}
+    <g transform="translate(65, 160)">
+      <circle r="36" fill="#040810" stroke={activeStep === 1 ? "#10b981" : "rgba(255,255,255,0.08)"} strokeWidth={activeStep === 1 ? "2.5" : "1"} filter={activeStep === 1 ? "url(#glow-emerald)" : "none"} style={{ transition: 'all 0.3s' }} />
+      <circle r="29" fill="#080f1e" />
+      <polygon points="-7,-9 2,-9 7,-4 7,9 -7,9" fill="none" stroke="#10b981" strokeWidth="1.5" />
+      <polyline points="2,-9 2,-4 7,-4" fill="none" stroke="#10b981" strokeWidth="1.2" />
+      <text x="0" y="48" fill={activeStep === 1 ? "#10b981" : "#64748b"} fontSize="8.5" fontFamily="monospace" fontWeight="600" textAnchor="middle">1. BRONZE (RAW)</text>
+    </g>
+
+    {/* Node 2: Silver */}
+    <g transform="translate(195, 160)">
+      <circle r="38" fill="#040810" stroke={activeStep === 2 ? "#10b981" : "rgba(255,255,255,0.08)"} strokeWidth={activeStep === 2 ? "2.5" : "1"} filter={activeStep === 2 ? "url(#glow-emerald)" : "none"} style={{ transition: 'all 0.3s' }} />
+      <circle r="30" fill="#080f1e" />
+      <g transform="translate(0, -2)" className={activeStep === 2 ? "svg-spin-animation" : ""}>
+        <circle cx="0" cy="0" r="9" fill="none" stroke="#10b981" strokeWidth="1.5" strokeDasharray="3 2" />
+        <line x1="-9" y1="0" x2="9" y2="0" stroke="#10b981" strokeWidth="1.2" />
+        <line x1="0" y1="-9" x2="0" y2="9" stroke="#10b981" strokeWidth="1.2" />
+      </g>
+      <text x="0" y="52" fill={activeStep === 2 ? "#10b981" : "#64748b"} fontSize="8.5" fontFamily="monospace" fontWeight="600" textAnchor="middle">2. SILVER (CLEAN)</text>
+    </g>
+
+    {/* Node 3: Gold */}
+    <g transform="translate(335, 160)">
+      <circle r="38" fill="#040810" stroke={activeStep === 3 ? "#10b981" : "rgba(255,255,255,0.08)"} strokeWidth={activeStep === 3 ? "2.5" : "1"} filter={activeStep === 3 ? "url(#glow-emerald)" : "none"} style={{ transition: 'all 0.3s' }} />
+      <circle r="30" fill="#080f1e" />
+      <path d="M-7,-7 C-7,-7 0,-10 0,-10 C0,-10 7,-7 7,-7 V0 C7,5 0,9 0,9 C0,9 -7,5 -7,0 Z" fill="none" stroke="#10b981" strokeWidth="1.5" />
+      <text x="0" y="52" fill={activeStep === 3 ? "#10b981" : "#64748b"} fontSize="8.5" fontFamily="monospace" fontWeight="600" textAnchor="middle">3. GOLD (STAR)</text>
+    </g>
+
+    {/* Node 4: Power BI */}
+    <g transform="translate(435, 160)">
+      <circle r="36" fill="#040810" stroke={activeStep === 4 ? "#10b981" : "rgba(255,255,255,0.08)"} strokeWidth={activeStep === 4 ? "2.5" : "1"} filter={activeStep === 4 ? "url(#glow-emerald)" : "none"} style={{ transition: 'all 0.3s' }} />
+      <circle r="29" fill="#080f1e" />
+      <rect x="-8" y="-7" width="3" height="13" fill="#10b981" />
+      <rect x="-3" y="-11" width="3" height="17" fill="#10b981" />
+      <rect x="2" y="-4" width="3" height="10" fill="#10b981" />
+      <text x="0" y="48" fill={activeStep === 4 ? "#10b981" : "#64748b"} fontSize="8.5" fontFamily="monospace" fontWeight="600" textAnchor="middle">4. EXECUTIVE BI</text>
     </g>
   </svg>
 );
 
-const PowerBiDashboardIllustration = () => (
-  <svg viewBox="0 0 400 160" width="100%" height="100%" style={{ background: '#090D1A', borderRadius: '8px', display: 'block' }}>
-    <rect width="100%" height="100%" fill="#070B14" />
-    <path d="M 0 30 L 400 30" stroke="rgba(59, 130, 246, 0.06)" strokeWidth="1" />
-    
-    <text x="16" y="19" fill="#EFF6FF" fontSize="9.5" fontFamily="sans-serif" fontWeight="bold">Hospital ER Analytics Dashboard</text>
-    
-    {/* Left Column: Progress Ring (Triage Rate) */}
-    <g transform="translate(70, 95)">
-      <circle r="36" fill="none" stroke="rgba(59, 130, 246, 0.05)" strokeWidth="6" />
-      <path d="M 0 -36 A 36 36 0 1 1 -25.4 25.4" fill="none" stroke="url(#blueGrad)" strokeWidth="6" strokeLinecap="round" />
-      <text x="0" y="4" fill="#3B82F6" fontSize="10.5" fontFamily="sans-serif" fontWeight="bold" textAnchor="middle">92.4%</text>
-      <text x="0" y="52" fill="#94A3B8" fontSize="8" fontFamily="sans-serif" textAnchor="middle">Triage Efficiency</text>
-    </g>
 
-    {/* Right Column: Wait Time Trend Chart */}
-    <g transform="translate(160, 48)">
-      <rect width="224" height="96" rx="6" fill="#0C1220" stroke="rgba(59, 130, 246, 0.06)" strokeWidth="1" />
-      <text x="12" y="16" fill="#94A3B8" fontSize="7.5" fontFamily="sans-serif">WAIT TIME TREND (24H)</text>
-      
-      <line x1="20" y1="36" x2="204" y2="36" stroke="rgba(59, 130, 246, 0.02)" strokeWidth="1" />
-      <line x1="20" y1="56" x2="204" y2="56" stroke="rgba(59, 130, 246, 0.02)" strokeWidth="1" />
-      <line x1="20" y1="76" x2="204" y2="76" stroke="rgba(59, 130, 246, 0.02)" strokeWidth="1" />
-      <line x1="20" y1="82" x2="204" y2="82" stroke="rgba(59, 130, 246, 0.08)" strokeWidth="1" />
 
-      <defs>
-        <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#22D3EE" stopOpacity="0.2" stopColorOpacity="0.2" />
-          <stop offset="100%" stopColor="#22D3EE" stopOpacity="0.0" stopColorOpacity="0" />
-        </linearGradient>
-      </defs>
+// Premium CSS-based MacBook/Vite browser mockup wrapper
+const BrowserFrame = ({ title, url, children }) => (
+  <div 
+    style={{
+      width: '100%',
+      background: '#040810',
+      borderRadius: '16px',
+      overflow: 'hidden',
+      border: '1px solid rgba(255,255,255,0.08)',
+      boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.95), inset 0 1px 0 rgba(255,255,255,0.05)',
+      display: 'flex',
+      flexDirection: 'column',
+      position: 'relative'
+    }}
+  >
+    {/* Browser header bar */}
+    <div 
+      style={{
+        height: '34px',
+        background: 'rgba(15, 23, 42, 0.9)',
+        borderBottom: '1px solid rgba(255,255,255,0.08)',
+        display: 'flex',
+        alignItems: 'center',
+        padding: '0 16px',
+        gap: '8px',
+        zIndex: 10
+      }}
+    >
+      {/* OS Mock buttons */}
+      <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#ef4444', display: 'inline-block' }}></span>
+      <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#eab308', display: 'inline-block' }}></span>
+      <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#22c55e', display: 'inline-block' }}></span>
       
-      <path d="M 30 82 L 30 52 L 64 68 L 98 42 L 132 30 L 166 56 L 200 82 Z" fill="url(#areaGrad)" />
-      <path d="M 30 52 L 64 68 L 98 42 L 132 30 L 166 56 L 200 82" fill="none" stroke="#22D3EE" strokeWidth="2" strokeLinecap="round" />
-      
-      <circle cx="98" cy="42" r="2" fill="#22D3EE" />
-      <circle cx="132" cy="30" r="2" fill="#22D3EE" />
-      <text x="132" y="22" fill="#22D3EE" fontSize="8" fontFamily="sans-serif" fontWeight="bold" textAnchor="middle">14.2m</text>
-    </g>
-  </svg>
+      {/* Browser Address mock bar */}
+      <div 
+        style={{
+          flex: 1,
+          height: '20px',
+          background: 'rgba(0, 0, 0, 0.45)',
+          borderRadius: '6px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '9.5px',
+          color: '#64748b',
+          fontFamily: 'var(--font-mono)',
+          letterSpacing: '0.3px',
+          border: '1px solid rgba(255,255,255,0.03)',
+          maxWidth: '340px',
+          margin: '0 auto'
+        }}
+      >
+        {url}
+      </div>
+    </div>
+    {/* Screen viewport content */}
+    <div style={{ position: 'relative', width: '100%', flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      {children}
+    </div>
+  </div>
 );
+
 
 const PROJECTS = [
   {
@@ -780,13 +915,48 @@ function App() {
             <div className="hero-subtitle">
               <Sparkles size={16} /> Data Operations &amp; Systems Automation Specialist
             </div>
-            <h1 className="hero-title">Data Operations &amp; Systems Automation</h1>
-            <p className="hero-desc">
-              With over 14 years of hands-on data operations experience, I build enterprise-grade reporting dashboards, scalable Snowflake data warehouses, and automated ETL pipelines. I bring immediate business value by translating operational realities into modern Data Analytics, BI, and Data Engineering solutions.
+            <h1 className="hero-title" style={{ letterSpacing: '-0.04em' }}>
+              I Bridge the Gap Between Operations &amp; Code
+            </h1>
+            <p className="hero-desc" style={{ fontSize: '1.02rem', color: 'var(--text-sub)' }}>
+              Over 14 years of hands-on data operations experience, turned into clean, automated systems. I build enterprise-grade reporting, scalable Snowflake data warehouses, and self-healing pipelines that translate complex operational needs into real business value.
             </p>
+            
+            {/* Tech Stack Showcase */}
+            <div style={{ marginTop: '28px', marginBottom: '28px' }}>
+              <span style={{ fontSize: '0.72rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '1px', display: 'block', marginBottom: '12px' }}>Core Tech Stack</span>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                {[
+                  { name: 'Snowflake DWH', color: '#60a5fa', bg: 'rgba(96,165,250,0.06)', border: 'rgba(96,165,250,0.18)' },
+                  { name: 'Power BI / DAX', color: '#22d3ee', bg: 'rgba(34,211,238,0.06)', border: 'rgba(34,211,238,0.18)' },
+                  { name: 'Python', color: '#fde047', bg: 'rgba(253,224,71,0.06)', border: 'rgba(253,224,71,0.18)' },
+                  { name: 'SQL / T-SQL', color: '#c084fc', bg: 'rgba(192,132,252,0.06)', border: 'rgba(192,132,252,0.18)' },
+                  { name: 'PowerShell', color: '#38bdf8', bg: 'rgba(56,189,248,0.06)', border: 'rgba(56,189,248,0.18)' },
+                  { name: 'dbt Pipelines', color: '#f43f5e', bg: 'rgba(244,63,94,0.06)', border: 'rgba(244,63,94,0.18)' }
+                ].map((tech, idx) => (
+                  <span 
+                    key={idx} 
+                    style={{ 
+                      padding: '4px 12px', 
+                      borderRadius: '30px', 
+                      background: tech.bg, 
+                      border: '1px solid ' + tech.border, 
+                      color: tech.color, 
+                      fontSize: '0.75rem', 
+                      fontWeight: '600',
+                      cursor: 'default'
+                    }}
+                    className="tech-tag-hover"
+                  >
+                    {tech.name}
+                  </span>
+                ))}
+              </div>
+            </div>
+
             <div className="cta-group">
               <a href="#projects" className="btn btn-primary">
-                View Portfolios <ArrowRight size={18} />
+                View Cases <ArrowRight size={18} />
               </a>
               <a href="#contact" className="btn btn-secondary">
                 Get In Touch
@@ -831,61 +1001,43 @@ function App() {
             </div>
           </div>
 
-          {/* Interactive Chapter Switcher Console */}
-          <div className="chapter-console-container reveal reveal-delay-2">
-            
-            {/* Left Tabs */}
-            <div className="chapter-tabs-list">
-              {CHAPTERS.map(ch => (
-                <button
-                  key={ch.id}
-                  onClick={() => setActiveChapterId(ch.id)}
-                  className={`chapter-tab-item ${activeChapterId === ch.id ? 'active' : ''}`}
-                  style={{ border: 'none' }}
-                >
-                  <div className="chapter-tab-num" style={{ color: activeChapterId === ch.id ? 'var(--accent-primary)' : 'var(--text-muted)' }}>
-                    ◆ {ch.chapter}
-                  </div>
-                  <div className="chapter-tab-title">{ch.label}</div>
-                </button>
-              ))}
-              
-              {/* My Edge Note */}
-              <div className="glass-panel" style={{ borderColor: 'rgba(59,130,246,0.15)', marginTop: '12px' }}>
-                <p style={{ color: 'var(--text-sub)', fontSize: '0.82rem', lineHeight: '1.6', fontStyle: 'italic' }}>
-                  "I know the <strong style={{ color: 'var(--text-main)' }}>operational reality</strong> behind the data — the broken pipelines, the manual workarounds, the business cost of slow reporting."
-                </p>
-              </div>
-            </div>
-
-            {/* Right Active Chapter Console Panel */}
-            <div className="chapter-viewer-panel">
-              <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
-                  <div>
-                    <span style={{ fontSize: '9px', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>CONSOLE NODE ACTIVE</span>
-                    <h3 style={{ fontSize: '1.4rem', fontWeight: '800', color: 'var(--text-main)', marginTop: '4px', fontFamily: 'var(--font-display)' }}>
-                      {CHAPTERS.find(c => c.id === activeChapterId).title}
-                    </h3>
-                  </div>
-                  <span style={{ fontSize: '2rem' }}>{CHAPTERS.find(c => c.id === activeChapterId).icon}</span>
+          {/* Immersive Narrative Timeline */}
+          <div className="story-timeline-vertical reveal reveal-delay-2" style={{ maxWidth: '840px', margin: '0 auto' }}>
+            {CHAPTERS.map(ch => (
+              <div key={ch.id} className="story-timeline-card">
+                {/* Timeline node icon */}
+                <div className="story-timeline-indicator">
+                  {ch.icon}
                 </div>
-                
-                <p style={{ fontSize: '0.92rem', color: 'var(--text-sub)', lineHeight: '1.7', marginBottom: '24px' }}>
-                  {CHAPTERS.find(c => c.id === activeChapterId).desc}
-                </p>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '20px' }}>
-                {CHAPTERS.find(c => c.id === activeChapterId).stats.map((st, sIdx) => (
-                  <div key={sIdx} style={{ textAlign: 'center' }}>
-                    <div style={{ fontSize: '9px', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', marginBottom: '4px', textTransform: 'uppercase' }}>{st.label}</div>
-                    <div style={{ fontSize: '0.95rem', fontWeight: '800', color: activeChapterId === 3 ? 'var(--accent-cyan)' : activeChapterId === 2 ? 'var(--accent-gold)' : 'var(--accent-primary)' }}>{st.value}</div>
+                {/* Timeline node body */}
+                <div className="story-timeline-body">
+                  <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', gap: '8px' }}>
+                    <span style={{ fontSize: '0.72rem', color: ch.id === 1 ? 'var(--accent-primary)' : ch.id === 2 ? 'var(--accent-gold)' : 'var(--accent-cyan)', fontFamily: 'var(--font-mono)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                      ◆ Chapter {ch.id}: {ch.label}
+                    </span>
+                    <span style={{ fontSize: '0.8rem', color: 'var(--text-dim)', fontWeight: '500' }}>
+                      {ch.stats.find(s => s.label === "EXPERIENCE" || s.label === "FOCUS AREA" || s.label === "CURRENT ROLE")?.value || ""}
+                    </span>
                   </div>
-                ))}
+                  <h3 style={{ fontSize: '1.25rem', fontWeight: '800', color: 'var(--text-main)', marginBottom: '10px' }}>
+                    {ch.title}
+                  </h3>
+                  <p style={{ fontSize: '0.92rem', color: 'var(--text-sub)', lineHeight: '1.7', marginBottom: '18px' }}>
+                    {ch.desc}
+                  </p>
+                  
+                  {/* Stats Grid inside Node */}
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', borderTop: '1px solid rgba(255, 255, 255, 0.05)', paddingTop: '16px' }}>
+                    {ch.stats.map((st, sIdx) => (
+                      <div key={sIdx}>
+                        <div style={{ fontSize: '8px', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', marginBottom: '2px', textTransform: 'uppercase' }}>{st.label}</div>
+                        <div style={{ fontSize: '0.88rem', fontWeight: '700', color: 'var(--text-main)' }}>{st.value}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
-            </div>
-
+            ))}
           </div>
         </div>
       </section>
@@ -967,120 +1119,17 @@ function App() {
             </div>
 
             {/* Visual Blueprint canvas */}
-            <div className="diagram-card" style={{ height: '100%', minHeight: '380px', justifyContent: 'center' }}>
-              <h4 style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', marginBottom: '16px', textTransform: 'uppercase' }}>
-                Pipeline Map ({pipelineType === 'automation' ? 'Automation' : 'Snowflake Medallion'})
+            <div className="diagram-card spotlight-card" style={{ height: '100%', minHeight: '400px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', background: 'rgba(7, 11, 20, 0.45)', border: '1px solid rgba(255, 255, 255, 0.06)', borderRadius: '16px', padding: '24px' }}>
+              <h4 style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', fontSize: '0.8rem', marginBottom: '16px', textTransform: 'uppercase', letterSpacing: '1px', textAlign: 'center' }}>
+                Pipeline Map ({pipelineType === 'automation' ? 'Systems Automation' : 'Snowflake Medallion'})
               </h4>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', alignItems: 'center', position: 'relative' }}>
-
-                {/* NODE 1 */}
-                 <div 
-                   ref={node1Spotlight.ref}
-                   onMouseMove={node1Spotlight.onMouseMove}
-                   className={`spotlight-card ${selectedStep.nodeHighlight === 'node1' ? 'blueprint-pulse' : ''}`}
-                   style={{
-                     width: '260px',
-                     padding: '16px',
-                     textAlign: 'center',
-                     borderWidth: '2px',
-                     borderColor: selectedStep.nodeHighlight === 'node1' ? (pipelineType === 'automation' ? 'var(--accent-orange)' : 'var(--accent-emerald)') : 'var(--border-color)',
-                     boxShadow: selectedStep.nodeHighlight === 'node1' ? (pipelineType === 'automation' ? 'var(--glow-shadow)' : '0 0 20px var(--accent-emerald-glow)') : 'none',
-                     transition: 'all 0.3s ease'
-                   }}
-                 >
-                   {pipelineType === 'automation' ? <Globe size={18} style={{ color: 'var(--accent-emerald)', marginBottom: '8px' }} /> : <Settings size={18} style={{ color: 'var(--accent-orange)', marginBottom: '8px' }} />}
-                   <h4 style={{ fontSize: '0.95rem' }}>{pipelineType === 'automation' ? 'Client Browser' : 'Bronze Landing Staging'}</h4>
-                   <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{pipelineType === 'automation' ? 'Intake Form & Metrics' : 'JSON, CSV, Raw stages'}</span>
-                 </div>
-
-                 {/* Arrow */}
-                 <ArrowRight 
-                   size={20} 
-                   className={selectedStep.nodeHighlight !== 'node1' ? 'blueprint-pulse' : ''} 
-                   style={{ 
-                     transform: 'rotate(90deg)', 
-                     color: selectedStep.nodeHighlight !== 'node1' ? (pipelineType === 'automation' ? 'var(--accent-orange)' : 'var(--accent-emerald)') : 'var(--border-color)',
-                     transition: 'all 0.3s ease'
-                   }} 
-                 />
-
-                 {/* NODE 2 */}
-                 <div 
-                   ref={node2Spotlight.ref}
-                   onMouseMove={node2Spotlight.onMouseMove}
-                   className={`spotlight-card ${selectedStep.nodeHighlight === 'node2' ? 'blueprint-pulse' : ''}`}
-                   style={{
-                     width: '260px',
-                     padding: '16px',
-                     textAlign: 'center',
-                     borderWidth: '2px',
-                     borderColor: selectedStep.nodeHighlight === 'node2' ? (pipelineType === 'automation' ? 'var(--accent-orange)' : 'var(--accent-emerald)') : 'var(--border-color)',
-                     boxShadow: selectedStep.nodeHighlight === 'node2' ? (pipelineType === 'automation' ? 'var(--glow-shadow)' : '0 0 20px var(--accent-emerald-glow)') : 'none',
-                     transition: 'all 0.3s ease'
-                   }}
-                 >
-                   {pipelineType === 'automation' ? <Lock size={18} style={{ color: 'var(--accent-orange)', marginBottom: '8px' }} /> : <Database size={18} style={{ color: 'var(--accent-emerald)', marginBottom: '8px' }} />}
-                   <h4 style={{ fontSize: '0.95rem' }}>{pipelineType === 'automation' ? 'API Proxy (Cloudflare)' : 'Silver Cleansing & CDC'}</h4>
-                   <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{pipelineType === 'automation' ? 'CORS & Endpoint Masking' : 'De-duplication & Streams'}</span>
-                 </div>
-
-                 {/* Arrow */}
-                 <ArrowRight 
-                   size={20} 
-                   className={(selectedStep.nodeHighlight === 'node3' || selectedStep.nodeHighlight === 'node4') ? 'blueprint-pulse' : ''} 
-                   style={{ 
-                     transform: 'rotate(90deg)', 
-                     color: (selectedStep.nodeHighlight === 'node3' || selectedStep.nodeHighlight === 'node4') ? (pipelineType === 'automation' ? 'var(--accent-orange)' : 'var(--accent-emerald)') : 'var(--border-color)',
-                     transition: 'all 0.3s ease'
-                   }} 
-                 />
-
-                 {/* DOUBLE HORIZONTAL NODES */}
-                 <div style={{ display: 'flex', gap: '24px', justifyContent: 'center', width: '100%' }}>
-
-                   {/* NODE 3 */}
-                   <div 
-                     ref={node3Spotlight.ref}
-                     onMouseMove={node3Spotlight.onMouseMove}
-                     className={`spotlight-card ${selectedStep.nodeHighlight === 'node3' ? 'blueprint-pulse' : ''}`}
-                     style={{
-                       width: '180px',
-                       padding: '16px',
-                       textAlign: 'center',
-                       borderWidth: '2px',
-                       borderColor: selectedStep.nodeHighlight === 'node3' ? (pipelineType === 'automation' ? 'var(--accent-orange)' : 'var(--accent-emerald)') : 'var(--border-color)',
-                       boxShadow: selectedStep.nodeHighlight === 'node3' ? (pipelineType === 'automation' ? 'var(--glow-shadow)' : '0 0 20px var(--accent-emerald-glow)') : 'none',
-                       transition: 'all 0.3s ease'
-                     }}
-                   >
-                     {pipelineType === 'automation' ? <Database size={18} style={{ color: 'var(--accent-orange)', marginBottom: '8px' }} /> : <Layers size={18} style={{ color: 'var(--accent-orange)', marginBottom: '8px' }} />}
-                     <h4 style={{ fontSize: '0.9rem' }}>{pipelineType === 'automation' ? 'Sheets CRM' : 'Gold Star Schema'}</h4>
-                     <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{pipelineType === 'automation' ? 'Lead & Checklist DB' : 'PII Masking & Dimensions'}</span>
-                   </div>
-
-                   {/* NODE 4 */}
-                   <div 
-                     ref={node4Spotlight.ref}
-                     onMouseMove={node4Spotlight.onMouseMove}
-                     className={`spotlight-card ${selectedStep.nodeHighlight === 'node4' ? 'blueprint-pulse' : ''}`}
-                     style={{
-                       width: '180px',
-                       padding: '16px',
-                       textAlign: 'center',
-                       borderWidth: '2px',
-                       borderColor: selectedStep.nodeHighlight === 'node4' ? (pipelineType === 'automation' ? 'var(--accent-orange)' : 'var(--accent-emerald)') : 'var(--border-color)',
-                       boxShadow: selectedStep.nodeHighlight === 'node4' ? (pipelineType === 'automation' ? 'var(--glow-shadow)' : '0 0 20px var(--accent-emerald-glow)') : 'none',
-                       transition: 'all 0.3s ease'
-                     }}
-                   >
-                     {pipelineType === 'automation' ? <Mail size={18} style={{ color: 'var(--accent-emerald)', marginBottom: '8px' }} /> : <BarChart3 size={18} style={{ color: 'var(--accent-emerald)', marginBottom: '8px' }} />}
-                     <h4 style={{ fontSize: '0.9rem' }}>{pipelineType === 'automation' ? 'Gmail Engines' : 'Executive BI Report'}</h4>
-                     <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{pipelineType === 'automation' ? 'PDF & Drip Campaign' : 'Power BI Risk Heatmaps'}</span>
-                   </div>
-
-                 </div>
-
+              <div style={{ width: '100%', maxWidth: '460px', flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                {pipelineType === 'automation' ? (
+                  <AutomationBlueprintDiagram activeStep={activeStep} />
+                ) : (
+                  <SnowflakeBlueprintDiagram activeStep={activeStep} />
+                )}
               </div>
             </div>
           </div>
@@ -1172,78 +1221,74 @@ function App() {
                     }}
                     className="spotlight-card flex flex-col lg:flex-row gap-8 items-stretch p-8 w-full slide-enter"
                   >
-                    {/* Left: Image Showcase with Ambient Glow Backdrop */}
+                    {/* Left: Image Showcase framed inside Browser Window Mockup */}
                     {activeProj.image && (
                       <div 
-                        style={{ 
-                          flex: '1.2', 
-                          borderRadius: '12px', 
-                          overflow: 'hidden', 
-                          border: '1px solid rgba(255,255,255,0.08)', 
-                          position: 'relative',
-                          cursor: 'zoom-in',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          minHeight: '380px',
-                          background: '#030712'
-                        }}
+                        style={{ flex: '1.2', display: 'flex', minHeight: '380px', cursor: 'zoom-in' }}
                         onClick={() => { setSelectedImage(activeProj.image); setSelectedTitle(activeProj.title); }}
                         className="group w-full lg:w-auto"
                       >
-                        {/* Ambient Glow Backdrop (Blurred replica of dashboard) */}
-                        <img 
-                          src={activeProj.image} 
-                          alt="" 
-                          style={{ 
-                            position: 'absolute',
-                            inset: 0,
-                            width: '100%', 
-                            height: '100%', 
-                            objectFit: 'cover',
-                            filter: 'blur(30px) opacity(0.38)',
-                            pointerEvents: 'none',
-                            transform: 'scale(1.15)',
-                            transition: 'transform 0.5s ease'
-                          }} 
-                          className="group-hover:scale-[1.22]"
-                        />
-                        {/* Foreground Main Image Floating with Shadow */}
-                        <img 
-                          src={activeProj.image} 
-                          alt={activeProj.title} 
-                          style={{ 
-                            position: 'relative',
-                            zIndex: 1,
-                            width: '90%', 
-                            height: 'auto',
-                            maxHeight: '330px',
-                            objectFit: 'contain',
-                            borderRadius: '8px',
-                            boxShadow: '0 20px 40px rgba(0,0,0,0.65)',
-                            border: '1px solid rgba(255,255,255,0.05)',
-                            transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease'
-                          }} 
-                          className="group-hover:scale-[1.03] group-hover:translate-y-[-4px]"
-                        />
-                        <div 
-                          style={{
-                            position: 'absolute',
-                            bottom: '12px',
-                            right: '12px',
-                            background: 'rgba(15,23,42,0.9)',
-                            padding: '6px 12px',
-                            borderRadius: '6px',
-                            fontSize: '11px',
-                            color: 'var(--accent-blue)',
-                            fontWeight: '600',
-                            border: '1px solid rgba(34,211,238,0.25)',
-                            boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
-                            zIndex: 2
-                          }}
+                        <BrowserFrame 
+                          title={activeProj.title} 
+                          url={`https://haresh.io/analytics/${activeProj.title.toLowerCase().replace(/ /g, '-')}`}
                         >
-                          🔍 Click to Zoom Full Image
-                        </div>
+                          {/* Ambient Glow Backdrop (Blurred replica of dashboard) */}
+                          <img 
+                            src={activeProj.image} 
+                            alt="" 
+                            style={{ 
+                              position: 'absolute',
+                              inset: 0,
+                              width: '100%', 
+                              height: '100%', 
+                              objectFit: 'cover',
+                              filter: 'blur(24px) opacity(0.35)',
+                              pointerEvents: 'none',
+                              transform: 'scale(1.15)',
+                              transition: 'transform 0.5s ease',
+                              zIndex: 0
+                            }} 
+                            className="group-hover:scale-[1.22]"
+                          />
+
+                          {/* Foreground Main Image Floating with Shadow */}
+                          <img 
+                            src={activeProj.image} 
+                            alt={activeProj.title} 
+                            style={{ 
+                              position: 'relative',
+                              zIndex: 1,
+                              width: '88%', 
+                              height: 'auto',
+                              maxHeight: '260px',
+                              objectFit: 'contain',
+                              borderRadius: '6px',
+                              boxShadow: '0 20px 45px rgba(0,0,0,0.7)',
+                              border: '1px solid rgba(255,255,255,0.06)',
+                              transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease'
+                            }} 
+                            className="group-hover:scale-[1.03] group-hover:translate-y-[-3px]"
+                          />
+
+                          <div 
+                            style={{
+                              position: 'absolute',
+                              bottom: '12px',
+                              right: '12px',
+                              background: 'rgba(15,23,42,0.92)',
+                              padding: '5px 10px',
+                              borderRadius: '6px',
+                              fontSize: '9.5px',
+                              color: '#60a5fa',
+                              fontWeight: '600',
+                              border: '1px solid rgba(59,130,246,0.2)',
+                              boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
+                              zIndex: 10
+                            }}
+                          >
+                            🔍 Zoom Screen
+                          </div>
+                        </BrowserFrame>
                       </div>
                     )}
 

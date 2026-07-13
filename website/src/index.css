@@ -891,4 +891,121 @@ textarea { resize:vertical; min-height:120px; }
   }
 }
 
+/* =======================================================
+   STORYTELLING & SVG BLUEPRINT DESIGN SYSTEM
+   ======================================================= */
+
+/* Ingestion stream animation for flow lines */
+.svg-flow-animation {
+  stroke-dasharray: 6 5;
+  animation: svgFlowMove 15s linear infinite;
+}
+
+@keyframes svgFlowMove {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -300;
+  }
+}
+
+/* Spinning indicator (cogs/workers) */
+.svg-spin-animation {
+  transform-origin: center;
+  animation: svgSpinSlow 12s linear infinite;
+}
+
+@keyframes svgSpinSlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Tech Tag Hover styles */
+.tech-tag-hover {
+  display: inline-block;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.tech-tag-hover:hover {
+  transform: translateY(-3px) scale(1.04);
+  box-shadow: 0 4px 15px rgba(34, 211, 238, 0.2);
+  background: rgba(34, 211, 238, 0.1) !important;
+  border-color: rgba(34, 211, 238, 0.4) !important;
+}
+
+/* Immersive Timeline nodes */
+.story-timeline-vertical {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.story-timeline-vertical::before {
+  content: '';
+  position: absolute;
+  left: 20px;
+  top: 15px;
+  bottom: 15px;
+  width: 2px;
+  background: linear-gradient(180deg, 
+    var(--accent-primary) 0%, 
+    var(--accent-cyan) 50%, 
+    var(--accent-gold) 100%
+  );
+  opacity: 0.25;
+}
+
+.story-timeline-card {
+  position: relative;
+  padding-left: 56px;
+}
+
+.story-timeline-indicator {
+  position: absolute;
+  left: 0;
+  top: 4px;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: #090d16;
+  border: 1.5px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  z-index: 2;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
+  transition: all 0.3s ease;
+}
+
+.story-timeline-card:hover .story-timeline-indicator {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 12px rgba(34, 211, 238, 0.3);
+  transform: scale(1.05);
+}
+
+.story-timeline-body {
+  background: rgba(10, 16, 32, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 8px 32px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s ease;
+}
+
+.story-timeline-body:hover {
+  border-color: rgba(59, 130, 246, 0.2);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 12px 40px rgba(0, 0, 0, 0.6);
+  transform: translateY(-2px);
+}
+
+
 
