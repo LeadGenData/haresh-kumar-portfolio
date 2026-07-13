@@ -535,6 +535,10 @@ const PROJECTS = [
     title: "Snowflake Medallion Pipeline",
     icon: <Database size={24} />,
     image: snowflakePipelineImg,
+    category: "Cloud Data Engineering",
+    tagBg: "rgba(59, 130, 246, 0.1)",
+    tagBorder: "rgba(59, 130, 246, 0.2)",
+    tagText: "#60a5fa",
     problem: "Manual data consolidation caused slow, inconsistent reporting.",
     approach: "Implemented bronze → silver → gold layers in Snowflake; transformations in SQL; automated incremental ingestion using Snowflake Streams (CDC) and Tasks.",
     solution: "Automated ETL pipeline that ingests raw files into bronze, applies cleansing and joins in silver, and produces analytics-ready tables in gold consumed by Power BI.",
@@ -547,6 +551,10 @@ const PROJECTS = [
     title: "Campaigns CRM Systems Automation",
     icon: <Bot size={24} />,
     image: crmAdminPortalImg,
+    category: "Systems Automation",
+    tagBg: "rgba(234, 179, 8, 0.1)",
+    tagBorder: "rgba(234, 179, 8, 0.2)",
+    tagText: "#fde047",
     problem: "Manual lead harvesting and email bounce tracking wasted hours of administrative work and polluted outreach databases.",
     approach: "Developed web scrapers in Python, automated Outlook COM sweeping in PowerShell, and synced logs to Google Sheets.",
     solution: "An automated lead generation and outreach monitoring system that harvests verified contacts and flags bounced addresses.",
@@ -559,6 +567,10 @@ const PROJECTS = [
     title: "Chocolate Sales Analytics",
     icon: <FileCode size={24} />,
     image: chocolateSalesDashboardImg,
+    category: "Business Intelligence",
+    tagBg: "rgba(34, 211, 238, 0.1)",
+    tagBorder: "rgba(34, 211, 238, 0.2)",
+    tagText: "#22d3ee",
     problem: "Lack of clear visibility into YOY revenue growth across global regions.",
     approach: "Analyzed raw sales logs; developed advanced DAX measures in Power BI.",
     solution: "Interactive Power BI dashboard analyzing global chocolate sales trends with dynamic product filtering.",
@@ -572,6 +584,10 @@ const PROJECTS = [
     title: "Clinical Admissions Analytics",
     icon: <BarChart3 size={24} />,
     image: hospitalDashboardImg,
+    category: "Clinical Analytics",
+    tagBg: "rgba(16, 185, 129, 0.1)",
+    tagBorder: "rgba(16, 185, 129, 0.2)",
+    tagText: "#34d399",
     problem: "Unpredictable emergency admissions wait times led to inefficient staffing.",
     approach: "SQL; Power BI; Power Query (M).",
     solution: "Optimized clinical operations dashboard dynamically calculating triage rate metrics and satisfaction trends.",
@@ -585,6 +601,10 @@ const PROJECTS = [
     title: "Relational Schema Optimizer",
     icon: <Database size={24} />,
     image: sqlWarehouseSchemaImg,
+    category: "Database Engineering",
+    tagBg: "rgba(168, 85, 247, 0.1)",
+    tagBorder: "rgba(168, 85, 247, 0.2)",
+    tagText: "#c084fc",
     problem: "High-volume billing analyses were crippled by unoptimized relational models.",
     approach: "SQL Server T-SQL; Data Warehousing; Clustered Indexing.",
     solution: "Optimized relational warehouse modeling transaction logs with high-performance Star schemas.",
@@ -598,6 +618,11 @@ const PROJECTS = [
 
 function App() {
   const [pipelineType, setPipelineType] = useState('automation');
+  const [activeFilter, setActiveFilter] = useState('All');
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedTitle, setSelectedTitle] = useState(null);
+  const [viewMode, setViewMode] = useState('grid');
+  const [carouselIndex, setCarouselIndex] = useState(0);
   const [activeStep, setActiveStep]     = useState(1);
   const [menuOpen, setMenuOpen]         = useState(false);
   const [formData, setFormData]         = useState({ name: '', email: '', message: '' });
@@ -613,6 +638,10 @@ function App() {
   const node4Spotlight = useMouseMoveSpotlight();
   const node5Spotlight = useMouseMoveSpotlight();
   const projectSpotlights = [node1Spotlight, node2Spotlight, node3Spotlight, node4Spotlight, node5Spotlight];
+
+  useEffect(() => {
+    setCarouselIndex(0);
+  }, [activeFilter]);
 
   useEffect(() => {
     const observerOptions = {
@@ -1063,102 +1092,556 @@ function App() {
       <section id="projects">
         <div className="container relative">
           <div className="section-watermark">03 WORK</div>
-          <div style={{ textAlign: 'center', marginBottom: '48px' }} className="reveal">
+          <div style={{ textAlign: 'center', marginBottom: '28px' }} className="reveal">
             <h2 className="section-title">Analytical &amp; Automation Portfolios</h2>
             <p className="section-subtitle" style={{ margin: '0 auto' }}>
               Real-world systems and Cloud Data Warehouses engineered to analyze metrics and automate operations.
             </p>
           </div>
 
-          <div className="bento-grid">
-            
-            {/* DYNAMIC PROJECT CARDS USING NEW RECRUITER STRUCTURE */}
-            {PROJECTS.map((proj, i) => (
-              <div 
-                key={i}
-                ref={projectSpotlights[i]?.ref}
-                onMouseMove={projectSpotlights[i]?.onMouseMove}
-                className={`spotlight-card reveal ${i === 0 || i === 3 ? "bento-col-2" : ""} ${i % 2 !== 0 ? "reveal-delay-1" : ""} flex flex-col justify-between h-full`}
+          {/* CATEGORY FILTER TABS */}
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', flexWrap: 'wrap', marginBottom: '24px' }} className="reveal">
+            {['All', 'Data Engineering', 'Business Intelligence', 'Automation'].map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setActiveFilter(cat)}
+                style={{
+                  padding: '8px 18px',
+                  borderRadius: '30px',
+                  fontSize: '0.8rem',
+                  fontWeight: '600',
+                  border: '1px solid',
+                  borderColor: activeFilter === cat ? 'var(--accent-blue)' : 'rgba(255,255,255,0.08)',
+                  backgroundColor: activeFilter === cat ? 'rgba(34, 211, 238, 0.1)' : 'rgba(10, 16, 32, 0.45)',
+                  color: activeFilter === cat ? 'var(--accent-blue)' : '#94a3b8',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  boxShadow: activeFilter === cat ? '0 0 15px rgba(34, 211, 238, 0.15)' : 'none'
+                }}
+                className="filter-btn"
               >
-                <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' }}>
-                    <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-                      <div className="proj-icon-wrapper">
-                        {proj.icon}
-                      </div>
-                      <div>
-                        <h3 className="proj-title" style={{ fontSize: '1.05rem', fontWeight: '700' }}>{proj.title}</h3>
-                        <span className="text-[10px] text-gray-500 font-mono tracking-wider uppercase">ANALYTICS & AUTOMATION</span>
-                      </div>
-                    </div>
-                    <div className="proj-links">
-                      {proj.githubLink && <a href={proj.githubLink} target="_blank" rel="noreferrer" title="Source Code"><Github size={20} /></a>}
-                      {proj.liveLink && <a href={proj.liveLink} target="_blank" rel="noreferrer" title="Live Site"><ExternalLink size={20} /></a>}
-                    </div>
-                  </div>
-
-                  {proj.image && (
-                    <div style={{ marginBottom: '20px', borderRadius: '8px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.05)', backgroundColor: '#0f172a' }}>
-                      <img src={proj.image} alt={proj.title} style={{ width: '100%', height: 'auto', display: 'block', objectFit: 'cover', maxHeight: '250px' }} />
-                    </div>
-                  )}
-
-                  <div style={{ marginBottom: '12px' }}>
-                    <strong style={{ color: 'var(--accent-blue)', fontSize: '0.80rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Problem</strong>
-                    <p className="proj-desc text-gray-400 text-sm mt-1">{proj.problem}</p>
-                  </div>
-                  
-                  <div style={{ marginBottom: '12px' }}>
-                    <strong style={{ color: 'var(--accent-blue)', fontSize: '0.80rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Approach</strong>
-                    <p className="proj-desc text-gray-400 text-sm mt-1">{proj.approach}</p>
-                  </div>
-
-                  <div style={{ marginBottom: '16px' }}>
-                    <strong style={{ color: 'var(--accent-blue)', fontSize: '0.80rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Solution</strong>
-                    <p className="proj-desc text-gray-400 text-sm mt-1">{proj.solution}</p>
-                  </div>
-
-                  <div style={{ marginBottom: '16px', padding: '12px', background: 'rgba(34, 211, 238, 0.05)', borderRadius: '6px', borderLeft: '3px solid var(--accent-blue)' }}>
-                    <strong style={{ color: '#fff', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Business Impact</strong>
-                    <p style={{ color: '#fff', fontSize: '0.9rem', marginTop: '6px', fontWeight: '500', lineHeight: '1.4' }}>{proj.impact}</p>
-                  </div>
-
-                  {proj.antigravityNote && (
-                    <div style={{ marginBottom: '20px', padding: '10px', background: 'rgba(245, 158, 11, 0.05)', borderRadius: '6px', border: '1px solid rgba(245, 158, 11, 0.2)' }}>
-                      <p style={{ color: 'var(--accent-gold)', fontSize: '0.8rem', fontStyle: 'italic', lineHeight: '1.4' }}>{proj.antigravityNote}</p>
-                    </div>
-                  )}
-                </div>
-
-                <ul className="tag-list mt-auto pt-4 border-t border-white/5">
-                  {proj.technologies.map((tag, idx) => <li key={idx}>{tag}</li>)}
-                </ul>
-              </div>
+                {cat}
+              </button>
             ))}
+          </div>
 
-            {/* Special Bento Card: Availability / Connect */}
-            <div 
-              ref={availabilitySpotlight.ref}
-              onMouseMove={availabilitySpotlight.onMouseMove}
-              className="spotlight-card reveal reveal-delay-2" 
-              style={{ borderColor: 'rgba(245, 158, 11, 0.25)', background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.03), rgba(7, 11, 20, 0.85))' }}
-            >
-              <div className="proj-header mb-4">
-                <div className="proj-icon-wrapper" style={{ background: 'rgba(245, 158, 11, 0.08)', color: 'var(--accent-gold)', borderColor: 'rgba(245, 158, 11, 0.2)' }}>
-                  <Sparkles size={22} />
+          {/* LAYOUT VIEW SELECTOR */}
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '16px', marginBottom: '36px' }} className="reveal">
+            <span style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: '600', letterSpacing: '0.5px' }}>LAYOUT VIEW:</span>
+            <div style={{ display: 'flex', background: 'rgba(10, 16, 32, 0.65)', padding: '4px', borderRadius: '10px', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
+              <button
+                onClick={() => setViewMode('grid')}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '8px 18px',
+                  borderRadius: '8px',
+                  fontSize: '0.8rem',
+                  fontWeight: '600',
+                  border: 'none',
+                  backgroundColor: viewMode === 'grid' ? 'rgba(34, 211, 238, 0.12)' : 'transparent',
+                  color: viewMode === 'grid' ? 'var(--accent-blue)' : '#94a3b8',
+                  cursor: 'pointer',
+                  transition: 'all 0.25s ease'
+                }}
+              >
+                Grid Bento
+              </button>
+              <button
+                onClick={() => setViewMode('carousel')}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '8px 18px',
+                  borderRadius: '8px',
+                  fontSize: '0.8rem',
+                  fontWeight: '600',
+                  border: 'none',
+                  backgroundColor: viewMode === 'carousel' ? 'rgba(34, 211, 238, 0.12)' : 'transparent',
+                  color: viewMode === 'carousel' ? 'var(--accent-blue)' : '#94a3b8',
+                  cursor: 'pointer',
+                  transition: 'all 0.25s ease'
+                }}
+              >
+                Flagship Slider ⚡
+              </button>
+            </div>
+          </div>
+
+          {viewMode === 'grid' ? (
+            <div className="bento-grid">
+              {/* Dynamic Grid Cards Mapping (only projects that match activeFilter) */}
+              {PROJECTS.map((proj, i) => {
+                const isEngineering = proj.category.includes("Engineering");
+                const isBI = proj.category.includes("Intelligence") || proj.category.includes("Analytics");
+                const isAutomation = proj.category.includes("Automation");
+                
+                let isVisible = true;
+                if (activeFilter === 'Data Engineering') isVisible = isEngineering;
+                if (activeFilter === 'Business Intelligence') isVisible = isBI;
+                if (activeFilter === 'Automation') isVisible = isAutomation;
+
+                if (!isVisible) return null;
+
+                return (
+                  <div 
+                    key={i}
+                    ref={projectSpotlights[i]?.ref}
+                    onMouseMove={projectSpotlights[i]?.onMouseMove}
+                    className={`spotlight-card reveal ${activeFilter === 'All' && (i === 0 || i === 3) ? "bento-col-2" : ""} flex flex-col justify-between h-full`}
+                  >
+                    <div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' }}>
+                        <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+                          <div className="proj-icon-wrapper">
+                            {proj.icon}
+                          </div>
+                          <div>
+                            <h3 className="proj-title" style={{ fontSize: '1.05rem', fontWeight: '700' }}>{proj.title}</h3>
+                            <span style={{ padding: '2px 8px', borderRadius: '4px', background: proj.tagBg, border: '1px solid ' + proj.tagBorder, color: proj.tagText, fontSize: '9px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px', fontFamily: 'monospace' }}>{proj.category}</span>
+                          </div>
+                        </div>
+                        <div className="proj-links">
+                          {proj.githubLink && <a href={proj.githubLink} target="_blank" rel="noreferrer" title="Source Code"><Github size={20} /></a>}
+                          {proj.liveLink && <a href={proj.liveLink} target="_blank" rel="noreferrer" title="Live Site"><ExternalLink size={20} /></a>}
+                        </div>
+                      </div>
+
+                      {proj.image && (
+                        <div 
+                          style={{ 
+                            marginBottom: '20px', 
+                            borderRadius: '8px', 
+                            overflow: 'hidden', 
+                            border: '1px solid rgba(255,255,255,0.05)', 
+                            backgroundColor: '#0f172a',
+                            cursor: 'zoom-in',
+                            position: 'relative'
+                          }}
+                          className="group"
+                          onClick={() => { setSelectedImage(proj.image); setSelectedTitle(proj.title); }}
+                        >
+                          <img 
+                            src={proj.image} 
+                            alt={proj.title} 
+                            style={{ 
+                              width: '100%', 
+                              height: 'auto', 
+                              display: 'block', 
+                              objectFit: 'contain', 
+                              maxHeight: '300px',
+                              transition: 'transform 0.4s ease'
+                            }} 
+                            className="group-hover:scale-[1.03]"
+                          />
+                          <div 
+                            style={{
+                              position: 'absolute',
+                              bottom: '8px',
+                              right: '8px',
+                              background: 'rgba(15,23,42,0.85)',
+                              padding: '4px 8px',
+                              borderRadius: '4px',
+                              fontSize: '10px',
+                              color: 'var(--accent-blue)',
+                              fontWeight: '600',
+                              border: '1px solid rgba(34,211,238,0.2)',
+                              opacity: 0.9
+                            }}
+                          >
+                            🔍 Click to Zoom
+                          </div>
+                        </div>
+                      )}
+
+                      <div style={{ marginBottom: '12px' }}>
+                        <strong style={{ color: 'var(--accent-blue)', fontSize: '0.80rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Problem</strong>
+                        <p className="proj-desc text-gray-400 text-sm mt-1">{proj.problem}</p>
+                      </div>
+                      
+                      <div style={{ marginBottom: '12px' }}>
+                        <strong style={{ color: 'var(--accent-blue)', fontSize: '0.80rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Approach</strong>
+                        <p className="proj-desc text-gray-400 text-sm mt-1">{proj.approach}</p>
+                      </div>
+
+                      <div style={{ marginBottom: '16px' }}>
+                        <strong style={{ color: 'var(--accent-blue)', fontSize: '0.80rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Solution</strong>
+                        <p className="proj-desc text-gray-400 text-sm mt-1">{proj.solution}</p>
+                      </div>
+
+                      <div style={{ marginBottom: '16px', padding: '12px', background: 'rgba(34, 211, 238, 0.05)', borderRadius: '6px', borderLeft: '3px solid var(--accent-blue)' }}>
+                        <strong style={{ color: '#fff', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Business Impact</strong>
+                        <p style={{ color: '#fff', fontSize: '0.9rem', marginTop: '6px', fontWeight: '500', lineHeight: '1.4' }}>{proj.impact}</p>
+                      </div>
+
+                      {proj.antigravityNote && (
+                        <div style={{ marginBottom: '20px', padding: '10px', background: 'rgba(245, 158, 11, 0.05)', borderRadius: '6px', border: '1px solid rgba(245, 158, 11, 0.2)' }}>
+                          <p style={{ color: 'var(--accent-gold)', fontSize: '0.8rem', fontStyle: 'italic', lineHeight: '1.4' }}>{proj.antigravityNote}</p>
+                        </div>
+                      )}
+                    </div>
+
+                    <ul className="tag-list mt-auto pt-4 border-t border-white/5">
+                      {proj.technologies.map((tag, idx) => <li key={idx}>{tag}</li>)}
+                    </ul>
+                  </div>
+                );
+              })}
+              
+              {/* Special Bento Card inside grid */}
+              <div 
+                ref={availabilitySpotlight.ref}
+                onMouseMove={availabilitySpotlight.onMouseMove}
+                className="spotlight-card reveal reveal-delay-2" 
+                style={{ borderColor: 'rgba(245, 158, 11, 0.25)', background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.03), rgba(7, 11, 20, 0.85))' }}
+              >
+                <div className="proj-header mb-4">
+                  <div className="proj-icon-wrapper" style={{ background: 'rgba(245, 158, 11, 0.08)', color: 'var(--accent-gold)', borderColor: 'rgba(245, 158, 11, 0.2)' }}>
+                    <Sparkles size={22} />
+                  </div>
                 </div>
-              </div>
-              <h3 className="proj-title mb-2" style={{ color: 'var(--accent-gold)' }}>Open for Opportunities</h3>
-              <p className="proj-desc mb-4" style={{ color: 'var(--text-sub)' }}>
-                I am actively seeking roles as a BI Specialist, Senior Data Analyst, Snowflake Data Engineer, or Automation Consultant. My 14+ years of operational delivery ensures I bring immediate value over theoretical knowledge.
-              </p>
-              <div style={{ marginTop: 'auto', paddingTop: '10px' }}>
-                <a href="#contact" className="btn btn-secondary" style={{ width: '100%', justifyContent: 'center', borderColor: 'rgba(245, 158, 11, 0.25)', color: 'var(--accent-gold)', background: 'rgba(245, 158, 11, 0.04)' }}>
-                  Start a Conversation →
-                </a>
+                <h3 className="proj-title mb-2" style={{ color: 'var(--accent-gold)' }}>Open for Opportunities</h3>
+                <p className="proj-desc mb-4" style={{ color: 'var(--text-sub)' }}>
+                  I am actively seeking roles as a BI Specialist, Senior Data Analyst, Snowflake Data Engineer, or Automation Consultant. My 14+ years of operational delivery ensures I bring immediate value over theoretical knowledge.
+                </p>
+                <div style={{ marginTop: 'auto', paddingTop: '10px' }}>
+                  <a href="#contact" className="btn btn-secondary" style={{ width: '100%', justifyContent: 'center', borderColor: 'rgba(245, 158, 11, 0.25)', color: 'var(--accent-gold)', background: 'rgba(245, 158, 11, 0.04)' }}>
+                    Start a Conversation →
+                  </a>
+                </div>
               </div>
             </div>
+          ) : (
+            /* FLAGSHIP SPOTLIGHT CAROUSEL */
+            <div className="reveal">
+              {(() => {
+                const list = PROJECTS.map((p, idx) => ({ ...p, originalIndex: idx })).filter(proj => {
+                  const isEngineering = proj.category.includes("Engineering");
+                  const isBI = proj.category.includes("Intelligence") || proj.category.includes("Analytics");
+                  const isAutomation = proj.category.includes("Automation");
+                  
+                  if (activeFilter === 'Data Engineering') return isEngineering;
+                  if (activeFilter === 'Business Intelligence') return isBI;
+                  if (activeFilter === 'Automation') return isAutomation;
+                  return true;
+                });
 
+                if (list.length === 0) {
+                  return (
+                    <div style={{ textAlign: 'center', padding: '48px', color: 'var(--text-muted)' }}>
+                      No projects found matching the filter.
+                    </div>
+                  );
+                }
+
+                const currentIndex = Math.min(carouselIndex, list.length - 1);
+                const activeProj = list[currentIndex];
+                const origIdx = activeProj.originalIndex;
+
+                const prevSlide = () => {
+                  setCarouselIndex((prev) => (prev === 0 ? list.length - 1 : prev - 1));
+                };
+
+                const nextSlide = () => {
+                  setCarouselIndex((prev) => (prev === list.length - 1 ? 0 : prev + 1));
+                };
+
+                return (
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+                    <div 
+                      ref={projectSpotlights[origIdx]?.ref}
+                      onMouseMove={projectSpotlights[origIdx]?.onMouseMove}
+                      style={{ 
+                        width: '100%', 
+                        display: 'flex', 
+                        gap: '32px',
+                        minHeight: '480px'
+                      }}
+                      className="spotlight-card flex flex-col lg:flex-row gap-8 items-stretch p-8 w-full"
+                    >
+                      {/* Left: Image Showcase */}
+                      {activeProj.image && (
+                        <div 
+                          style={{ 
+                            flex: '1.2', 
+                            borderRadius: '12px', 
+                            overflow: 'hidden', 
+                            border: '1px solid rgba(255,255,255,0.06)', 
+                            backgroundColor: '#070b13',
+                            position: 'relative',
+                            cursor: 'zoom-in',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            minHeight: '300px'
+                          }}
+                          onClick={() => { setSelectedImage(activeProj.image); setSelectedTitle(activeProj.title); }}
+                          className="group w-full lg:w-auto"
+                        >
+                          <img 
+                            src={activeProj.image} 
+                            alt={activeProj.title} 
+                            style={{ 
+                              width: '100%', 
+                              height: '100%', 
+                              maxHeight: '380px',
+                              objectFit: 'contain',
+                              display: 'block',
+                              transition: 'transform 0.4s ease'
+                            }} 
+                            className="group-hover:scale-[1.02]"
+                          />
+                          <div 
+                            style={{
+                              position: 'absolute',
+                              bottom: '12px',
+                              right: '12px',
+                              background: 'rgba(15,23,42,0.9)',
+                              padding: '6px 12px',
+                              borderRadius: '6px',
+                              fontSize: '11px',
+                              color: 'var(--accent-blue)',
+                              fontWeight: '600',
+                              border: '1px solid rgba(34,211,238,0.25)',
+                              boxShadow: '0 4px 12px rgba(0,0,0,0.5)'
+                            }}
+                          >
+                            🔍 Click to Zoom Full Image
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Right: Info Showcase */}
+                      <div style={{ flex: '1', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                        <div>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
+                            <div>
+                              <span style={{ padding: '3px 10px', borderRadius: '4px', background: activeProj.tagBg, border: '1px solid ' + activeProj.tagBorder, color: activeProj.tagText, fontSize: '10px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.8px', fontFamily: 'monospace' }}>{activeProj.category}</span>
+                              <h3 className="proj-title" style={{ fontSize: '1.4rem', fontWeight: '800', marginTop: '10px', color: '#fff' }}>{activeProj.title}</h3>
+                            </div>
+                            <div className="proj-links" style={{ gap: '16px' }}>
+                              {activeProj.githubLink && <a href={activeProj.githubLink} target="_blank" rel="noreferrer" title="Source Code" style={{ color: '#94a3b8' }} className="hover:text-white"><Github size={24} /></a>}
+                              {activeProj.liveLink && <a href={activeProj.liveLink} target="_blank" rel="noreferrer" title="Live Site" style={{ color: '#94a3b8' }} className="hover:text-white"><ExternalLink size={24} /></a>}
+                            </div>
+                          </div>
+
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '12px', marginBottom: '16px' }}>
+                            <div>
+                              <strong style={{ color: 'var(--accent-blue)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>The Problem</strong>
+                              <p style={{ color: '#94a3b8', fontSize: '0.88rem', marginTop: '4px', lineHeight: '1.5' }}>{activeProj.problem}</p>
+                            </div>
+                            <div>
+                              <strong style={{ color: 'var(--accent-blue)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Our Approach</strong>
+                              <p style={{ color: '#94a3b8', fontSize: '0.88rem', marginTop: '4px', lineHeight: '1.5' }}>{activeProj.approach}</p>
+                            </div>
+                            <div>
+                              <strong style={{ color: 'var(--accent-blue)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>The Solution</strong>
+                              <p style={{ color: '#94a3b8', fontSize: '0.88rem', marginTop: '4px', lineHeight: '1.5' }}>{activeProj.solution}</p>
+                            </div>
+                          </div>
+
+                          <div style={{ marginBottom: '20px', padding: '14px', background: 'rgba(34, 211, 238, 0.06)', borderRadius: '8px', borderLeft: '4px solid var(--accent-blue)' }}>
+                            <strong style={{ color: '#fff', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Business Impact</strong>
+                            <p style={{ color: '#fff', fontSize: '0.95rem', marginTop: '6px', fontWeight: '500', lineHeight: '1.4' }}>{activeProj.impact}</p>
+                          </div>
+                        </div>
+
+                        <div>
+                          <ul className="tag-list mt-auto pt-4 border-t border-white/5" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', listStyle: 'none', padding: 0 }}>
+                            {activeProj.technologies.map((tag, idx) => (
+                              <li key={idx} style={{ padding: '4px 10px', background: 'rgba(255,255,255,0.04)', borderRadius: '6px', fontSize: '0.78rem', color: '#cbd5e1', border: '1px solid rgba(255,255,255,0.04)' }}>{tag}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Carousel Nav Controls */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '24px', marginTop: '24px' }}>
+                      <button
+                        onClick={prevSlide}
+                        style={{
+                          background: 'rgba(10, 16, 32, 0.65)',
+                          border: '1px solid rgba(255,255,255,0.06)',
+                          color: '#fff',
+                          borderRadius: '50%',
+                          width: '44px',
+                          height: '44px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          cursor: 'pointer',
+                          fontSize: '1.1rem',
+                          transition: 'all 0.2s',
+                          boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
+                        }}
+                        onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--accent-blue)'; e.currentTarget.style.boxShadow = '0 0 10px rgba(34,211,238,0.2)'; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)'; }}
+                      >
+                        &larr;
+                      </button>
+
+                      {/* Dots Indicators */}
+                      <div style={{ display: 'flex', gap: '10px' }}>
+                        {list.map((_, idx) => (
+                          <button
+                            key={idx}
+                            onClick={() => setCarouselIndex(idx)}
+                            style={{
+                              width: currentIndex === idx ? '24px' : '10px',
+                              height: '10px',
+                              borderRadius: '5px',
+                              background: currentIndex === idx ? 'var(--accent-blue)' : 'rgba(255,255,255,0.2)',
+                              border: 'none',
+                              cursor: 'pointer',
+                              transition: 'all 0.3s ease',
+                              boxShadow: currentIndex === idx ? '0 0 8px var(--accent-blue)' : 'none'
+                            }}
+                          />
+                        ))}
+                      </div>
+
+                      <button
+                        onClick={nextSlide}
+                        style={{
+                          background: 'rgba(10, 16, 32, 0.65)',
+                          border: '1px solid rgba(255,255,255,0.06)',
+                          color: '#fff',
+                          borderRadius: '50%',
+                          width: '44px',
+                          height: '44px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          cursor: 'pointer',
+                          fontSize: '1.1rem',
+                          transition: 'all 0.2s',
+                          boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
+                        }}
+                        onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--accent-blue)'; e.currentTarget.style.boxShadow = '0 0 10px rgba(34,211,238,0.2)'; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)'; }}
+                      >
+                        &rarr;
+                      </button>
+                    </div>
+
+                    {/* Special Bento Card below carousel, styled to span full width */}
+                    <div 
+                      ref={availabilitySpotlight.ref}
+                      onMouseMove={availabilitySpotlight.onMouseMove}
+                      className="spotlight-card reveal" 
+                      style={{ 
+                        borderColor: 'rgba(245, 158, 11, 0.25)', 
+                        background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.03), rgba(7, 11, 20, 0.85))',
+                        width: '100%',
+                        marginTop: '40px',
+                        padding: '28px',
+                        textAlign: 'center',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center'
+                      }}
+                    >
+                      <div className="proj-header mb-4" style={{ display: 'flex', justifyContent: 'center' }}>
+                        <div className="proj-icon-wrapper" style={{ background: 'rgba(245, 158, 11, 0.08)', color: 'var(--accent-gold)', borderColor: 'rgba(245, 158, 11, 0.2)' }}>
+                          <Sparkles size={22} />
+                        </div>
+                      </div>
+                      <h3 className="proj-title mb-2" style={{ color: 'var(--accent-gold)', fontSize: '1.2rem' }}>Open for Opportunities</h3>
+                      <p className="proj-desc mb-4" style={{ color: 'var(--text-sub)', maxWidth: '650px', margin: '0 auto 16px' }}>
+                        I am actively seeking roles as a BI Specialist, Senior Data Analyst, Snowflake Data Engineer, or Automation Consultant. My 14+ years of operational delivery ensures I bring immediate value over theoretical knowledge.
+                      </p>
+                      <div style={{ width: '100%', maxWidth: '280px' }}>
+                        <a href="#contact" className="btn btn-secondary" style={{ width: '100%', justifyContent: 'center', borderColor: 'rgba(245, 158, 11, 0.25)', color: 'var(--accent-gold)', background: 'rgba(245, 158, 11, 0.04)' }}>
+                          Start a Conversation →
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* CAREER TIMELINE & MILESTONES */}
+      <section id="timeline" style={{ background: 'var(--bg-secondary)' }}>
+        <div className="container relative">
+          <div className="section-watermark">04 JOURNEY</div>
+          <div style={{ textAlign: 'center', marginBottom: '48px' }} className="reveal">
+            <h2 className="section-title">Career Timeline &amp; Milestones</h2>
+            <p className="section-subtitle" style={{ margin: '0 auto' }}>
+              A progression from operational management to data engineering and intelligent automation.
+            </p>
+          </div>
+
+          <div className="timeline-container reveal">
+            <div className="timeline-line"></div>
+
+            {[
+              {
+                year: '2024 – Present',
+                title: 'Cloud Data Engineering & Automation',
+                desc: 'Building Snowflake medallion pipelines, automated CRM lead systems with Python/Outlook COM, and deploying Power BI dashboards for executive reporting.',
+                tech: ['Snowflake', 'Python', 'Power BI', 'GitHub Actions']
+              },
+              {
+                year: '2022 – 2024',
+                title: 'BI Analytics & Dashboard Architecture',
+                desc: 'Designed clinical analytics dashboards, chocolate sales analytics, and relational schema optimizers. Mastered DAX, Power Query (M), and Star Schema modeling.',
+                tech: ['Power BI', 'DAX', 'SQL Server', 'Power Query']
+              },
+              {
+                year: '2018 – 2022',
+                title: 'Systems Automation & Process Optimization',
+                desc: 'Automated operational workflows, built VBA-driven reporting tools, and managed cross-functional teams delivering logistics and compliance solutions.',
+                tech: ['VBA', 'Excel', 'SharePoint', 'Process Automation']
+              },
+              {
+                year: '2012 – 2018',
+                title: 'Operational Management & SQL Foundations',
+                desc: 'Led large-scale operational teams, developed foundational SQL reporting capabilities, and managed inventory/logistics databases serving 500+ daily transactions.',
+                tech: ['SQL', 'Excel', 'Operations', 'Team Leadership']
+              }
+            ].map((milestone, idx) => (
+              <div className="timeline-item" key={idx}>
+                <div className="timeline-dot"></div>
+                <div className="timeline-card">
+                  <div className="timeline-year">{milestone.year}</div>
+                  <div className="timeline-title">{milestone.title}</div>
+                  <div className="timeline-desc">{milestone.desc}</div>
+                  <div className="timeline-tech">
+                    {milestone.tech.map((t, i) => <span key={i}>{t}</span>)}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Skill Progress Bars */}
+          <div style={{ maxWidth: '700px', margin: '48px auto 0' }} className="reveal">
+            <h3 style={{ textAlign: 'center', fontSize: '1.1rem', fontWeight: '700', color: 'var(--text-main)', marginBottom: '28px', fontFamily: 'var(--font-display)' }}>Core Competency Levels</h3>
+            {[
+              { name: 'Snowflake / Cloud DWH', level: 90 },
+              { name: 'SQL / T-SQL / Stored Procedures', level: 95 },
+              { name: 'Power BI / DAX / Data Modeling', level: 92 },
+              { name: 'Python Automation & Scripting', level: 85 },
+              { name: 'ETL Pipeline Design', level: 88 },
+              { name: 'Systems Automation (Outlook/VBA)', level: 93 }
+            ].map((skill, idx) => (
+              <div className="skill-bar-container" key={idx}>
+                <div className="skill-bar-label">
+                  <span>{skill.name}</span>
+                  <span>{skill.level}%</span>
+                </div>
+                <div className="skill-bar-track">
+                  <div className="skill-bar-fill" style={{ width: skill.level + '%' }}></div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -1280,6 +1763,80 @@ function App() {
           </p>
         </div>
       </footer>
+
+      {/* PORTFOLIO LIGHTBOX MODAL */}
+      {selectedImage && (
+        <div 
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            backgroundColor: 'rgba(5, 8, 16, 0.9)',
+            backdropFilter: 'blur(12px)',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 10000,
+            padding: '20px',
+            cursor: 'zoom-out'
+          }}
+          onClick={() => setSelectedImage(null)}
+        >
+          <div 
+            style={{
+              position: 'relative',
+              maxWidth: '95%',
+              maxHeight: '85%',
+              boxShadow: '0 25px 50px -12px rgba(0,0,0,0.8)',
+              borderRadius: '12px',
+              overflow: 'hidden',
+              border: '1px solid rgba(255,255,255,0.1)',
+              backgroundColor: '#090d16',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button 
+              onClick={() => setSelectedImage(null)}
+              style={{
+                position: 'absolute',
+                top: '16px',
+                right: '16px',
+                background: 'rgba(15, 23, 42, 0.65)',
+                border: '1px solid rgba(255,255,255,0.15)',
+                color: '#fff',
+                borderRadius: '50%',
+                width: '38px',
+                height: '38px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                fontSize: '1.4rem',
+                lineHeight: '1',
+                zIndex: 10,
+                boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
+              }}
+            >
+              &times;
+            </button>
+            <img 
+              src={selectedImage} 
+              alt={selectedTitle} 
+              style={{ maxWidth: '100%', maxHeight: '80vh', display: 'block', objectFit: 'contain' }} 
+            />
+          </div>
+          <div style={{ marginTop: '20px', textAlign: 'center', color: '#fff' }}>
+            <h3 style={{ fontSize: '1.15rem', fontWeight: 'bold' }}>{selectedTitle}</h3>
+            <p style={{ color: '#94a3b8', fontSize: '0.85rem', marginTop: '4px' }}>Click anywhere outside to close this preview</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
