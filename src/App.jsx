@@ -725,7 +725,7 @@ function App() {
             </div>
             <h1 className="hero-title">Data Operations &amp; Systems Automation</h1>
             <p className="hero-desc">
-              With over 14 years of hands-on data operations experience, I build clinical reporting dashboards, scalable Snowflake data warehouses, and serverless automation pipelines. I bring immediate business value by translating operational realities into modern Data Analytics, BI, and Data Engineering solutions.
+              With over 14 years of hands-on data operations experience, I build enterprise-grade reporting dashboards, scalable Snowflake data warehouses, and automated ETL pipelines. I bring immediate business value by translating operational realities into modern Data Analytics, BI, and Data Engineering solutions.
             </p>
             <div className="cta-group">
               <a href="#projects" className="btn btn-primary">
