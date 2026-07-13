@@ -369,30 +369,30 @@ const CHAPTERS = [
 const AUTOMATION_STEPS = [
   {
     id: 1,
-    title: "Client Intake & Math Engine",
-    component: "Frontend / Apps Script",
-    desc: "Prospects input metrics on the browser. The frontend offloads calculations to a secure, server-side Google Apps Script math engine to protect intellectual property.",
+    title: "Leads Scraping & Extraction",
+    component: "scrape_restaurants.py (Python)",
+    desc: "Python web scrapers query business registries to extract phone numbers, physical addresses, and coordinates into a Raw Leads CSV.",
     nodeHighlight: "node1"
   },
   {
     id: 2,
-    title: "Secure API Proxy Gateway",
-    component: "Cloudflare Workers",
-    desc: "All traffic routes through a custom Cloudflare Workers proxy at /api. This hides the Google Apps Script endpoint, cleans HTTP headers, and enforces CORS protection.",
+    title: "Leads Cleansing & Normalization",
+    component: "clean_leads.py (Python)",
+    desc: "Normalizes name casing (e.g. converting 'REStauranT lTD' to 'Restaurant Ltd'), filters invalid characters, and deduplicates records in the Cleaned Leads Database.",
     nodeHighlight: "node2"
   },
   {
     id: 3,
-    title: "Bi-directional GSheets Database",
-    component: "Google Sheets CRM",
-    desc: "Leads and client checklist progress states are saved to Google Sheets. The API features self-healing checks to automatically restore missing columns.",
+    title: "Outreach & Outlook Integration",
+    component: "sync_sent_from_outlook.ps1 (PowerShell)",
+    desc: "PowerShell automation utilizing local Outlook COM APIs to track outbound sent emails and synchronize outreaches with the CRM.",
     nodeHighlight: "node3"
   },
   {
     id: 4,
-    title: "Multi-Channel Automated Nurturing",
-    component: "Gmail Drip Engine",
-    desc: "Apps Script triggers automatically compile customized 6-page PDF audits, schedule follow-up emails on Day 2 & Day 5, and link clients directly to their portal.",
+    title: "Inbox Bounce Sweeping",
+    component: "sweep_bounces.py (Python)",
+    desc: "Automated inbox sweeper that parses incoming bounced/out-of-office emails, flags dead leads in Google Sheets CRM, and logs alternative contact suggestions.",
     nodeHighlight: "node4"
   }
 ];
@@ -428,7 +428,7 @@ const BI_STEPS = [
   }
 ];
 
-// Interactive SVG blueprint showing Systems Automation flow
+// Interactive SVG blueprint showing Systems Automation flow (Lead Harvesting & Bounce Sweeper)
 const AutomationBlueprintDiagram = ({ activeStep }) => (
   <svg viewBox="0 0 500 320" width="100%" height="100%" style={{ background: 'transparent', display: 'block' }}>
     <defs>
@@ -450,72 +450,71 @@ const AutomationBlueprintDiagram = ({ activeStep }) => (
 
     {/* Connection Flow Lines with active dash offsets */}
     <path 
-      d="M 90 160 H 210" 
+      d="M 65 160 H 180" 
       stroke={activeStep > 1 ? "#22d3ee" : "rgba(255,255,255,0.08)"} 
       strokeWidth="2.5" 
       fill="none"
       className={activeStep > 1 ? "svg-flow-animation" : ""}
     />
-
-    {/* Split paths */}
     <path 
-      d="M 290 160 C 330 160, 330 90, 410 90" 
+      d="M 220 160 H 320" 
       stroke={activeStep > 2 ? "#22d3ee" : "rgba(255,255,255,0.08)"} 
-      strokeWidth="2" 
+      strokeWidth="2.5" 
       fill="none"
       className={activeStep > 2 ? "svg-flow-animation" : ""}
     />
     <path 
-      d="M 290 160 C 330 160, 330 230, 410 230" 
-      stroke={activeStep > 2 ? "#22d3ee" : "rgba(255,255,255,0.08)"} 
-      strokeWidth="2" 
+      d="M 360 160 H 435" 
+      stroke={activeStep > 3 ? "#22d3ee" : "rgba(255,255,255,0.08)"} 
+      strokeWidth="2.5" 
       fill="none"
-      className={activeStep > 2 ? "svg-flow-animation" : ""}
+      className={activeStep > 3 ? "svg-flow-animation" : ""}
     />
 
-    {/* Node 1: Browser */}
-    <g transform="translate(90, 160)">
-      <circle r="40" fill="#040810" stroke={activeStep === 1 ? "#22d3ee" : "rgba(255,255,255,0.08)"} strokeWidth={activeStep === 1 ? "2.5" : "1"} filter={activeStep === 1 ? "url(#glow-cyan)" : "none"} style={{ transition: 'all 0.3s' }} />
-      <circle r="32" fill="#080f1e" />
-      <rect x="-12" y="-10" width="24" height="17" rx="2" fill="none" stroke="#22d3ee" strokeWidth="1.5" />
-      <line x1="-12" y1="-4" x2="12" y2="-4" stroke="#22d3ee" strokeWidth="1" />
-      <circle cx="-8" cy="-7" r="0.8" fill="#ef4444" />
-      <circle cx="-5" cy="-7" r="0.8" fill="#eab308" />
-      <circle cx="-2" cy="-7" r="0.8" fill="#22c55e" />
-      <text x="0" y="3" fill="#cbd5e1" fontSize="6.5" fontFamily="sans-serif" textAnchor="middle">Metrics Intake</text>
-      <text x="0" y="54" fill={activeStep === 1 ? "#22d3ee" : "#64748b"} fontSize="8" fontFamily="monospace" fontWeight="600" textAnchor="middle">1. BROWSER FORM</text>
+    {/* Node 1: Web Scraper */}
+    <g transform="translate(65, 160)">
+      <circle r="36" fill="#040810" stroke={activeStep === 1 ? "#22d3ee" : "rgba(255,255,255,0.08)"} strokeWidth={activeStep === 1 ? "2.5" : "1"} filter={activeStep === 1 ? "url(#glow-cyan)" : "none"} style={{ transition: 'all 0.3s' }} />
+      <circle r="29" fill="#080f1e" />
+      {/* Icon: Scraper spider/web/registry */}
+      <circle cx="0" cy="-3" r="7" fill="none" stroke="#22d3ee" strokeWidth="1.5" />
+      <line x1="-10" y1="-8" x2="-5" y2="-5" stroke="#22d3ee" strokeWidth="1.2" />
+      <line x1="10" y1="-8" x2="5" y2="-5" stroke="#22d3ee" strokeWidth="1.2" />
+      <line x1="-11" y1="-2" x2="-6" y2="-2" stroke="#22d3ee" strokeWidth="1.2" />
+      <line x1="11" y1="-2" x2="6" y2="-2" stroke="#22d3ee" strokeWidth="1.2" />
+      <line x1="-10" y1="4" x2="-5" y2="1" stroke="#22d3ee" strokeWidth="1.2" />
+      <line x1="10" y1="4" x2="5" y2="1" stroke="#22d3ee" strokeWidth="1.2" />
+      <text x="0" y="48" fill={activeStep === 1 ? "#22d3ee" : "#64748b"} fontSize="8.5" fontFamily="monospace" fontWeight="600" textAnchor="middle">1. SCRAPER</text>
     </g>
 
-    {/* Node 2: Workers */}
-    <g transform="translate(250, 160)">
-      <circle r="40" fill="#040810" stroke={activeStep === 2 ? "#22d3ee" : "rgba(255,255,255,0.08)"} strokeWidth={activeStep === 2 ? "2.5" : "1"} filter={activeStep === 2 ? "url(#glow-cyan)" : "none"} style={{ transition: 'all 0.3s' }} />
-      <circle r="32" fill="#080f1e" />
-      <g transform="translate(0, -3)" className={activeStep === 2 ? "svg-spin-animation" : ""}>
-        <circle cx="0" cy="0" r="9" fill="none" stroke="#22d3ee" strokeWidth="1.5" strokeDasharray="3 2" />
-        <circle cx="0" cy="0" r="4" fill="#22d3ee" />
-      </g>
-      <text x="0" y="14" fill="#cbd5e1" fontSize="6.5" fontFamily="sans-serif" textAnchor="middle">CF API Workers</text>
-      <text x="0" y="54" fill={activeStep === 2 ? "#22d3ee" : "#64748b"} fontSize="8" fontFamily="monospace" fontWeight="600" textAnchor="middle">2. PROXY GATEWAY</text>
+    {/* Node 2: Cleansing Engine */}
+    <g transform="translate(200, 160)">
+      <circle r="38" fill="#040810" stroke={activeStep === 2 ? "#22d3ee" : "rgba(255,255,255,0.08)"} strokeWidth={activeStep === 2 ? "2.5" : "1"} filter={activeStep === 2 ? "url(#glow-cyan)" : "none"} style={{ transition: 'all 0.3s' }} />
+      <circle r="30" fill="#080f1e" />
+      {/* Icon: Funnel/Cleanser */}
+      <polygon points="-8,-8 8,-8 3,1 3,8 -3,8 -3,1" fill="none" stroke="#22d3ee" strokeWidth="1.5" />
+      <line x1="-5" y1="-3" x2="5" y2="-3" stroke="#22d3ee" strokeWidth="1" />
+      <text x="0" y="50" fill={activeStep === 2 ? "#22d3ee" : "#64748b"} fontSize="8.5" fontFamily="monospace" fontWeight="600" textAnchor="middle">2. CLEANSE</text>
     </g>
 
-    {/* Node 3: Sheets CRM */}
-    <g transform="translate(410, 90)">
-      <circle r="34" fill="#040810" stroke={activeStep === 3 ? "#22d3ee" : "rgba(255,255,255,0.08)"} strokeWidth={activeStep === 3 ? "2" : "1"} filter={activeStep === 3 ? "url(#glow-cyan)" : "none"} style={{ transition: 'all 0.3s' }} />
-      <circle r="27" fill="#080f1e" />
-      <rect x="-9" y="-8" width="18" height="15" fill="none" stroke="#22d3ee" strokeWidth="1.5" />
-      <line x1="-9" y1="-3" x2="9" y2="-3" stroke="#22d3ee" strokeWidth="1" />
-      <line x1="-9" y1="2" x2="9" y2="2" stroke="#22d3ee" strokeWidth="1" />
-      <line x1="-3" y1="-8" x2="-3" y2="7" stroke="#22d3ee" strokeWidth="1" />
-      <text x="0" y="46" fill={activeStep === 3 ? "#22d3ee" : "#64748b"} fontSize="8.5" fontFamily="monospace" fontWeight="600" textAnchor="middle">3. GOOGLE SHEETS</text>
+    {/* Node 3: Outlook COM */}
+    <g transform="translate(340, 160)">
+      <circle r="38" fill="#040810" stroke={activeStep === 3 ? "#22d3ee" : "rgba(255,255,255,0.08)"} strokeWidth={activeStep === 3 ? "2.5" : "1"} filter={activeStep === 3 ? "url(#glow-cyan)" : "none"} style={{ transition: 'all 0.3s' }} />
+      <circle r="30" fill="#080f1e" />
+      {/* Icon: Mail message envelope */}
+      <rect x="-9" y="-6" width="18" height="13" rx="1" fill="none" stroke="#22d3ee" strokeWidth="1.5" />
+      <path d="M-9 -4 L0 1 L9 -4" fill="none" stroke="#22d3ee" strokeWidth="1.2" />
+      <text x="0" y="50" fill={activeStep === 3 ? "#22d3ee" : "#64748b"} fontSize="8.5" fontFamily="monospace" fontWeight="600" textAnchor="middle">3. OUTLOOK API</text>
     </g>
 
-    {/* Node 4: Email */}
-    <g transform="translate(410, 230)">
-      <circle r="34" fill="#040810" stroke={activeStep === 4 ? "#22d3ee" : "rgba(255,255,255,0.08)"} strokeWidth={activeStep === 4 ? "2" : "1"} filter={activeStep === 4 ? "url(#glow-cyan)" : "none"} style={{ transition: 'all 0.3s' }} />
-      <circle r="27" fill="#080f1e" />
-      <rect x="-10" y="-7" width="20" height="14" rx="1.5" fill="none" stroke="#22d3ee" strokeWidth="1.5" />
-      <path d="M-10 -5 L0 1 L10 -5" fill="none" stroke="#22d3ee" strokeWidth="1.2" />
-      <text x="0" y="46" fill={activeStep === 4 ? "#22d3ee" : "#64748b"} fontSize="8.5" fontFamily="monospace" fontWeight="600" textAnchor="middle">4. EMAIL OUTREACH</text>
+    {/* Node 4: Bounce Sweeper / sheets */}
+    <g transform="translate(440, 160)">
+      <circle r="36" fill="#040810" stroke={activeStep === 4 ? "#22d3ee" : "rgba(255,255,255,0.08)"} strokeWidth={activeStep === 4 ? "2.5" : "1"} filter={activeStep === 4 ? "url(#glow-cyan)" : "none"} style={{ transition: 'all 0.3s' }} />
+      <circle r="29" fill="#080f1e" />
+      {/* Icon: Bounce cross/check */}
+      <line x1="-5" y1="-5" x2="5" y2="5" stroke="#22d3ee" strokeWidth="1.5" />
+      <line x1="5" y1="-5" x2="-5" y2="5" stroke="#22d3ee" strokeWidth="1.5" />
+      <rect x="-9" y="-9" width="18" height="18" rx="2" fill="none" stroke="#22d3ee" strokeWidth="1" strokeDasharray="3 2" />
+      <text x="0" y="48" fill={activeStep === 4 ? "#22d3ee" : "#64748b"} fontSize="8.5" fontFamily="monospace" fontWeight="600" textAnchor="middle">4. BOUNCE CRM</text>
     </g>
   </svg>
 );
