@@ -1342,7 +1342,7 @@ function App() {
             &copy; {new Date().getFullYear()} M. Haresh Kumar · Styled with <span>React &amp; Vite</span>
           </p>
           <p style={{ fontSize: '0.72rem', color: 'var(--text-dim)', marginTop: '8px', fontStyle: 'italic', maxWidth: '600px', margin: '8px auto 0', lineHeight: '1.5' }}>
-            * This portfolio website design and layout was built leveraging AI assistance (Antigravity), representing my commitment to modern operational efficiency. All linked SQL, Python, and PowerShell repositories contain my handwritten data operations code.
+            * I leveraged Antigravity to automate workflow integration and portfolio layout, while all SQL, Power BI, and Snowflake projects are my own handwritten work.
           </p>
         </div>
       </footer>

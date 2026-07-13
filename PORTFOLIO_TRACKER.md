@@ -12,6 +12,7 @@
 > - 🎯 *"Automated ETL pipeline saved 20 hours/month."*
 > - 🎯 *"Reporting dashboards reduced manual effort by 40%."*
 > - 🎯 *"Snowflake Medallion architecture improved data reliability."*
+> - 🤖 **Antigravity Explanation:** *"I leveraged Antigravity to automate workflow integration and portfolio layout, while all SQL, Power BI, and Snowflake projects are my own handwritten work."*
 
 ---
 
