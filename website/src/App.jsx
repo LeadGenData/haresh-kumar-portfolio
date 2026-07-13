@@ -795,6 +795,27 @@ const ProjectCaseStudy = ({ proj, index, onZoom }) => {
           )}
         </div>
 
+        {/* Code Registry (Optional) */}
+        {proj.codeFiles && (
+          <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <span style={{ fontSize: '0.7rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '1px', display: 'block' }}>Pipeline Script Registry</span>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '8px' }}>
+              {proj.codeFiles.map((file, fIdx) => (
+                <a 
+                  key={fIdx} 
+                  href={file.url} 
+                  target="_blank" 
+                  rel="noreferrer" 
+                  style={{ fontSize: '0.8rem', color: '#60a5fa', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }} 
+                  className="hover:underline"
+                >
+                  📄 {file.name}
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Tech list */}
         <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '16px' }}>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
@@ -826,7 +847,13 @@ const PROJECTS = [
     impact: "Achieved 100% PCI-DSS compliance by masking cardholder PII; optimized dashboard query latency by 60% using Gold dimension tables; eliminated manual ETL runs.",
     technologies: ["Snowflake DWH", "SQL", "Power BI", "DAX", "Python (Jupyter)", "Snowflake CDC"],
     liveLink: null,
-    githubLink: "https://github.com/LeadGenData/haresh-kumar-portfolio/tree/main/projects/snowflake-pipeline"
+    githubLink: "https://github.com/LeadGenData/haresh-kumar-portfolio/tree/main/projects/snowflake-pipeline",
+    codeFiles: [
+      { name: "03_silver_layer.sql (Cleansing & Transformations)", url: "https://github.com/LeadGenData/haresh-kumar-portfolio/blob/main/projects/snowflake-pipeline/03_silver_layer.sql" },
+      { name: "04_gold_star_schema.sql (Star Schema Modeling)", url: "https://github.com/LeadGenData/haresh-kumar-portfolio/blob/main/projects/snowflake-pipeline/04_gold_star_schema.sql" },
+      { name: "06_streams_tasks_alerts.sql (CDC & Tasks Orchestration)", url: "https://github.com/LeadGenData/haresh-kumar-portfolio/blob/main/projects/snowflake-pipeline/06_streams_tasks_alerts.sql" },
+      { name: "08_governance.sql (Data Security & Masking Policies)", url: "https://github.com/LeadGenData/haresh-kumar-portfolio/blob/main/projects/snowflake-pipeline/08_governance.sql" }
+    ]
   },
   {
     title: "Chocolate Sales Analytics",
@@ -1015,13 +1042,13 @@ function App() {
         <div className="container hero-layout">
           <div className="reveal">
             <div className="hero-subtitle">
-              <Sparkles size={16} /> Data Operations &amp; Systems Automation Specialist
+              <Sparkles size={16} /> Data &amp; Analytics Specialist | Snowflake &amp; Power BI
             </div>
             <h1 className="hero-title" style={{ letterSpacing: '-0.04em' }}>
               I Bridge the Gap Between Operations &amp; Code
             </h1>
             <p className="hero-desc" style={{ fontSize: '1.02rem', color: 'var(--text-sub)' }}>
-              Over 14 years of hands-on data operations experience, turned into clean, automated systems. I build enterprise-grade reporting, scalable Snowflake data warehouses, and self-healing pipelines that translate complex operational needs into real business value.
+              Over 14 years of professional delivery experience, self-taught and execution-driven. I design high-performance Snowflake data warehouses, model secure SQL databases, and build interactive Power BI semantic dashboards that translate complex operational needs into real business value.
             </p>
             
             {/* Tech Stack Showcase */}
