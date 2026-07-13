@@ -28,9 +28,11 @@ import {
 } from 'lucide-react';
 
 import snowflakePipelineImg from './assets/snowflake_pipeline.png';
-import revenueLeakageImg from './assets/revenue_leakage_calculator.png';
+import crmAdminPortalImg from './assets/crm_admin_portal.png';
 import powerBiDashboardImg from './assets/power_bi_dashboard.png';
 import hospitalDashboardImg from './assets/hospital_dashboard.jpg';
+import sqlWarehouseSchemaImg from './assets/sql_warehouse_schema.png';
+import revenueLeakageImg from './assets/revenue_leakage_calculator.png';
 
 // ─── Canvas Particle Background ───────────────────────────────────────────
 const DataNodeBackground = () => {
@@ -542,14 +544,14 @@ const PROJECTS = [
     githubLink: "https://github.com/LeadGenData/haresh-kumar-portfolio/tree/main/projects/snowflake-pipeline"
   },
   {
-    title: "Revenue Leakage Analysis",
+    title: "Campaigns CRM Systems Automation",
     icon: <Bot size={24} />,
-    image: revenueLeakageImg,
-    problem: "Tedious manual data refresh cycles delayed stakeholder reporting.",
-    approach: "Orchestrated serverless ETL pipelines using Antigravity; automated triggers.",
-    solution: "Hands-free background process integrating Snowflake and Power BI pipelines without manual intervention.",
-    impact: "Achieved 100% automated delivery, saving 10 hours/week in manual execution.",
-    technologies: ["Antigravity", "Workflow Automation", "API Integration"],
+    image: crmAdminPortalImg,
+    problem: "Manual lead harvesting and email bounce tracking wasted hours of administrative work and polluted outreach databases.",
+    approach: "Developed web scrapers in Python, automated Outlook COM sweeping in PowerShell, and synced logs to Google Sheets.",
+    solution: "An automated lead generation and outreach monitoring system that harvests verified contacts and flags bounced addresses.",
+    impact: "Reduced administrative manual work by 100% and protected outreach domain reputation from email spam blocks.",
+    technologies: ["Python", "PowerShell", "Outlook API", "Google Sheets API"],
     liveLink: null,
     githubLink: "https://github.com/LeadGenData/haresh-kumar-portfolio/tree/main/projects/campaigns-automation"
   },
@@ -582,12 +584,12 @@ const PROJECTS = [
   {
     title: "Relational Schema Optimizer",
     icon: <Database size={24} />,
-    image: null,
+    image: sqlWarehouseSchemaImg,
     problem: "High-volume billing analyses were crippled by unoptimized relational models.",
-    approach: "Oracle SQL; Data Warehousing; Clustered Indexing.",
+    approach: "SQL Server T-SQL; Data Warehousing; Clustered Indexing.",
     solution: "Optimized relational warehouse modeling transaction logs with high-performance Star schemas.",
     impact: "Sped up complex reporting queries by 300%.",
-    technologies: ["SQL Engine", "Oracle SQL", "ETL Pipelines", "Star Schema"],
+    technologies: ["SQL Server", "T-SQL Engine", "ETL Pipelines", "Star Schema"],
     liveLink: "https://github.com/LeadGenData/sql_data_warehouse_project",
     githubLink: "https://github.com/LeadGenData/sql_data_warehouse_project",
     antigravityNote: null
