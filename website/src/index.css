@@ -1028,5 +1028,20 @@ textarea { resize:vertical; min-height:120px; }
   transform: translateY(-2px);
 }
 
+/* Alternating Case Study Layout Rules */
+.case-study-row {
+  display: flex;
+  align-items: center;
+  gap: 64px;
+  width: 100%;
+}
+
+@media (max-width: 992px) {
+  .case-study-row {
+    flex-direction: column !important;
+    gap: 40px !important;
+  }
+}
+
 
 

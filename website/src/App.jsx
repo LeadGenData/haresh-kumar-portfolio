@@ -665,6 +665,153 @@ const BrowserFrame = ({ title, url, children }) => (
 );
 
 
+const ProjectCaseStudy = ({ proj, index, onZoom }) => {
+  const spotlight = useMouseMoveSpotlight();
+  const isEven = index % 2 === 0;
+
+  return (
+    <div 
+      ref={spotlight.ref}
+      onMouseMove={spotlight.onMouseMove}
+      className="case-study-row reveal"
+      style={{
+        display: 'flex',
+        flexDirection: isEven ? 'row' : 'row-reverse',
+        alignItems: 'center',
+        gap: '64px',
+        width: '100%',
+        marginBottom: '120px'
+      }}
+    >
+      {/* Left / Right: Image Mockup */}
+      <div 
+        style={{ flex: '1.2', display: 'flex', minHeight: '340px', cursor: 'zoom-in' }}
+        onClick={() => onZoom(proj.image, proj.title)}
+        className="group w-full lg:w-auto"
+      >
+        <BrowserFrame 
+          title={proj.title} 
+          url={`https://haresh.io/analytics/${proj.title.toLowerCase().replace(/ /g, '-')}`}
+        >
+          <img 
+            src={proj.image} 
+            alt="" 
+            style={{ 
+              position: 'absolute',
+              inset: 0,
+              width: '100%', 
+              height: '100%', 
+              objectFit: 'cover',
+              filter: 'blur(24px) opacity(0.35)',
+              pointerEvents: 'none',
+              transform: 'scale(1.15)',
+              transition: 'transform 0.5s ease',
+              zIndex: 0
+            }} 
+            className="group-hover:scale-[1.22]"
+          />
+
+          <img 
+            src={proj.image} 
+            alt={proj.title} 
+            style={{ 
+              position: 'relative',
+              zIndex: 1,
+              width: '88%', 
+              height: 'auto',
+              maxHeight: '260px',
+              objectFit: 'contain',
+              borderRadius: '6px',
+              boxShadow: '0 20px 45px rgba(0,0,0,0.7)',
+              border: '1px solid rgba(255,255,255,0.06)',
+              transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease'
+            }} 
+            className="group-hover:scale-[1.03] group-hover:translate-y-[-3px]"
+          />
+
+          <div 
+            style={{
+              position: 'absolute',
+              bottom: '12px',
+              right: '12px',
+              background: 'rgba(15,23,42,0.92)',
+              padding: '5px 10px',
+              borderRadius: '6px',
+              fontSize: '9.5px',
+              color: '#60a5fa',
+              fontWeight: '600',
+              border: '1px solid rgba(59,130,246,0.2)',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
+              zIndex: 10
+            }}
+          >
+            🔍 Zoom Screen
+          </div>
+        </BrowserFrame>
+      </div>
+
+      {/* Right / Left: Content */}
+      <div style={{ flex: '1', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        <div>
+          <span style={{ padding: '4px 12px', borderRadius: '30px', background: proj.tagBg, border: '1px solid ' + proj.tagBorder, color: proj.tagText, fontSize: '10px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', fontFamily: 'monospace' }}>
+            {proj.category}
+          </span>
+          <h3 style={{ fontSize: '1.8rem', fontWeight: '800', marginTop: '12px', color: '#fff', letterSpacing: '-0.02em' }}>
+            {proj.title}
+          </h3>
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div>
+            <strong style={{ color: 'var(--accent-primary)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '1px', display: 'block', marginBottom: '4px' }}>The Problem</strong>
+            <p style={{ color: 'var(--text-sub)', fontSize: '0.92rem', lineHeight: '1.6' }}>{proj.problem}</p>
+          </div>
+          <div>
+            <strong style={{ color: 'var(--accent-primary)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '1px', display: 'block', marginBottom: '4px' }}>Our Approach</strong>
+            <p style={{ color: 'var(--text-sub)', fontSize: '0.92rem', lineHeight: '1.6' }}>{proj.approach}</p>
+          </div>
+          <div>
+            <strong style={{ color: 'var(--accent-primary)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '1px', display: 'block', marginBottom: '4px' }}>The Solution</strong>
+            <p style={{ color: 'var(--text-sub)', fontSize: '0.92rem', lineHeight: '1.6' }}>{proj.solution}</p>
+          </div>
+        </div>
+
+        {/* Business Impact Box */}
+        <div style={{ padding: '16px 20px', background: 'rgba(34, 211, 238, 0.04)', borderRadius: '12px', borderLeft: '4px solid var(--accent-cyan)', boxShadow: '0 4px 20px rgba(0,0,0,0.15)' }}>
+          <strong style={{ color: 'var(--accent-cyan)', fontSize: '0.82rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Business Impact</strong>
+          <p style={{ color: '#fff', fontSize: '0.98rem', marginTop: '6px', fontWeight: '600', lineHeight: '1.5' }}>{proj.impact}</p>
+        </div>
+
+        {/* GitHub / Live buttons */}
+        <div style={{ display: 'flex', gap: '12px' }}>
+          {proj.githubLink && (
+            <a href={proj.githubLink} target="_blank" rel="noreferrer" className="btn btn-secondary" style={{ padding: '8px 16px', fontSize: '0.85rem' }}>
+              <Github size={16} /> View Code
+            </a>
+          )}
+          {proj.liveLink && (
+            <a href={proj.liveLink} target="_blank" rel="noreferrer" className="btn btn-primary" style={{ padding: '8px 16px', fontSize: '0.85rem' }}>
+              <ExternalLink size={16} /> Live Dashboard
+            </a>
+          )}
+        </div>
+
+        {/* Tech list */}
+        <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '16px' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+            {proj.technologies.map((tag, idx) => (
+              <span key={idx} style={{ padding: '3px 8px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '6px', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                {tag}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+
 const PROJECTS = [
   {
     title: "Snowflake Medallion Pipeline",
@@ -753,29 +900,20 @@ const PROJECTS = [
 
 function App() {
   const [pipelineType, setPipelineType] = useState('automation');
-  const [activeFilter, setActiveFilter] = useState('All');
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedTitle, setSelectedTitle] = useState(null);
-  const [carouselIndex, setCarouselIndex] = useState(0);
   const [activeStep, setActiveStep]     = useState(1);
   const [menuOpen, setMenuOpen]         = useState(false);
   const [formData, setFormData]         = useState({ name: '', email: '', message: '' });
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [formLoading, setFormLoading]   = useState(false);
   const [formError, setFormError]       = useState('');
-  const [activeChapterId, setActiveChapterId] = useState(1);
   const availabilitySpotlight = useMouseMoveSpotlight();
   const contactSpotlight = useMouseMoveSpotlight();
   const node1Spotlight = useMouseMoveSpotlight();
   const node2Spotlight = useMouseMoveSpotlight();
   const node3Spotlight = useMouseMoveSpotlight();
   const node4Spotlight = useMouseMoveSpotlight();
-  const node5Spotlight = useMouseMoveSpotlight();
-  const projectSpotlights = [node1Spotlight, node2Spotlight, node3Spotlight, node4Spotlight, node5Spotlight];
-
-  useEffect(() => {
-    setCarouselIndex(0);
-  }, [activeFilter]);
 
   useEffect(() => {
     const observerOptions = {
@@ -1140,307 +1278,59 @@ function App() {
       <section id="projects">
         <div className="container relative">
           <div className="section-watermark">03 WORK</div>
-          <div style={{ textAlign: 'center', marginBottom: '28px' }} className="reveal">
-            <h2 className="section-title">Analytical &amp; Automation Portfolios</h2>
+          <div style={{ textAlign: 'center', marginBottom: '80px' }} className="reveal">
+            <h2 className="section-title">Case Studies &amp; Technical Portfolios</h2>
             <p className="section-subtitle" style={{ margin: '0 auto' }}>
-              Real-world systems and Cloud Data Warehouses engineered to analyze metrics and automate operations.
+              Real-world systems, automated pipelines, and Snowflake data warehouses built to scale.
             </p>
           </div>
 
-          {/* CATEGORY FILTER TABS */}
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', flexWrap: 'wrap', marginBottom: '24px' }} className="reveal">
-            {['All', 'Data Engineering', 'Business Intelligence', 'Automation'].map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setActiveFilter(cat)}
-                style={{
-                  padding: '8px 18px',
-                  borderRadius: '30px',
-                  fontSize: '0.8rem',
-                  fontWeight: '600',
-                  border: '1px solid',
-                  borderColor: activeFilter === cat ? 'var(--accent-blue)' : 'rgba(255,255,255,0.08)',
-                  backgroundColor: activeFilter === cat ? 'rgba(34, 211, 238, 0.1)' : 'rgba(10, 16, 32, 0.45)',
-                  color: activeFilter === cat ? 'var(--accent-blue)' : '#94a3b8',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease',
-                  boxShadow: activeFilter === cat ? '0 0 15px rgba(34, 211, 238, 0.15)' : 'none'
-                }}
-                className="filter-btn"
-              >
-                {cat}
-              </button>
+          {/* Alternating Project Case Study List */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '80px' }}>
+            {PROJECTS.map((proj, idx) => (
+              <ProjectCaseStudy 
+                key={idx} 
+                proj={proj} 
+                index={idx} 
+                onZoom={(img, title) => { setSelectedImage(img); setSelectedTitle(title); }} 
+              />
             ))}
           </div>
 
-          {/* FLAGSHIP SPOTLIGHT CAROUSEL */}
-          <div className="reveal">
-            {(() => {
-              const list = PROJECTS.map((p, idx) => ({ ...p, originalIndex: idx })).filter(proj => {
-                const isEngineering = proj.category.includes("Engineering");
-                const isBI = proj.category.includes("Intelligence") || proj.category.includes("Analytics");
-                const isAutomation = proj.category.includes("Automation");
-                
-                if (activeFilter === 'Data Engineering') return isEngineering;
-                if (activeFilter === 'Business Intelligence') return isBI;
-                if (activeFilter === 'Automation') return isAutomation;
-                return true;
-              });
-
-              if (list.length === 0) {
-                return (
-                  <div style={{ textAlign: 'center', padding: '48px', color: 'var(--text-muted)' }}>
-                    No projects found matching the filter.
-                  </div>
-                );
-              }
-
-              const currentIndex = Math.min(carouselIndex, list.length - 1);
-              const activeProj = list[currentIndex];
-              const origIdx = activeProj.originalIndex;
-
-              const prevSlide = () => {
-                setCarouselIndex((prev) => (prev === 0 ? list.length - 1 : prev - 1));
-              };
-
-              const nextSlide = () => {
-                setCarouselIndex((prev) => (prev === list.length - 1 ? 0 : prev + 1));
-              };
-
-              return (
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
-                  <div 
-                    key={currentIndex}
-                    ref={projectSpotlights[origIdx]?.ref}
-                    onMouseMove={projectSpotlights[origIdx]?.onMouseMove}
-                    style={{ 
-                      width: '100%', 
-                      display: 'flex', 
-                      gap: '32px',
-                      minHeight: '480px'
-                    }}
-                    className="spotlight-card flex flex-col lg:flex-row gap-8 items-stretch p-8 w-full slide-enter"
-                  >
-                    {/* Left: Image Showcase framed inside Browser Window Mockup */}
-                    {activeProj.image && (
-                      <div 
-                        style={{ flex: '1.2', display: 'flex', minHeight: '380px', cursor: 'zoom-in' }}
-                        onClick={() => { setSelectedImage(activeProj.image); setSelectedTitle(activeProj.title); }}
-                        className="group w-full lg:w-auto"
-                      >
-                        <BrowserFrame 
-                          title={activeProj.title} 
-                          url={`https://haresh.io/analytics/${activeProj.title.toLowerCase().replace(/ /g, '-')}`}
-                        >
-                          {/* Ambient Glow Backdrop (Blurred replica of dashboard) */}
-                          <img 
-                            src={activeProj.image} 
-                            alt="" 
-                            style={{ 
-                              position: 'absolute',
-                              inset: 0,
-                              width: '100%', 
-                              height: '100%', 
-                              objectFit: 'cover',
-                              filter: 'blur(24px) opacity(0.35)',
-                              pointerEvents: 'none',
-                              transform: 'scale(1.15)',
-                              transition: 'transform 0.5s ease',
-                              zIndex: 0
-                            }} 
-                            className="group-hover:scale-[1.22]"
-                          />
-
-                          {/* Foreground Main Image Floating with Shadow */}
-                          <img 
-                            src={activeProj.image} 
-                            alt={activeProj.title} 
-                            style={{ 
-                              position: 'relative',
-                              zIndex: 1,
-                              width: '88%', 
-                              height: 'auto',
-                              maxHeight: '260px',
-                              objectFit: 'contain',
-                              borderRadius: '6px',
-                              boxShadow: '0 20px 45px rgba(0,0,0,0.7)',
-                              border: '1px solid rgba(255,255,255,0.06)',
-                              transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease'
-                            }} 
-                            className="group-hover:scale-[1.03] group-hover:translate-y-[-3px]"
-                          />
-
-                          <div 
-                            style={{
-                              position: 'absolute',
-                              bottom: '12px',
-                              right: '12px',
-                              background: 'rgba(15,23,42,0.92)',
-                              padding: '5px 10px',
-                              borderRadius: '6px',
-                              fontSize: '9.5px',
-                              color: '#60a5fa',
-                              fontWeight: '600',
-                              border: '1px solid rgba(59,130,246,0.2)',
-                              boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
-                              zIndex: 10
-                            }}
-                          >
-                            🔍 Zoom Screen
-                          </div>
-                        </BrowserFrame>
-                      </div>
-                    )}
-
-                    {/* Right: Info Showcase */}
-                    <div style={{ flex: '1', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                      <div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
-                          <div>
-                            <span style={{ padding: '3px 10px', borderRadius: '4px', background: activeProj.tagBg, border: '1px solid ' + activeProj.tagBorder, color: activeProj.tagText, fontSize: '10px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.8px', fontFamily: 'monospace' }}>{activeProj.category}</span>
-                            <h3 className="proj-title" style={{ fontSize: '1.4rem', fontWeight: '800', marginTop: '10px', color: '#fff' }}>{activeProj.title}</h3>
-                          </div>
-                          <div className="proj-links" style={{ gap: '16px', display: 'flex' }}>
-                            {activeProj.githubLink && <a href={activeProj.githubLink} target="_blank" rel="noreferrer" title="Source Code" style={{ color: '#94a3b8' }} className="hover:text-white"><Github size={24} /></a>}
-                            {activeProj.liveLink && <a href={activeProj.liveLink} target="_blank" rel="noreferrer" title="Live Site" style={{ color: '#94a3b8' }} className="hover:text-white"><ExternalLink size={24} /></a>}
-                          </div>
-                        </div>
-
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '12px', marginBottom: '16px' }}>
-                          <div>
-                            <strong style={{ color: 'var(--accent-blue)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>The Problem</strong>
-                            <p style={{ color: '#94a3b8', fontSize: '0.88rem', marginTop: '4px', lineHeight: '1.5' }}>{activeProj.problem}</p>
-                          </div>
-                          <div>
-                            <strong style={{ color: 'var(--accent-blue)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Our Approach</strong>
-                            <p style={{ color: '#94a3b8', fontSize: '0.88rem', marginTop: '4px', lineHeight: '1.5' }}>{activeProj.approach}</p>
-                          </div>
-                          <div>
-                            <strong style={{ color: 'var(--accent-blue)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>The Solution</strong>
-                            <p style={{ color: '#94a3b8', fontSize: '0.88rem', marginTop: '4px', lineHeight: '1.5' }}>{activeProj.solution}</p>
-                          </div>
-                        </div>
-
-                        <div style={{ marginBottom: '20px', padding: '14px', background: 'rgba(34, 211, 238, 0.06)', borderRadius: '8px', borderLeft: '4px solid var(--accent-blue)' }}>
-                          <strong style={{ color: '#fff', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Business Impact</strong>
-                          <p style={{ color: '#fff', fontSize: '0.95rem', marginTop: '6px', fontWeight: '500', lineHeight: '1.4' }}>{activeProj.impact}</p>
-                        </div>
-                      </div>
-
-                      <div>
-                        <ul className="tag-list mt-auto pt-4 border-t border-white/5" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', listStyle: 'none', padding: 0 }}>
-                          {activeProj.technologies.map((tag, idx) => (
-                            <li key={idx} style={{ padding: '4px 10px', background: 'rgba(255,255,255,0.04)', borderRadius: '6px', fontSize: '0.78rem', color: '#cbd5e1', border: '1px solid rgba(255,255,255,0.04)' }}>{tag}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Carousel Nav Controls */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '24px', marginTop: '24px' }}>
-                    <button
-                      onClick={prevSlide}
-                      style={{
-                        background: 'rgba(10, 16, 32, 0.65)',
-                        border: '1px solid rgba(255,255,255,0.06)',
-                        color: '#fff',
-                        borderRadius: '50%',
-                        width: '44px',
-                        height: '44px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        cursor: 'pointer',
-                        fontSize: '1.1rem',
-                        transition: 'all 0.2s',
-                        boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
-                      }}
-                      onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--accent-blue)'; e.currentTarget.style.boxShadow = '0 0 10px rgba(34,211,238,0.2)'; }}
-                      onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)'; }}
-                    >
-                      &larr;
-                    </button>
-
-                    {/* Dots Indicators */}
-                    <div style={{ display: 'flex', gap: '10px' }}>
-                      {list.map((_, idx) => (
-                        <button
-                          key={idx}
-                          onClick={() => setCarouselIndex(idx)}
-                          style={{
-                            width: currentIndex === idx ? '24px' : '10px',
-                            height: '10px',
-                            borderRadius: '5px',
-                            background: currentIndex === idx ? 'var(--accent-blue)' : 'rgba(255,255,255,0.2)',
-                            border: 'none',
-                            cursor: 'pointer',
-                            transition: 'all 0.3s ease',
-                            boxShadow: currentIndex === idx ? '0 0 8px var(--accent-blue)' : 'none'
-                          }}
-                        />
-                      ))}
-                    </div>
-
-                    <button
-                      onClick={nextSlide}
-                      style={{
-                        background: 'rgba(10, 16, 32, 0.65)',
-                        border: '1px solid rgba(255,255,255,0.06)',
-                        color: '#fff',
-                        borderRadius: '50%',
-                        width: '44px',
-                        height: '44px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        cursor: 'pointer',
-                        fontSize: '1.1rem',
-                        transition: 'all 0.2s',
-                        boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
-                      }}
-                      onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--accent-blue)'; e.currentTarget.style.boxShadow = '0 0 10px rgba(34,211,238,0.2)'; }}
-                      onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)'; }}
-                    >
-                      &rarr;
-                    </button>
-                  </div>
-
-                  {/* Special Bento Card below carousel, styled to span full width */}
-                  <div 
-                    ref={availabilitySpotlight.ref}
-                    onMouseMove={availabilitySpotlight.onMouseMove}
-                    className="spotlight-card reveal" 
-                    style={{ 
-                      borderColor: 'rgba(245, 158, 11, 0.25)', 
-                      background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.03), rgba(7, 11, 20, 0.85))',
-                      width: '100%',
-                      marginTop: '40px',
-                      padding: '28px',
-                      textAlign: 'center',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center'
-                    }}
-                  >
-                    <div className="proj-header mb-4" style={{ display: 'flex', justifyContent: 'center' }}>
-                      <div className="proj-icon-wrapper" style={{ background: 'rgba(245, 158, 11, 0.08)', color: 'var(--accent-gold)', borderColor: 'rgba(245, 158, 11, 0.2)' }}>
-                        <Sparkles size={22} />
-                      </div>
-                    </div>
-                    <h3 className="proj-title mb-2" style={{ color: 'var(--accent-gold)', fontSize: '1.2rem' }}>Open for Opportunities</h3>
-                    <p className="proj-desc mb-4" style={{ color: 'var(--text-sub)', maxWidth: '650px', margin: '0 auto 16px' }}>
-                      I am actively seeking roles as a BI Specialist, Senior Data Analyst, Snowflake Data Engineer, or Automation Consultant. My 14+ years of operational delivery ensures I bring immediate value over theoretical knowledge.
-                    </p>
-                    <div style={{ width: '100%', maxWidth: '280px' }}>
-                      <a href="#contact" className="btn btn-secondary" style={{ width: '100%', justifyContent: 'center', borderColor: 'rgba(245, 158, 11, 0.25)', color: 'var(--accent-gold)', background: 'rgba(245, 158, 11, 0.04)' }}>
-                        Start a Conversation →
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              );
-            })()}
+          {/* Opportunities/Availability Card */}
+          <div 
+            ref={availabilitySpotlight.ref}
+            onMouseMove={availabilitySpotlight.onMouseMove}
+            className="spotlight-card reveal" 
+            style={{ 
+              borderColor: 'rgba(245, 158, 11, 0.2)', 
+              background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.02), rgba(7, 11, 20, 0.85))',
+              width: '100%',
+              maxWidth: '800px',
+              margin: '64px auto 0',
+              padding: '40px',
+              textAlign: 'center',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              borderRadius: '16px',
+              boxShadow: '0 20px 48px rgba(0, 0, 0, 0.5)'
+            }}
+          >
+            <div className="proj-header mb-4" style={{ display: 'flex', justifyContent: 'center' }}>
+              <div className="proj-icon-wrapper" style={{ background: 'rgba(245, 158, 11, 0.08)', color: 'var(--accent-gold)', borderColor: 'rgba(245, 158, 11, 0.2)', width: '48px', height: '48px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Sparkles size={22} />
+              </div>
+            </div>
+            <h3 style={{ color: 'var(--accent-gold)', fontSize: '1.25rem', fontWeight: '800', marginBottom: '10px' }}>Open for Inquiries &amp; Roles</h3>
+            <p style={{ color: 'var(--text-sub)', maxWidth: '650px', margin: '0 auto 20px', fontSize: '0.92rem', lineHeight: '1.6' }}>
+              I am actively seeking roles as a Senior BI Specialist, Senior Data Analyst, Snowflake Data Engineer, or Operations Automation Consultant. My 14+ years of data leadership ensures I bring immediate value to your pipelines.
+            </p>
+            <div style={{ width: '100%', maxWidth: '280px' }}>
+              <a href="#contact" className="btn btn-secondary" style={{ width: '100%', justifyContent: 'center', borderColor: 'rgba(245, 158, 11, 0.25)', color: 'var(--accent-gold)', background: 'rgba(245, 158, 11, 0.04)', borderRadius: '8px' }}>
+                Start a Conversation →
+              </a>
+            </div>
           </div>
         </div>
       </section>
