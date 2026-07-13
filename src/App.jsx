@@ -725,7 +725,7 @@ function App() {
             </div>
             <h1 className="hero-title">Data Operations &amp; Systems Automation</h1>
             <p className="hero-desc">
-              I build clinical and financial reporting dashboards, clean SQL data warehouses, and serverless automation pipelines. I specialize in database hygiene, API endpoint proxying, and eliminating manual business task redundancies.
+              With over 14 years of hands-on data operations experience, I build clinical reporting dashboards, scalable Snowflake data warehouses, and serverless automation pipelines. I bring immediate business value by translating operational realities into modern Data Analytics, BI, and Data Engineering solutions.
             </p>
             <div className="cta-group">
               <a href="#projects" className="btn btn-primary">
@@ -1216,7 +1216,7 @@ function App() {
               </div>
               <h3 className="proj-title mb-2" style={{ color: 'var(--accent-gold)' }}>Open for Opportunities</h3>
               <p className="proj-desc mb-4" style={{ color: 'var(--text-sub)' }}>
-                I am actively seeking roles in Data Operations, Business Intelligence, Systems Analytics, and Data Quality. Available for full-time direct hire or contract work.
+                I am actively seeking roles as a BI Specialist, Senior Data Analyst, Snowflake Data Engineer, or Automation Consultant. My 14+ years of operational delivery ensures I bring immediate value over theoretical knowledge.
               </p>
               <div style={{ marginTop: 'auto', paddingTop: '10px' }}>
                 <a href="#contact" className="btn btn-secondary" style={{ width: '100%', justifyContent: 'center', borderColor: 'rgba(245, 158, 11, 0.25)', color: 'var(--accent-gold)', background: 'rgba(245, 158, 11, 0.04)' }}>
