@@ -2,16 +2,63 @@
   <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80" width="100%" style="border-radius: 12px; margin-bottom: 20px;">
   
   <h1>📊 Data Analytics Portfolio Strategy</h1>
-  <i>Recruiter‑Friendly Portfolio Plan (Final Version)</i>
+  <i>Recruiter‑Friendly Portfolio & Job Hunt Blueprint</i>
 </div>
 
 <br/>
 
 > [!IMPORTANT]
-> **RECRUITER APPEAL LANGUAGE (Always use these phrases in your portfolio):**
+> **RECRUITER APPEAL LANGUAGE (Always use these phrases in your portfolio & resume):**
 > - 🎯 *"Automated ETL pipeline saved 20 hours/month."*
 > - 🎯 *"Reporting dashboards reduced manual effort by 40%."*
 > - 🎯 *"Snowflake Medallion architecture improved data reliability."*
+
+---
+
+## 🎯 Target Job Profiles (The Strategy)
+*With 14+ years of data operations experience + modern SQL/Snowflake/Power BI stacks, the lack of a formal degree is not a blocker. Target these specific roles:*
+
+<details open>
+<summary><b>1. BI Specialist / BI Consultant</b></summary>
+
+- **Focus:** Power BI dashboards, DAX, SQL modeling, stakeholder reporting.
+- **Why:** Recruiters see this as a direct fit for your skill set.
+</details>
+
+<details open>
+<summary><b>2. Data Analyst (Senior)</b></summary>
+
+- **Focus:** SQL queries, reporting automation, KPI dashboards.
+- **Why:** Startups and SMEs have much lower degree filters and value your 14 years of hardcore operational delivery.
+</details>
+
+<details>
+<summary><b>3. Data Engineer (Snowflake Focus)</b></summary>
+
+- **Focus:** Snowflake pipelines, Medallion architecture, ETL workflows.
+- **Why:** If your Python basics and SQL are strong, recruiters will consider you for modern data warehousing roles.
+</details>
+
+<details>
+<summary><b>4. Reporting Analyst / MIS Manager</b></summary>
+
+- **Focus:** Excel automation, reporting clarity, management dashboards.
+- **Why:** Your 14 years of pure Excel/Operations experience is incredibly valuable here.
+</details>
+
+<details>
+<summary><b>5. Automation Consultant (Workflow/ETL)</b></summary>
+
+- **Focus:** Antigravity workflows, reporting automation, API integration.
+- **Why:** Massive demand in freelance/contract roles where businesses just need broken pipelines fixed fast.
+</details>
+
+<details>
+<summary><b>6. Freelance BI Developer (Upwork, Toptal)</b></summary>
+
+- **Focus:** SQL + Power BI + Snowflake projects.
+- **Why:** With your live GitHub portfolio as proof, international clients care about results, not degrees.
+</details>
 
 ---
 
@@ -33,7 +80,7 @@
 
 ---
 
-## 🏗️ 1. Core Focus Areas (Portfolio Sections)
+## 🏗️ Core Focus Areas (Portfolio Sections)
 
 <details open>
 <summary><b>❄️ Snowflake Architecture</b></summary>
@@ -71,25 +118,10 @@
 
 ---
 
-## 📝 2. Standardized Documentation Checklist
+## 📝 Standardized Documentation Checklist
 *Every single project uploaded to the portfolio MUST follow this exact format:*
 
 - `[ ]` **Problem:** Define the manual reporting bottleneck or pipeline delays.
 - `[ ]` **Approach:** Describe the stack (SQL + Power BI + Snowflake + Antigravity).
 - `[ ]` **Solution:** Explain the automated dashboards + pipelines created.
 - `[ ]` **Impact:** *Crucial step!* (e.g., Reporting time reduced by 40%, manual effort saved 20 hours/month).
-
----
-
-## 🌐 3. Portfolio Website Development
-*Tasks to complete on the actual React/Vite website.*
-
-<details open>
-<summary><b>Website Layout Tasks</b></summary>
-
-- [ ] **Focus Areas Component:** Add visual cards for Snowflake, Power BI, SQL Modeling, and Automation.
-- [ ] **Projects Section:** Ensure all GitHub links (SQL queries, dashboards, workflows) open correctly.
-- [ ] **Contact Form:** Set up secure message option for hiring managers.
-- [ ] **Footer Note:** Add *"Styled with React & Vite, AI assistance used for layout. All SQL repositories handwritten."*
-
-</details>
