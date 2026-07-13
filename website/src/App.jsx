@@ -537,7 +537,7 @@ const PROJECTS = [
     approach: "Implemented bronze → silver → gold layers in Snowflake; transformations in SQL; scheduled refresh via Antigravity.",
     solution: "Automated ETL pipeline that ingests raw files into bronze, applies cleansing and joins in silver, and produces analytics-ready tables in gold consumed by Power BI.",
     impact: "Reduced end‑to‑end reporting latency from 6 hours to 30 minutes; eliminated manual reconciliation tasks saving ~15 hours/month.",
-    tags: ["Snowflake DWH", "SQL", "Power BI", "Antigravity"],
+    technologies: ["Snowflake DWH", "SQL", "Power BI", "Antigravity"],
     liveLink: null,
     githubLink: "https://github.com/LeadGenData/haresh-kumar-portfolio/tree/main/projects/snowflake-pipeline"
   },
@@ -549,7 +549,7 @@ const PROJECTS = [
     approach: "Orchestrated serverless ETL pipelines using Antigravity; automated triggers.",
     solution: "Hands-free background process integrating Snowflake and Power BI pipelines without manual intervention.",
     impact: "Achieved 100% automated delivery, saving 10 hours/week in manual execution.",
-    tags: ["Antigravity", "Workflow Automation", "API Integration"],
+    technologies: ["Antigravity", "Workflow Automation", "API Integration"],
     liveLink: null,
     githubLink: "https://github.com/LeadGenData/haresh-kumar-portfolio/tree/main/projects/campaigns-automation"
   },
@@ -563,6 +563,7 @@ const PROJECTS = [
     impact: "Provided instant YOY revenue growth metrics, improving strategic decision-making speed by 50%.",
     liveLink: null,
     githubLink: "https://github.com/LeadGenData/haresh-kumar-portfolio/tree/main/projects/powerbi-analytics",
+    technologies: ["Power BI", "DAX", "Data Modeling", "Business Intelligence"],
     antigravityNote: null
   },
   {
