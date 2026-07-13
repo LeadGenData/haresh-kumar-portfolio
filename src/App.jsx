@@ -520,9 +520,9 @@ const PowerBiDashboardIllustration = () => (
 
 const PROJECTS = [
   {
-    title: "Sales Data Pipeline using Snowflake Medallion Architecture",
+    title: "Snowflake Medallion Pipeline",
     icon: <Database size={24} />,
-    image: "/snowflake_console.png",
+    image: "/snowflake_pipeline.png",
     problem: "Manual data consolidation caused slow, inconsistent reporting.",
     approach: "Implemented bronze → silver → gold layers in Snowflake; transformations in SQL; scheduled refresh via Antigravity.",
     solution: "Automated ETL pipeline that ingests raw files into bronze, applies cleansing and joins in silver, and produces analytics-ready tables in gold consumed by Power BI.",
