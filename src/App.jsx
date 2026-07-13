@@ -561,7 +561,7 @@ const PROJECTS = [
   {
     title: "Clinical Admissions Analytics",
     icon: <BarChart3 size={24} />,
-    image: "https://raw.githubusercontent.com/LeadGenData/hospital-emergency-room-dashboard-Power-BI-/main/screenshot.png",
+    image: "/hospital_dashboard.jpg",
     problem: "Unpredictable emergency admissions wait times led to inefficient staffing.",
     approach: "SQL; Power BI; Power Query (M).",
     solution: "Optimized clinical operations dashboard dynamically calculating triage rate metrics and satisfaction trends.",
