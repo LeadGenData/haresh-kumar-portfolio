@@ -4,6 +4,29 @@ A complete enterprise-grade cloud data pipeline implementing the **Medallion Arc
 
 ---
 
+## 🏗️ Architecture Blueprint
+
+```mermaid
+graph TD
+    A[Raw Datasets: CSV/JSON] -->|Upload| B[Snowflake Stages]
+    B -->|Ingest| C[(bronze.transactions_raw)]
+    C -->|Streams CDC| D[Snowflake Stream]
+    D -->|Task Trigger| E[Stored Procedures]
+    E -->|Clean & De-dup| F[(silver.transactions_clean)]
+    F -->|Load Dimensions| G[(gold.dim_customers)]
+    F -->|Load Dimensions| H[(gold.dim_merchants)]
+    F -->|Load Facts| I[(gold.fact_transactions)]
+    I -->|Direct Query| J[Power BI Dashboard]
+    I -->|Secure Access| K[Jupyter Notebook Fraud Model]
+    
+    subgraph Data Governance & Security
+        L[Dynamic Data Masking] -.->|Mask PII Cards| I
+        M[Row-Level Security] -.->|Filter Regional Rows| J
+    end
+```
+
+---
+
 ## 🚨 The Problem: Latency, Inaccuracy, and Security Risks in Fraud Detection
 Financial institutions lose millions daily to credit card fraud. Detecting anomalous activity requires ingestion of high-velocity raw transaction logs. However, building these systems faces critical roadblocks:
 1. **Dirty Data & Duplicates:** Ingesting raw logs results in format disparities and duplicates.
@@ -14,11 +37,6 @@ Financial institutions lose millions daily to credit card fraud. Detecting anoma
 ---
 
 ## 💡 The Solution: Snowflake Medallion Streaming Pipeline
-I architected and deployed a secure, end-to-end data pipeline in Snowflake:
-
-```
-Raw Logs ──> [Bronze Layer] ──(Cleanse/De-dup)──> [Silver Layer] ──(Star Schema)──> [Gold Layer] ──> Power BI / Jupyter
-```
 
 ### 1. Ingestion & Storage (Bronze Layer)
 * Loaded raw transactional JSON and CSV files into Snowflake Stages.
@@ -31,6 +49,13 @@ Raw Logs ──> [Bronze Layer] ──(Cleanse/De-dup)──> [Silver Layer] ─
 ### 3. Star Schema Modeling (Gold Layer)
 * Modeled transactional dimensions in a high-performance Star Schema (`04_gold_star_schema.sql`).
 * Created fact tables (`FactTransactions`) and dimension tables (`DimCustomers`, `DimMerchants`, `DimDates`) to minimize query latency for visual reporting.
+
+```mermaid
+erDiagram
+    DimCustomers ||--o{ FactTransactions : "places"
+    DimMerchants ||--o{ FactTransactions : "receives"
+    DimDates ||--o{ FactTransactions : "occurs_on"
+```
 
 ### 4. Real-time Orchestration
 * Deployed **Snowflake Streams** (`06_streams_tasks_alerts.sql`) to capture changes in the transactional data logs.
