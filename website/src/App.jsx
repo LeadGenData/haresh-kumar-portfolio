@@ -969,7 +969,6 @@ function App() {
           <ul className="nav-links">
             <li><a href="#hero">About</a></li>
             <li><a href="#story">My Story</a></li>
-            <li><a href="#architecture">Blueprints</a></li>
             <li><a href="#projects">Portfolio</a></li>
             <li><a href="#contact">Contact</a></li>
             <li style={{ marginLeft: '12px' }}>
@@ -995,7 +994,6 @@ function App() {
           <ul className="mobile-menu-links">
             <li><a href="#hero" onClick={() => setMenuOpen(false)}>About</a></li>
             <li><a href="#story" onClick={() => setMenuOpen(false)}>My Story</a></li>
-            <li><a href="#architecture" onClick={() => setMenuOpen(false)}>Blueprints</a></li>
             <li><a href="#projects" onClick={() => setMenuOpen(false)}>Portfolio</a></li>
             <li><a href="#contact" onClick={() => setMenuOpen(false)}>Contact</a></li>
             <li style={{ marginTop: '16px' }}>
@@ -1142,100 +1140,6 @@ function App() {
                 </div>
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ARCHITECTURE SECTION */}
-      <section id="architecture" style={{ background: 'var(--bg-secondary)', borderTop: '1px solid var(--border-color)' }}>
-        <div className="container">
-          <div style={{ textAlign: 'center', marginBottom: '36px' }}>
-            <h2 className="section-title">Interactive System Blueprints</h2>
-            <p className="section-subtitle" style={{ margin: '0 auto 24px' }}>
-              Toggle between the two core architectures I design: serverless systems automation or cloud data engineering pipelines.
-            </p>
-
-            {/* Toggle Buttons */}
-            <div style={{ display: 'inline-flex', gap: '12px', background: 'rgba(8, 9, 12, 0.6)', padding: '6px', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
-              <button
-                onClick={() => { setPipelineType('automation'); setActiveStep(1); }}
-                style={{
-                  background: pipelineType === 'automation' ? 'var(--accent-orange)' : 'transparent',
-                  color: pipelineType === 'automation' ? '#ffffff' : 'var(--text-muted)',
-                  border: 'none',
-                  padding: '8px 16px',
-                  borderRadius: '6px',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  fontFamily: 'var(--font-display)',
-                  transition: 'var(--transition-smooth)'
-                }}
-              >
-                Systems Automation
-              </button>
-              <button
-                onClick={() => { setPipelineType('bi'); setActiveStep(1); }}
-                style={{
-                  background: pipelineType === 'bi' ? 'var(--accent-emerald)' : 'transparent',
-                  color: pipelineType === 'bi' ? '#ffffff' : 'var(--text-muted)',
-                  border: 'none',
-                  padding: '8px 16px',
-                  borderRadius: '6px',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  fontFamily: 'var(--font-display)',
-                  transition: 'var(--transition-smooth)'
-                }}
-              >
-                Cloud Data Engineering (Snowflake)
-              </button>
-            </div>
-          </div>
-
-          <div className="arch-grid">
-            {/* Steps Controller */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              {stepsList.map((step) => (
-                <div
-                  key={step.id}
-                  className="step-card"
-                  onClick={() => setActiveStep(step.id)}
-                  style={{
-                    cursor: 'pointer',
-                    borderColor: activeStep === step.id ? (pipelineType === 'automation' ? 'var(--accent-orange)' : 'var(--accent-emerald)') : 'var(--border-color)',
-                    background: activeStep === step.id ? 'var(--bg-tertiary)' : 'rgba(23, 27, 38, 0.4)',
-                    boxShadow: activeStep === step.id ? (pipelineType === 'automation' ? 'var(--glow-shadow)' : '0 0 20px var(--accent-emerald-glow)') : 'none'
-                  }}
-                >
-                  <div className="step-num" style={{
-                    background: activeStep === step.id ? (pipelineType === 'automation' ? 'var(--accent-orange)' : 'var(--accent-emerald)') : 'var(--border-color)',
-                    color: '#ffffff'
-                  }}>{step.id}</div>
-                  <div className="step-info">
-                    <h4>{step.title}</h4>
-                    <span style={{ fontSize: '0.75rem', color: pipelineType === 'automation' ? 'var(--accent-emerald)' : 'var(--accent-orange)', fontFamily: 'var(--font-mono)', display: 'block', marginBottom: '4px' }}>
-                      {step.component}
-                    </span>
-                    <p style={{ fontSize: '0.9rem' }}>{step.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Visual Blueprint canvas */}
-            <div className="diagram-card spotlight-card" style={{ height: '100%', minHeight: '400px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', background: 'rgba(7, 11, 20, 0.45)', border: '1px solid rgba(255, 255, 255, 0.06)', borderRadius: '16px', padding: '24px' }}>
-              <h4 style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', fontSize: '0.8rem', marginBottom: '16px', textTransform: 'uppercase', letterSpacing: '1px', textAlign: 'center' }}>
-                Pipeline Map ({pipelineType === 'automation' ? 'Systems Automation' : 'Snowflake Medallion'})
-              </h4>
-
-              <div style={{ width: '100%', maxWidth: '460px', flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                {pipelineType === 'automation' ? (
-                  <AutomationBlueprintDiagram activeStep={activeStep} />
-                ) : (
-                  <SnowflakeBlueprintDiagram activeStep={activeStep} />
-                )}
-              </div>
-            </div>
           </div>
         </div>
       </section>
