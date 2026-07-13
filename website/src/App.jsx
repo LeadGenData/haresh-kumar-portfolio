@@ -621,7 +621,6 @@ function App() {
   const [activeFilter, setActiveFilter] = useState('All');
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedTitle, setSelectedTitle] = useState(null);
-  const [viewMode, setViewMode] = useState('carousel');
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [activeStep, setActiveStep]     = useState(1);
   const [menuOpen, setMenuOpen]         = useState(false);
@@ -1125,469 +1124,279 @@ function App() {
             ))}
           </div>
 
-          {/* LAYOUT VIEW SELECTOR */}
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '16px', marginBottom: '36px' }} className="reveal">
-            <span style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: '600', letterSpacing: '0.5px' }}>LAYOUT VIEW:</span>
-            <div style={{ display: 'flex', background: 'rgba(10, 16, 32, 0.65)', padding: '4px', borderRadius: '10px', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
-              <button
-                onClick={() => setViewMode('grid')}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '8px 18px',
-                  borderRadius: '8px',
-                  fontSize: '0.8rem',
-                  fontWeight: '600',
-                  border: 'none',
-                  backgroundColor: viewMode === 'grid' ? 'rgba(34, 211, 238, 0.12)' : 'transparent',
-                  color: viewMode === 'grid' ? 'var(--accent-blue)' : '#94a3b8',
-                  cursor: 'pointer',
-                  transition: 'all 0.25s ease'
-                }}
-              >
-                Grid Bento
-              </button>
-              <button
-                onClick={() => setViewMode('carousel')}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '8px 18px',
-                  borderRadius: '8px',
-                  fontSize: '0.8rem',
-                  fontWeight: '600',
-                  border: 'none',
-                  backgroundColor: viewMode === 'carousel' ? 'rgba(34, 211, 238, 0.12)' : 'transparent',
-                  color: viewMode === 'carousel' ? 'var(--accent-blue)' : '#94a3b8',
-                  cursor: 'pointer',
-                  transition: 'all 0.25s ease'
-                }}
-              >
-                Flagship Slider ⚡
-              </button>
-            </div>
-          </div>
-
-          {viewMode === 'grid' ? (
-            <div className="bento-grid">
-              {/* Dynamic Grid Cards Mapping (only projects that match activeFilter) */}
-              {PROJECTS.map((proj, i) => {
+          {/* FLAGSHIP SPOTLIGHT CAROUSEL */}
+          <div className="reveal">
+            {(() => {
+              const list = PROJECTS.map((p, idx) => ({ ...p, originalIndex: idx })).filter(proj => {
                 const isEngineering = proj.category.includes("Engineering");
                 const isBI = proj.category.includes("Intelligence") || proj.category.includes("Analytics");
                 const isAutomation = proj.category.includes("Automation");
                 
-                let isVisible = true;
-                if (activeFilter === 'Data Engineering') isVisible = isEngineering;
-                if (activeFilter === 'Business Intelligence') isVisible = isBI;
-                if (activeFilter === 'Automation') isVisible = isAutomation;
+                if (activeFilter === 'Data Engineering') return isEngineering;
+                if (activeFilter === 'Business Intelligence') return isBI;
+                if (activeFilter === 'Automation') return isAutomation;
+                return true;
+              });
 
-                if (!isVisible) return null;
-
+              if (list.length === 0) {
                 return (
+                  <div style={{ textAlign: 'center', padding: '48px', color: 'var(--text-muted)' }}>
+                    No projects found matching the filter.
+                  </div>
+                );
+              }
+
+              const currentIndex = Math.min(carouselIndex, list.length - 1);
+              const activeProj = list[currentIndex];
+              const origIdx = activeProj.originalIndex;
+
+              const prevSlide = () => {
+                setCarouselIndex((prev) => (prev === 0 ? list.length - 1 : prev - 1));
+              };
+
+              const nextSlide = () => {
+                setCarouselIndex((prev) => (prev === list.length - 1 ? 0 : prev + 1));
+              };
+
+              return (
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
                   <div 
-                    key={i}
-                    ref={projectSpotlights[i]?.ref}
-                    onMouseMove={projectSpotlights[i]?.onMouseMove}
-                    className={`spotlight-card reveal ${activeFilter === 'All' && (i === 0 || i === 3) ? "bento-col-2" : ""} flex flex-col justify-between h-full`}
+                    key={currentIndex}
+                    ref={projectSpotlights[origIdx]?.ref}
+                    onMouseMove={projectSpotlights[origIdx]?.onMouseMove}
+                    style={{ 
+                      width: '100%', 
+                      display: 'flex', 
+                      gap: '32px',
+                      minHeight: '480px'
+                    }}
+                    className="spotlight-card flex flex-col lg:flex-row gap-8 items-stretch p-8 w-full slide-enter"
                   >
-                    <div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' }}>
-                        <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-                          <div className="proj-icon-wrapper">
-                            {proj.icon}
+                    {/* Left: Image Showcase with Ambient Glow Backdrop */}
+                    {activeProj.image && (
+                      <div 
+                        style={{ 
+                          flex: '1.2', 
+                          borderRadius: '12px', 
+                          overflow: 'hidden', 
+                          border: '1px solid rgba(255,255,255,0.08)', 
+                          position: 'relative',
+                          cursor: 'zoom-in',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          minHeight: '380px',
+                          background: '#030712'
+                        }}
+                        onClick={() => { setSelectedImage(activeProj.image); setSelectedTitle(activeProj.title); }}
+                        className="group w-full lg:w-auto"
+                      >
+                        {/* Ambient Glow Backdrop (Blurred replica of dashboard) */}
+                        <img 
+                          src={activeProj.image} 
+                          alt="" 
+                          style={{ 
+                            position: 'absolute',
+                            inset: 0,
+                            width: '100%', 
+                            height: '100%', 
+                            objectFit: 'cover',
+                            filter: 'blur(30px) opacity(0.38)',
+                            pointerEvents: 'none',
+                            transform: 'scale(1.15)',
+                            transition: 'transform 0.5s ease'
+                          }} 
+                          className="group-hover:scale-[1.22]"
+                        />
+                        {/* Foreground Main Image Floating with Shadow */}
+                        <img 
+                          src={activeProj.image} 
+                          alt={activeProj.title} 
+                          style={{ 
+                            position: 'relative',
+                            zIndex: 1,
+                            width: '90%', 
+                            height: 'auto',
+                            maxHeight: '330px',
+                            objectFit: 'contain',
+                            borderRadius: '8px',
+                            boxShadow: '0 20px 40px rgba(0,0,0,0.65)',
+                            border: '1px solid rgba(255,255,255,0.05)',
+                            transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease'
+                          }} 
+                          className="group-hover:scale-[1.03] group-hover:translate-y-[-4px]"
+                        />
+                        <div 
+                          style={{
+                            position: 'absolute',
+                            bottom: '12px',
+                            right: '12px',
+                            background: 'rgba(15,23,42,0.9)',
+                            padding: '6px 12px',
+                            borderRadius: '6px',
+                            fontSize: '11px',
+                            color: 'var(--accent-blue)',
+                            fontWeight: '600',
+                            border: '1px solid rgba(34,211,238,0.25)',
+                            boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
+                            zIndex: 2
+                          }}
+                        >
+                          🔍 Click to Zoom Full Image
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Right: Info Showcase */}
+                    <div style={{ flex: '1', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
+                          <div>
+                            <span style={{ padding: '3px 10px', borderRadius: '4px', background: activeProj.tagBg, border: '1px solid ' + activeProj.tagBorder, color: activeProj.tagText, fontSize: '10px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.8px', fontFamily: 'monospace' }}>{activeProj.category}</span>
+                            <h3 className="proj-title" style={{ fontSize: '1.4rem', fontWeight: '800', marginTop: '10px', color: '#fff' }}>{activeProj.title}</h3>
+                          </div>
+                          <div className="proj-links" style={{ gap: '16px', display: 'flex' }}>
+                            {activeProj.githubLink && <a href={activeProj.githubLink} target="_blank" rel="noreferrer" title="Source Code" style={{ color: '#94a3b8' }} className="hover:text-white"><Github size={24} /></a>}
+                            {activeProj.liveLink && <a href={activeProj.liveLink} target="_blank" rel="noreferrer" title="Live Site" style={{ color: '#94a3b8' }} className="hover:text-white"><ExternalLink size={24} /></a>}
+                          </div>
+                        </div>
+
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '12px', marginBottom: '16px' }}>
+                          <div>
+                            <strong style={{ color: 'var(--accent-blue)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>The Problem</strong>
+                            <p style={{ color: '#94a3b8', fontSize: '0.88rem', marginTop: '4px', lineHeight: '1.5' }}>{activeProj.problem}</p>
                           </div>
                           <div>
-                            <h3 className="proj-title" style={{ fontSize: '1.05rem', fontWeight: '700' }}>{proj.title}</h3>
-                            <span style={{ padding: '2px 8px', borderRadius: '4px', background: proj.tagBg, border: '1px solid ' + proj.tagBorder, color: proj.tagText, fontSize: '9px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px', fontFamily: 'monospace' }}>{proj.category}</span>
+                            <strong style={{ color: 'var(--accent-blue)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Our Approach</strong>
+                            <p style={{ color: '#94a3b8', fontSize: '0.88rem', marginTop: '4px', lineHeight: '1.5' }}>{activeProj.approach}</p>
+                          </div>
+                          <div>
+                            <strong style={{ color: 'var(--accent-blue)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>The Solution</strong>
+                            <p style={{ color: '#94a3b8', fontSize: '0.88rem', marginTop: '4px', lineHeight: '1.5' }}>{activeProj.solution}</p>
                           </div>
                         </div>
-                        <div className="proj-links">
-                          {proj.githubLink && <a href={proj.githubLink} target="_blank" rel="noreferrer" title="Source Code"><Github size={20} /></a>}
-                          {proj.liveLink && <a href={proj.liveLink} target="_blank" rel="noreferrer" title="Live Site"><ExternalLink size={20} /></a>}
+
+                        <div style={{ marginBottom: '20px', padding: '14px', background: 'rgba(34, 211, 238, 0.06)', borderRadius: '8px', borderLeft: '4px solid var(--accent-blue)' }}>
+                          <strong style={{ color: '#fff', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Business Impact</strong>
+                          <p style={{ color: '#fff', fontSize: '0.95rem', marginTop: '6px', fontWeight: '500', lineHeight: '1.4' }}>{activeProj.impact}</p>
                         </div>
                       </div>
 
-                      {proj.image && (
-                        <div 
-                          style={{ 
-                            marginBottom: '20px', 
-                            borderRadius: '8px', 
-                            overflow: 'hidden', 
-                            border: '1px solid rgba(255,255,255,0.05)', 
-                            backgroundColor: '#0f172a',
-                            cursor: 'zoom-in',
-                            position: 'relative'
-                          }}
-                          className="group"
-                          onClick={() => { setSelectedImage(proj.image); setSelectedTitle(proj.title); }}
-                        >
-                          <img 
-                            src={proj.image} 
-                            alt={proj.title} 
-                            style={{ 
-                              width: '100%', 
-                              height: 'auto', 
-                              display: 'block', 
-                              objectFit: 'contain', 
-                              maxHeight: '300px',
-                              transition: 'transform 0.4s ease'
-                            }} 
-                            className="group-hover:scale-[1.03]"
-                          />
-                          <div 
-                            style={{
-                              position: 'absolute',
-                              bottom: '8px',
-                              right: '8px',
-                              background: 'rgba(15,23,42,0.85)',
-                              padding: '4px 8px',
-                              borderRadius: '4px',
-                              fontSize: '10px',
-                              color: 'var(--accent-blue)',
-                              fontWeight: '600',
-                              border: '1px solid rgba(34,211,238,0.2)',
-                              opacity: 0.9
-                            }}
-                          >
-                            🔍 Click to Zoom
-                          </div>
-                        </div>
-                      )}
-
-                      <div style={{ marginBottom: '12px' }}>
-                        <strong style={{ color: 'var(--accent-blue)', fontSize: '0.80rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Problem</strong>
-                        <p className="proj-desc text-gray-400 text-sm mt-1">{proj.problem}</p>
+                      <div>
+                        <ul className="tag-list mt-auto pt-4 border-t border-white/5" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', listStyle: 'none', padding: 0 }}>
+                          {activeProj.technologies.map((tag, idx) => (
+                            <li key={idx} style={{ padding: '4px 10px', background: 'rgba(255,255,255,0.04)', borderRadius: '6px', fontSize: '0.78rem', color: '#cbd5e1', border: '1px solid rgba(255,255,255,0.04)' }}>{tag}</li>
+                          ))}
+                        </ul>
                       </div>
-                      
-                      <div style={{ marginBottom: '12px' }}>
-                        <strong style={{ color: 'var(--accent-blue)', fontSize: '0.80rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Approach</strong>
-                        <p className="proj-desc text-gray-400 text-sm mt-1">{proj.approach}</p>
-                      </div>
-
-                      <div style={{ marginBottom: '16px' }}>
-                        <strong style={{ color: 'var(--accent-blue)', fontSize: '0.80rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Solution</strong>
-                        <p className="proj-desc text-gray-400 text-sm mt-1">{proj.solution}</p>
-                      </div>
-
-                      <div style={{ marginBottom: '16px', padding: '12px', background: 'rgba(34, 211, 238, 0.05)', borderRadius: '6px', borderLeft: '3px solid var(--accent-blue)' }}>
-                        <strong style={{ color: '#fff', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Business Impact</strong>
-                        <p style={{ color: '#fff', fontSize: '0.9rem', marginTop: '6px', fontWeight: '500', lineHeight: '1.4' }}>{proj.impact}</p>
-                      </div>
-
-                      {proj.antigravityNote && (
-                        <div style={{ marginBottom: '20px', padding: '10px', background: 'rgba(245, 158, 11, 0.05)', borderRadius: '6px', border: '1px solid rgba(245, 158, 11, 0.2)' }}>
-                          <p style={{ color: 'var(--accent-gold)', fontSize: '0.8rem', fontStyle: 'italic', lineHeight: '1.4' }}>{proj.antigravityNote}</p>
-                        </div>
-                      )}
                     </div>
-
-                    <ul className="tag-list mt-auto pt-4 border-t border-white/5">
-                      {proj.technologies.map((tag, idx) => <li key={idx}>{tag}</li>)}
-                    </ul>
                   </div>
-                );
-              })}
-              
-              {/* Special Bento Card inside grid */}
-              <div 
-                ref={availabilitySpotlight.ref}
-                onMouseMove={availabilitySpotlight.onMouseMove}
-                className="spotlight-card reveal reveal-delay-2" 
-                style={{ borderColor: 'rgba(245, 158, 11, 0.25)', background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.03), rgba(7, 11, 20, 0.85))' }}
-              >
-                <div className="proj-header mb-4">
-                  <div className="proj-icon-wrapper" style={{ background: 'rgba(245, 158, 11, 0.08)', color: 'var(--accent-gold)', borderColor: 'rgba(245, 158, 11, 0.2)' }}>
-                    <Sparkles size={22} />
-                  </div>
-                </div>
-                <h3 className="proj-title mb-2" style={{ color: 'var(--accent-gold)' }}>Open for Opportunities</h3>
-                <p className="proj-desc mb-4" style={{ color: 'var(--text-sub)' }}>
-                  I am actively seeking roles as a BI Specialist, Senior Data Analyst, Snowflake Data Engineer, or Automation Consultant. My 14+ years of operational delivery ensures I bring immediate value over theoretical knowledge.
-                </p>
-                <div style={{ marginTop: 'auto', paddingTop: '10px' }}>
-                  <a href="#contact" className="btn btn-secondary" style={{ width: '100%', justifyContent: 'center', borderColor: 'rgba(245, 158, 11, 0.25)', color: 'var(--accent-gold)', background: 'rgba(245, 158, 11, 0.04)' }}>
-                    Start a Conversation →
-                  </a>
-                </div>
-              </div>
-            </div>
-          ) : (
-            /* FLAGSHIP SPOTLIGHT CAROUSEL */
-            <div className="reveal">
-              {(() => {
-                const list = PROJECTS.map((p, idx) => ({ ...p, originalIndex: idx })).filter(proj => {
-                  const isEngineering = proj.category.includes("Engineering");
-                  const isBI = proj.category.includes("Intelligence") || proj.category.includes("Analytics");
-                  const isAutomation = proj.category.includes("Automation");
-                  
-                  if (activeFilter === 'Data Engineering') return isEngineering;
-                  if (activeFilter === 'Business Intelligence') return isBI;
-                  if (activeFilter === 'Automation') return isAutomation;
-                  return true;
-                });
 
-                if (list.length === 0) {
-                  return (
-                    <div style={{ textAlign: 'center', padding: '48px', color: 'var(--text-muted)' }}>
-                      No projects found matching the filter.
-                    </div>
-                  );
-                }
-
-                const currentIndex = Math.min(carouselIndex, list.length - 1);
-                const activeProj = list[currentIndex];
-                const origIdx = activeProj.originalIndex;
-
-                const prevSlide = () => {
-                  setCarouselIndex((prev) => (prev === 0 ? list.length - 1 : prev - 1));
-                };
-
-                const nextSlide = () => {
-                  setCarouselIndex((prev) => (prev === list.length - 1 ? 0 : prev + 1));
-                };
-
-                return (
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
-                    <div 
-                      key={currentIndex}
-                      ref={projectSpotlights[origIdx]?.ref}
-                      onMouseMove={projectSpotlights[origIdx]?.onMouseMove}
-                      style={{ 
-                        width: '100%', 
-                        display: 'flex', 
-                        gap: '32px',
-                        minHeight: '480px'
-                      }}
-                      className="spotlight-card flex flex-col lg:flex-row gap-8 items-stretch p-8 w-full slide-enter"
-                    >
-                      {/* Left: Image Showcase with Ambient Glow Backdrop */}
-                      {activeProj.image && (
-                        <div 
-                          style={{ 
-                            flex: '1.2', 
-                            borderRadius: '12px', 
-                            overflow: 'hidden', 
-                            border: '1px solid rgba(255,255,255,0.08)', 
-                            position: 'relative',
-                            cursor: 'zoom-in',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            minHeight: '380px',
-                            background: '#030712'
-                          }}
-                          onClick={() => { setSelectedImage(activeProj.image); setSelectedTitle(activeProj.title); }}
-                          className="group w-full lg:w-auto"
-                        >
-                          {/* Ambient Glow Backdrop (Blurred replica of dashboard) */}
-                          <img 
-                            src={activeProj.image} 
-                            alt="" 
-                            style={{ 
-                              position: 'absolute',
-                              inset: 0,
-                              width: '100%', 
-                              height: '100%', 
-                              objectFit: 'cover',
-                              filter: 'blur(30px) opacity(0.38)',
-                              pointerEvents: 'none',
-                              transform: 'scale(1.15)',
-                              transition: 'transform 0.5s ease'
-                            }} 
-                            className="group-hover:scale-[1.22]"
-                          />
-                          {/* Foreground Main Image Floating with Shadow */}
-                          <img 
-                            src={activeProj.image} 
-                            alt={activeProj.title} 
-                            style={{ 
-                              position: 'relative',
-                              zIndex: 1,
-                              width: '90%', 
-                              height: 'auto',
-                              maxHeight: '330px',
-                              objectFit: 'contain',
-                              borderRadius: '8px',
-                              boxShadow: '0 20px 40px rgba(0,0,0,0.65)',
-                              border: '1px solid rgba(255,255,255,0.05)',
-                              transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease'
-                            }} 
-                            className="group-hover:scale-[1.03] group-hover:translate-y-[-4px]"
-                          />
-                          <div 
-                            style={{
-                              position: 'absolute',
-                              bottom: '12px',
-                              right: '12px',
-                              background: 'rgba(15,23,42,0.9)',
-                              padding: '6px 12px',
-                              borderRadius: '6px',
-                              fontSize: '11px',
-                              color: 'var(--accent-blue)',
-                              fontWeight: '600',
-                              border: '1px solid rgba(34,211,238,0.25)',
-                              boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
-                              zIndex: 2
-                            }}
-                          >
-                            🔍 Click to Zoom Full Image
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Right: Info Showcase */}
-                      <div style={{ flex: '1', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                        <div>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
-                            <div>
-                              <span style={{ padding: '3px 10px', borderRadius: '4px', background: activeProj.tagBg, border: '1px solid ' + activeProj.tagBorder, color: activeProj.tagText, fontSize: '10px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.8px', fontFamily: 'monospace' }}>{activeProj.category}</span>
-                              <h3 className="proj-title" style={{ fontSize: '1.4rem', fontWeight: '800', marginTop: '10px', color: '#fff' }}>{activeProj.title}</h3>
-                            </div>
-                            <div className="proj-links" style={{ gap: '16px', display: 'flex' }}>
-                              {activeProj.githubLink && <a href={activeProj.githubLink} target="_blank" rel="noreferrer" title="Source Code" style={{ color: '#94a3b8' }} className="hover:text-white"><Github size={24} /></a>}
-                              {activeProj.liveLink && <a href={activeProj.liveLink} target="_blank" rel="noreferrer" title="Live Site" style={{ color: '#94a3b8' }} className="hover:text-white"><ExternalLink size={24} /></a>}
-                            </div>
-                          </div>
-
-                          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '12px', marginBottom: '16px' }}>
-                            <div>
-                              <strong style={{ color: 'var(--accent-blue)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>The Problem</strong>
-                              <p style={{ color: '#94a3b8', fontSize: '0.88rem', marginTop: '4px', lineHeight: '1.5' }}>{activeProj.problem}</p>
-                            </div>
-                            <div>
-                              <strong style={{ color: 'var(--accent-blue)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Our Approach</strong>
-                              <p style={{ color: '#94a3b8', fontSize: '0.88rem', marginTop: '4px', lineHeight: '1.5' }}>{activeProj.approach}</p>
-                            </div>
-                            <div>
-                              <strong style={{ color: 'var(--accent-blue)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>The Solution</strong>
-                              <p style={{ color: '#94a3b8', fontSize: '0.88rem', marginTop: '4px', lineHeight: '1.5' }}>{activeProj.solution}</p>
-                            </div>
-                          </div>
-
-                          <div style={{ marginBottom: '20px', padding: '14px', background: 'rgba(34, 211, 238, 0.06)', borderRadius: '8px', borderLeft: '4px solid var(--accent-blue)' }}>
-                            <strong style={{ color: '#fff', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Business Impact</strong>
-                            <p style={{ color: '#fff', fontSize: '0.95rem', marginTop: '6px', fontWeight: '500', lineHeight: '1.4' }}>{activeProj.impact}</p>
-                          </div>
-                        </div>
-
-                        <div>
-                          <ul className="tag-list mt-auto pt-4 border-t border-white/5" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', listStyle: 'none', padding: 0 }}>
-                            {activeProj.technologies.map((tag, idx) => (
-                              <li key={idx} style={{ padding: '4px 10px', background: 'rgba(255,255,255,0.04)', borderRadius: '6px', fontSize: '0.78rem', color: '#cbd5e1', border: '1px solid rgba(255,255,255,0.04)' }}>{tag}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Carousel Nav Controls */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '24px', marginTop: '24px' }}>
-                      <button
-                        onClick={prevSlide}
-                        style={{
-                          background: 'rgba(10, 16, 32, 0.65)',
-                          border: '1px solid rgba(255,255,255,0.06)',
-                          color: '#fff',
-                          borderRadius: '50%',
-                          width: '44px',
-                          height: '44px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          cursor: 'pointer',
-                          fontSize: '1.1rem',
-                          transition: 'all 0.2s',
-                          boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
-                        }}
-                        onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--accent-blue)'; e.currentTarget.style.boxShadow = '0 0 10px rgba(34,211,238,0.2)'; }}
-                        onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)'; }}
-                      >
-                        &larr;
-                      </button>
-
-                      {/* Dots Indicators */}
-                      <div style={{ display: 'flex', gap: '10px' }}>
-                        {list.map((_, idx) => (
-                          <button
-                            key={idx}
-                            onClick={() => setCarouselIndex(idx)}
-                            style={{
-                              width: currentIndex === idx ? '24px' : '10px',
-                              height: '10px',
-                              borderRadius: '5px',
-                              background: currentIndex === idx ? 'var(--accent-blue)' : 'rgba(255,255,255,0.2)',
-                              border: 'none',
-                              cursor: 'pointer',
-                              transition: 'all 0.3s ease',
-                              boxShadow: currentIndex === idx ? '0 0 8px var(--accent-blue)' : 'none'
-                            }}
-                          />
-                        ))}
-                      </div>
-
-                      <button
-                        onClick={nextSlide}
-                        style={{
-                          background: 'rgba(10, 16, 32, 0.65)',
-                          border: '1px solid rgba(255,255,255,0.06)',
-                          color: '#fff',
-                          borderRadius: '50%',
-                          width: '44px',
-                          height: '44px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          cursor: 'pointer',
-                          fontSize: '1.1rem',
-                          transition: 'all 0.2s',
-                          boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
-                        }}
-                        onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--accent-blue)'; e.currentTarget.style.boxShadow = '0 0 10px rgba(34,211,238,0.2)'; }}
-                        onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)'; }}
-                      >
-                        &rarr;
-                      </button>
-                    </div>
-
-                    {/* Special Bento Card below carousel, styled to span full width */}
-                    <div 
-                      ref={availabilitySpotlight.ref}
-                      onMouseMove={availabilitySpotlight.onMouseMove}
-                      className="spotlight-card reveal" 
-                      style={{ 
-                        borderColor: 'rgba(245, 158, 11, 0.25)', 
-                        background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.03), rgba(7, 11, 20, 0.85))',
-                        width: '100%',
-                        marginTop: '40px',
-                        padding: '28px',
-                        textAlign: 'center',
+                  {/* Carousel Nav Controls */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '24px', marginTop: '24px' }}>
+                    <button
+                      onClick={prevSlide}
+                      style={{
+                        background: 'rgba(10, 16, 32, 0.65)',
+                        border: '1px solid rgba(255,255,255,0.06)',
+                        color: '#fff',
+                        borderRadius: '50%',
+                        width: '44px',
+                        height: '44px',
                         display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center'
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        fontSize: '1.1rem',
+                        transition: 'all 0.2s',
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
                       }}
+                      onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--accent-blue)'; e.currentTarget.style.boxShadow = '0 0 10px rgba(34,211,238,0.2)'; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)'; }}
                     >
-                      <div className="proj-header mb-4" style={{ display: 'flex', justifyContent: 'center' }}>
-                        <div className="proj-icon-wrapper" style={{ background: 'rgba(245, 158, 11, 0.08)', color: 'var(--accent-gold)', borderColor: 'rgba(245, 158, 11, 0.2)' }}>
-                          <Sparkles size={22} />
-                        </div>
-                      </div>
-                      <h3 className="proj-title mb-2" style={{ color: 'var(--accent-gold)', fontSize: '1.2rem' }}>Open for Opportunities</h3>
-                      <p className="proj-desc mb-4" style={{ color: 'var(--text-sub)', maxWidth: '650px', margin: '0 auto 16px' }}>
-                        I am actively seeking roles as a BI Specialist, Senior Data Analyst, Snowflake Data Engineer, or Automation Consultant. My 14+ years of operational delivery ensures I bring immediate value over theoretical knowledge.
-                      </p>
-                      <div style={{ width: '100%', maxWidth: '280px' }}>
-                        <a href="#contact" className="btn btn-secondary" style={{ width: '100%', justifyContent: 'center', borderColor: 'rgba(245, 158, 11, 0.25)', color: 'var(--accent-gold)', background: 'rgba(245, 158, 11, 0.04)' }}>
-                          Start a Conversation →
-                        </a>
+                      &larr;
+                    </button>
+
+                    {/* Dots Indicators */}
+                    <div style={{ display: 'flex', gap: '10px' }}>
+                      {list.map((_, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => setCarouselIndex(idx)}
+                          style={{
+                            width: currentIndex === idx ? '24px' : '10px',
+                            height: '10px',
+                            borderRadius: '5px',
+                            background: currentIndex === idx ? 'var(--accent-blue)' : 'rgba(255,255,255,0.2)',
+                            border: 'none',
+                            cursor: 'pointer',
+                            transition: 'all 0.3s ease',
+                            boxShadow: currentIndex === idx ? '0 0 8px var(--accent-blue)' : 'none'
+                          }}
+                        />
+                      ))}
+                    </div>
+
+                    <button
+                      onClick={nextSlide}
+                      style={{
+                        background: 'rgba(10, 16, 32, 0.65)',
+                        border: '1px solid rgba(255,255,255,0.06)',
+                        color: '#fff',
+                        borderRadius: '50%',
+                        width: '44px',
+                        height: '44px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        fontSize: '1.1rem',
+                        transition: 'all 0.2s',
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
+                      }}
+                      onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--accent-blue)'; e.currentTarget.style.boxShadow = '0 0 10px rgba(34,211,238,0.2)'; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)'; }}
+                    >
+                      &rarr;
+                    </button>
+                  </div>
+
+                  {/* Special Bento Card below carousel, styled to span full width */}
+                  <div 
+                    ref={availabilitySpotlight.ref}
+                    onMouseMove={availabilitySpotlight.onMouseMove}
+                    className="spotlight-card reveal" 
+                    style={{ 
+                      borderColor: 'rgba(245, 158, 11, 0.25)', 
+                      background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.03), rgba(7, 11, 20, 0.85))',
+                      width: '100%',
+                      marginTop: '40px',
+                      padding: '28px',
+                      textAlign: 'center',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center'
+                    }}
+                  >
+                    <div className="proj-header mb-4" style={{ display: 'flex', justifyContent: 'center' }}>
+                      <div className="proj-icon-wrapper" style={{ background: 'rgba(245, 158, 11, 0.08)', color: 'var(--accent-gold)', borderColor: 'rgba(245, 158, 11, 0.2)' }}>
+                        <Sparkles size={22} />
                       </div>
                     </div>
+                    <h3 className="proj-title mb-2" style={{ color: 'var(--accent-gold)', fontSize: '1.2rem' }}>Open for Opportunities</h3>
+                    <p className="proj-desc mb-4" style={{ color: 'var(--text-sub)', maxWidth: '650px', margin: '0 auto 16px' }}>
+                      I am actively seeking roles as a BI Specialist, Senior Data Analyst, Snowflake Data Engineer, or Automation Consultant. My 14+ years of operational delivery ensures I bring immediate value over theoretical knowledge.
+                    </p>
+                    <div style={{ width: '100%', maxWidth: '280px' }}>
+                      <a href="#contact" className="btn btn-secondary" style={{ width: '100%', justifyContent: 'center', borderColor: 'rgba(245, 158, 11, 0.25)', color: 'var(--accent-gold)', background: 'rgba(245, 158, 11, 0.04)' }}>
+                        Start a Conversation →
+                      </a>
+                    </div>
                   </div>
-                );
-              })()}
-            </div>
-          )}
+                </div>
+              );
+            })()}
+          </div>
         </div>
       </section>
 

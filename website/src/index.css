@@ -477,27 +477,7 @@ textarea { resize:vertical; min-height:120px; }
   50% { filter: drop-shadow(0 0 8px rgba(34, 211, 238, 0.55)) drop-shadow(0 0 14px rgba(34, 211, 238, 0.25)); }
 }
 
-/* =======================================================
-   BENTO GRID & INTERACTIVE WIDGET DESIGN SYSTEM
-   ======================================================= */
 
-.bento-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-}
-
-.bento-col-2 {
-  grid-column: span 2;
-}
-
-.bento-col-3 {
-  grid-column: span 3;
-}
-
-.bento-row-2 {
-  grid-row: span 2;
-}
 
 /* Modern Glass Card style override */
 .glass-card {
@@ -757,27 +737,9 @@ textarea { resize:vertical; min-height:120px; }
   box-shadow: inset 0 2px 20px rgba(0, 0, 0, 0.9);
 }
 
-/* Media Query overrides for Bento Grid */
 @media(max-width:1024px) {
-  .bento-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-  .bento-col-2 {
-    grid-column: span 2;
-  }
   .chapter-console-container {
     grid-template-columns: 1fr;
-  }
-}
-@media(max-width:640px) {
-  .bento-grid {
-    grid-template-columns: 1fr;
-  }
-  .bento-col-2 {
-    grid-column: span 1;
-  }
-  .bento-col-3 {
-    grid-column: span 1;
   }
 }
 
