@@ -19,8 +19,18 @@ import {
   Award,
   Download,
   Menu,
-  X
+  X,
+  Code2,
+  Bot,
+  ChevronRight,
+  FileCode,
+  CheckCircle2
 } from 'lucide-react';
+
+import snowflakePipelineImg from './assets/snowflake_pipeline.png';
+import revenueLeakageImg from './assets/revenue_leakage_calculator.png';
+import powerBiDashboardImg from './assets/power_bi_dashboard.png';
+import hospitalDashboardImg from './assets/hospital_dashboard.jpg';
 
 // ─── Canvas Particle Background ───────────────────────────────────────────
 const DataNodeBackground = () => {
@@ -522,38 +532,35 @@ const PROJECTS = [
   {
     title: "Snowflake Medallion Pipeline",
     icon: <Database size={24} />,
-    image: "/snowflake_pipeline.png",
+    image: snowflakePipelineImg,
     problem: "Manual data consolidation caused slow, inconsistent reporting.",
     approach: "Implemented bronze → silver → gold layers in Snowflake; transformations in SQL; scheduled refresh via Antigravity.",
     solution: "Automated ETL pipeline that ingests raw files into bronze, applies cleansing and joins in silver, and produces analytics-ready tables in gold consumed by Power BI.",
     impact: "Reduced end‑to‑end reporting latency from 6 hours to 30 minutes; eliminated manual reconciliation tasks saving ~15 hours/month.",
-    technologies: ["Snowflake DWH", "SQL", "Power BI", "Antigravity"],
+    tags: ["Snowflake DWH", "SQL", "Power BI", "Antigravity"],
     liveLink: null,
-    githubLink: "https://github.com/LeadGenData/Data-Analytics-Portfolio/tree/main/Snowflake-Medallion-Pipeline",
-    antigravityNote: "Automation note: I used Antigravity to orchestrate ETL refresh and reporting delivery; transformation logic and SQL are authored by me."
+    githubLink: "https://github.com/LeadGenData/Data-Analytics-Portfolio/tree/main/Snowflake-Medallion-Pipeline"
   },
   {
-    title: "Antigravity Workflow Automation Demo",
-    icon: <Cpu size={24} />,
-    image: "/revenue_leakage_calculator.png",
+    title: "Revenue Leakage Analysis",
+    icon: <Bot size={24} />,
+    image: revenueLeakageImg,
     problem: "Tedious manual data refresh cycles delayed stakeholder reporting.",
     approach: "Orchestrated serverless ETL pipelines using Antigravity; automated triggers.",
     solution: "Hands-free background process integrating Snowflake and Power BI pipelines without manual intervention.",
     impact: "Achieved 100% automated delivery, saving 10 hours/week in manual execution.",
-    technologies: ["Antigravity", "Workflow Automation", "API Integration"],
+    tags: ["Antigravity", "Workflow Automation", "API Integration"],
     liveLink: null,
-    githubLink: "https://github.com/LeadGenData/Data-Analytics-Portfolio",
-    antigravityNote: "Automation note: Antigravity handles the CRON triggers and webhooks to keep the data pipelines flowing automatically."
+    githubLink: "https://github.com/LeadGenData/Data-Analytics-Portfolio"
   },
   {
-    title: "Chocolate Sales Dashboard",
-    icon: <BarChart3 size={24} />,
-    image: "/power_bi_dashboard.png",
+    title: "Chocolate Sales Analytics",
+    icon: <FileCode size={24} />,
+    image: powerBiDashboardImg,
     problem: "Lack of clear visibility into YOY revenue growth across global regions.",
     approach: "Analyzed raw sales logs; developed advanced DAX measures in Power BI.",
     solution: "Interactive Power BI dashboard analyzing global chocolate sales trends with dynamic product filtering.",
     impact: "Provided instant YOY revenue growth metrics, improving strategic decision-making speed by 50%.",
-    technologies: ["Power BI", "DAX", "Data Visualization"],
     liveLink: null,
     githubLink: "https://github.com/LeadGenData/chocolate-sales-dashboard",
     antigravityNote: null
@@ -561,7 +568,7 @@ const PROJECTS = [
   {
     title: "Clinical Admissions Analytics",
     icon: <BarChart3 size={24} />,
-    image: "/hospital_dashboard.jpg",
+    image: hospitalDashboardImg,
     problem: "Unpredictable emergency admissions wait times led to inefficient staffing.",
     approach: "SQL; Power BI; Power Query (M).",
     solution: "Optimized clinical operations dashboard dynamically calculating triage rate metrics and satisfaction trends.",
