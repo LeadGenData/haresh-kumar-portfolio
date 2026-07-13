@@ -29,7 +29,7 @@ import {
 
 import snowflakePipelineImg from './assets/snowflake_pipeline.png';
 import crmAdminPortalImg from './assets/crm_admin_portal.png';
-import powerBiDashboardImg from './assets/power_bi_dashboard.png';
+import chocolateSalesDashboardImg from './assets/chocolate_sales_dashboard.jpg';
 import hospitalDashboardImg from './assets/hospital_dashboard.jpg';
 import sqlWarehouseSchemaImg from './assets/sql_warehouse_schema.png';
 import revenueLeakageImg from './assets/revenue_leakage_calculator.png';
@@ -558,7 +558,7 @@ const PROJECTS = [
   {
     title: "Chocolate Sales Analytics",
     icon: <FileCode size={24} />,
-    image: powerBiDashboardImg,
+    image: chocolateSalesDashboardImg,
     problem: "Lack of clear visibility into YOY revenue growth across global regions.",
     approach: "Analyzed raw sales logs; developed advanced DAX measures in Power BI.",
     solution: "Interactive Power BI dashboard analyzing global chocolate sales trends with dynamic product filtering.",
