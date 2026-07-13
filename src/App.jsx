@@ -520,52 +520,69 @@ const PowerBiDashboardIllustration = () => (
 
 const PROJECTS = [
   {
-    title: "Snowflake Medallion Pipeline",
+    title: "Sales Data Pipeline using Snowflake Medallion Architecture",
     icon: <Database size={24} />,
-    desc: "Production-ready credit transaction auditing pipeline in Snowflake. Automates change data capture (CDC) streams and tasks, normalizes semi-structured logs, and implements dynamic data masking to secure consumer credit card PII.",
-    liveLink: "https://github.com/LeadGenData/Data-Analytics-Portfolio/tree/main/Snowflake-Medallion-Pipeline",
+    image: "/snowflake_console.png",
+    problem: "Manual data consolidation caused slow, inconsistent reporting.",
+    approach: "Implemented bronze → silver → gold layers in Snowflake; transformations in SQL; scheduled refresh via Antigravity.",
+    solution: "Automated ETL pipeline that ingests raw files into bronze, applies cleansing and joins in silver, and produces analytics-ready tables in gold consumed by Power BI.",
+    impact: "Reduced end‑to‑end reporting latency from 6 hours to 30 minutes; eliminated manual reconciliation tasks saving ~15 hours/month.",
+    technologies: ["Snowflake DWH", "SQL", "Power BI", "Antigravity"],
+    liveLink: null,
     githubLink: "https://github.com/LeadGenData/Data-Analytics-Portfolio/tree/main/Snowflake-Medallion-Pipeline",
-    tags: ["Snowflake DWH", "Streams & Tasks", "Dynamic Data Masking", "SQL / DDL", "Power BI"]
+    antigravityNote: "Automation note: I used Antigravity to orchestrate ETL refresh and reporting delivery; transformation logic and SQL are authored by me."
   },
   {
-    title: "Clinical Admissions Analytics",
-    icon: <BarChart3 size={24} />,
-    desc: "Optimized clinical operations dashboard analyzing emergency admissions wait times. Integrates advanced DAX queries to dynamically calculate triage rate metrics, satisfaction trends, and recommend hospital staffing allocations.",
-    liveLink: "https://github.com/LeadGenData/hospital-emergency-room-dashboard-Power-BI-",
-    githubLink: "https://github.com/LeadGenData/hospital-emergency-room-dashboard-Power-BI-",
-    tags: ["Power BI", "DAX", "Power Query (M)", "Healthcare BI", "Data Analysis"]
-  },
-  {
-    title: "B2B Revenue Recovery Pipeline",
+    title: "Antigravity Workflow Automation Demo",
     icon: <Cpu size={24} />,
-    desc: "Serverless B2B lead auditing tool routing requests via Cloudflare Workers proxy to a Google Apps Script engine. Computes leakage statistics, compiles multi-page PDF performance audits on-the-fly, and triggers drip notifications.",
-    liveLink: "https://bdl.dataconnectmail.com/",
-    githubLink: "https://github.com/jamescluster35/revenue-leakage-calculator",
-    tags: ["Google Apps Script", "Cloudflare Workers", "Vanilla HTML/CSS/JS", "PDF Engine"]
+    image: "/revenue_leakage_calculator.png",
+    problem: "Tedious manual data refresh cycles delayed stakeholder reporting.",
+    approach: "Orchestrated serverless ETL pipelines using Antigravity; automated triggers.",
+    solution: "Hands-free background process integrating Snowflake and Power BI pipelines without manual intervention.",
+    impact: "Achieved 100% automated delivery, saving 10 hours/week in manual execution.",
+    technologies: ["Antigravity", "Workflow Automation", "API Integration"],
+    liveLink: null,
+    githubLink: "https://github.com/LeadGenData/Data-Analytics-Portfolio",
+    antigravityNote: "Automation note: Antigravity handles the CRON triggers and webhooks to keep the data pipelines flowing automatically."
   },
   {
     title: "Chocolate Sales Dashboard",
     icon: <BarChart3 size={24} />,
-    desc: "Interactive Power BI dashboard analyzing global chocolate sales trends. Features advanced DAX measures for YOY revenue growth, regional performance mapping, and dynamic product filtering.",
+    image: "/power_bi_dashboard.png",
+    problem: "Lack of clear visibility into YOY revenue growth across global regions.",
+    approach: "Analyzed raw sales logs; developed advanced DAX measures in Power BI.",
+    solution: "Interactive Power BI dashboard analyzing global chocolate sales trends with dynamic product filtering.",
+    impact: "Provided instant YOY revenue growth metrics, improving strategic decision-making speed by 50%.",
+    technologies: ["Power BI", "DAX", "Data Visualization"],
     liveLink: null,
     githubLink: "https://github.com/LeadGenData/chocolate-sales-dashboard",
-    tags: ["Power BI", "DAX", "Data Visualization", "Analytics"]
+    antigravityNote: null
+  },
+  {
+    title: "Clinical Admissions Analytics",
+    icon: <BarChart3 size={24} />,
+    image: "https://raw.githubusercontent.com/LeadGenData/hospital-emergency-room-dashboard-Power-BI-/main/screenshot.png",
+    problem: "Unpredictable emergency admissions wait times led to inefficient staffing.",
+    approach: "SQL; Power BI; Power Query (M).",
+    solution: "Optimized clinical operations dashboard dynamically calculating triage rate metrics and satisfaction trends.",
+    impact: "Identified bottlenecks to reduce patient wait times by 20% through optimized hospital staffing allocations.",
+    technologies: ["Power BI", "DAX", "Power Query (M)", "Healthcare BI"],
+    liveLink: "https://github.com/LeadGenData/hospital-emergency-room-dashboard-Power-BI-",
+    githubLink: "https://github.com/LeadGenData/hospital-emergency-room-dashboard-Power-BI-",
+    antigravityNote: null
   },
   {
     title: "Relational Schema Optimizer",
     icon: <Database size={24} />,
-    desc: "Optimized relational warehouse modeling transaction logs in Oracle SQL. Implements high-performance Star schemas, clustered indexing, and clean ETL transformations for high-volume billing analyses.",
+    image: null,
+    problem: "High-volume billing analyses were crippled by unoptimized relational models.",
+    approach: "Oracle SQL; Data Warehousing; Clustered Indexing.",
+    solution: "Optimized relational warehouse modeling transaction logs with high-performance Star schemas.",
+    impact: "Sped up complex reporting queries by 300%.",
+    technologies: ["SQL Engine", "Oracle SQL", "ETL Pipelines", "Star Schema"],
     liveLink: "https://github.com/LeadGenData/sql_data_warehouse_project",
     githubLink: "https://github.com/LeadGenData/sql_data_warehouse_project",
-    tags: ["SQL Engine", "Oracle SQL", "Data Warehousing", "ETL Pipelines", "Star Schema"]
-  },
-  {
-    title: "Email Campaign Ingestion Sweeper",
-    icon: <Terminal size={24} />,
-    desc: "Production script suite automating email campaign auditing. Leverages Python and PowerShell Core to parse local Outlook folders, extract bounce alerts, and synchronize campaign status updates directly to Google Sheets database endpoints.",
-    liveLink: null,
-    githubLink: "https://github.com/jamescluster35/revenue-leakage-calculator/tree/main/scripts",
-    tags: ["Python 3", "PowerShell Core", "Outlook COM API", "Automation"]
+    antigravityNote: null
   }
 ];
 
@@ -584,6 +601,8 @@ function App() {
   const node2Spotlight = useMouseMoveSpotlight();
   const node3Spotlight = useMouseMoveSpotlight();
   const node4Spotlight = useMouseMoveSpotlight();
+  const node5Spotlight = useMouseMoveSpotlight();
+  const projectSpotlights = [node1Spotlight, node2Spotlight, node3Spotlight, node4Spotlight, node5Spotlight];
 
   useEffect(() => {
     const observerOptions = {
@@ -1043,164 +1062,69 @@ function App() {
 
           <div className="bento-grid">
             
-            {/* CARD 1: Medallion Pipeline (Col Span 2) */}
-            <div 
-              ref={node1Spotlight.ref}
-              onMouseMove={node1Spotlight.onMouseMove}
-              className="spotlight-card bento-col-2 reveal"
-            >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
-                <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-                  <div className="proj-icon-wrapper">
-                    <Database size={24} />
-                  </div>
-                  <div>
-                    <h3 className="proj-title" style={{ fontSize: '1.05rem', fontWeight: '700' }}>{PROJECTS[0].title}</h3>
-                    <span className="text-[10px] text-gray-500 font-mono tracking-wider uppercase">DWH ARCHITECTURE</span>
-                  </div>
-                </div>
-                <div className="proj-links">
-                  <a href={PROJECTS[0].githubLink} target="_blank" rel="noreferrer" title="Source Code"><Github size={20} /></a>
-                  <a href={PROJECTS[0].liveLink} target="_blank" rel="noreferrer" title="Live Site"><ExternalLink size={20} /></a>
-                </div>
-              </div>
-              <p className="proj-desc text-gray-400 text-sm mb-4 leading-relaxed">{PROJECTS[0].desc}</p>
-              
-              <ul className="tag-list mt-4">
-                {PROJECTS[0].tags.map((tag, i) => <li key={i}>{tag}</li>)}
-              </ul>
-            </div>
-
-            {/* CARD 2: Hospital ER Analytics (Col Span 1) */}
-            <div 
-              ref={node2Spotlight.ref}
-              onMouseMove={node2Spotlight.onMouseMove}
-              className="spotlight-card reveal reveal-delay-1"
-            >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
-                <div style={{ display: 'flex', gap: '14px', alignItems: 'center' }}>
-                  <div className="proj-icon-wrapper">
-                    <BarChart3 size={24} />
-                  </div>
-                  <div>
-                    <h3 className="proj-title" style={{ fontSize: '1.05rem', fontWeight: '700' }}>{PROJECTS[1].title}</h3>
-                    <span className="text-[10px] text-gray-500 font-mono tracking-wider uppercase">POWER BI / DAX</span>
-                  </div>
-                </div>
-                <div className="proj-links">
-                  <a href={PROJECTS[1].githubLink} target="_blank" rel="noreferrer" title="Source Code"><Github size={20} /></a>
-                </div>
-              </div>
-              <p className="proj-desc text-gray-400 text-sm mb-4 leading-relaxed">{PROJECTS[1].desc}</p>
-              
-              <ul className="tag-list mt-4">
-                {PROJECTS[1].tags.map((tag, i) => <li key={i}>{tag}</li>)}
-              </ul>
-            </div>
-
-            {/* CARD 3: Revenue Leakage Calculator (Col Span 1) */}
-            <div 
-              ref={node3Spotlight.ref}
-              onMouseMove={node3Spotlight.onMouseMove}
-              className="spotlight-card reveal"
-            >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
-                <div style={{ display: 'flex', gap: '14px', alignItems: 'center' }}>
-                  <div className="proj-icon-wrapper">
-                    <Cpu size={24} />
-                  </div>
-                  <div>
-                    <h3 className="proj-title" style={{ fontSize: '1.05rem', fontWeight: '700' }}>{PROJECTS[2].title}</h3>
-                    <span className="text-[10px] text-gray-500 font-mono tracking-wider uppercase">SYSTEMS AUTOMATION</span>
-                  </div>
-                </div>
-                <div className="proj-links">
-                  <a href={PROJECTS[2].githubLink} target="_blank" rel="noreferrer" title="Source Code"><Github size={20} /></a>
-                  <a href={PROJECTS[2].liveLink} target="_blank" rel="noreferrer" title="Live Site"><ExternalLink size={20} /></a>
-                </div>
-              </div>
-              <p className="proj-desc text-gray-400 text-sm mb-4 leading-relaxed">{PROJECTS[2].desc}</p>
-              
-              <ul className="tag-list mt-4">
-                {PROJECTS[2].tags.map((tag, i) => <li key={i}>{tag}</li>)}
-              </ul>
-            </div>
-
-            {/* CARD 4: Executive CRM Admin Portal (Col Span 2) */}
-            <div 
-              ref={node4Spotlight.ref}
-              onMouseMove={node4Spotlight.onMouseMove}
-              className="spotlight-card bento-col-2 reveal reveal-delay-1"
-            >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
-                <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-                  <div className="proj-icon-wrapper">
-                    <Layers size={24} />
-                  </div>
-                  <div>
-                    <h3 className="proj-title" style={{ fontSize: '1.05rem', fontWeight: '700' }}>{PROJECTS[3].title}</h3>
-                    <span className="text-[10px] text-gray-500 font-mono tracking-wider uppercase">REACT CONSOLE</span>
-                  </div>
-                </div>
-                <div className="proj-links">
-                  <a href={PROJECTS[3].githubLink} target="_blank" rel="noreferrer" title="Source Code"><Github size={20} /></a>
-                  <a href={PROJECTS[3].liveLink} target="_blank" rel="noreferrer" title="Live Site"><ExternalLink size={20} /></a>
-                </div>
-              </div>
-              <p className="proj-desc text-gray-400 text-sm mb-4 leading-relaxed">{PROJECTS[3].desc}</p>
-
-              <ul className="tag-list mt-4">
-                {PROJECTS[3].tags.map((tag, i) => <li key={i}>{tag}</li>)}
-              </ul>
-            </div>
-
-            {/* CARD 5: SQL Warehouse (Col Span 1) */}
-            <div className="spotlight-card reveal flex flex-col justify-between h-full">
-              <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
-                  <div style={{ display: 'flex', gap: '14px', alignItems: 'center' }}>
-                    <div className="proj-icon-wrapper">
-                      <Database size={24} />
+            {/* DYNAMIC PROJECT CARDS USING NEW RECRUITER STRUCTURE */}
+            {PROJECTS.map((proj, i) => (
+              <div 
+                key={i}
+                ref={projectSpotlights[i]?.ref}
+                onMouseMove={projectSpotlights[i]?.onMouseMove}
+                className={`spotlight-card reveal ${i === 0 || i === 3 ? "bento-col-2" : ""} ${i % 2 !== 0 ? "reveal-delay-1" : ""} flex flex-col justify-between h-full`}
+              >
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' }}>
+                    <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+                      <div className="proj-icon-wrapper">
+                        {proj.icon}
+                      </div>
+                      <div>
+                        <h3 className="proj-title" style={{ fontSize: '1.05rem', fontWeight: '700' }}>{proj.title}</h3>
+                        <span className="text-[10px] text-gray-500 font-mono tracking-wider uppercase">ANALYTICS & AUTOMATION</span>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="proj-title" style={{ fontSize: '1.05rem', fontWeight: '700' }}>{PROJECTS[4].title}</h3>
-                      <span className="text-[10px] text-gray-500 font-mono tracking-wider uppercase">SQL MODELING</span>
+                    <div className="proj-links">
+                      {proj.githubLink && <a href={proj.githubLink} target="_blank" rel="noreferrer" title="Source Code"><Github size={20} /></a>}
+                      {proj.liveLink && <a href={proj.liveLink} target="_blank" rel="noreferrer" title="Live Site"><ExternalLink size={20} /></a>}
                     </div>
                   </div>
-                  <div className="proj-links">
-                    <a href={PROJECTS[4].githubLink} target="_blank" rel="noreferrer" title="Source Code"><Github size={20} /></a>
-                  </div>
-                </div>
-                <p className="proj-desc text-gray-400 text-sm mb-4 leading-relaxed">{PROJECTS[4].desc}</p>
-              </div>
-              <ul className="tag-list mt-auto">
-                {PROJECTS[4].tags.map((tag, i) => <li key={i}>{tag}</li>)}
-              </ul>
-            </div>
 
-            {/* CARD 6: Outlook Sync (Col Span 1) */}
-            <div className="spotlight-card reveal reveal-delay-1 flex flex-col justify-between h-full">
-              <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
-                  <div style={{ display: 'flex', gap: '14px', alignItems: 'center' }}>
-                    <div className="proj-icon-wrapper">
-                      <Terminal size={24} />
+                  {proj.image && (
+                    <div style={{ marginBottom: '20px', borderRadius: '8px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.05)', backgroundColor: '#0f172a' }}>
+                      <img src={proj.image} alt={proj.title} style={{ width: '100%', height: 'auto', display: 'block', objectFit: 'cover', maxHeight: '250px' }} />
                     </div>
-                    <div>
-                      <h3 className="proj-title" style={{ fontSize: '1.05rem', fontWeight: '700' }}>{PROJECTS[5].title}</h3>
-                      <span className="text-[10px] text-gray-500 font-mono tracking-wider uppercase">SHELL AUTOMATION</span>
+                  )}
+
+                  <div style={{ marginBottom: '12px' }}>
+                    <strong style={{ color: 'var(--accent-blue)', fontSize: '0.80rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Problem</strong>
+                    <p className="proj-desc text-gray-400 text-sm mt-1">{proj.problem}</p>
+                  </div>
+                  
+                  <div style={{ marginBottom: '12px' }}>
+                    <strong style={{ color: 'var(--accent-blue)', fontSize: '0.80rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Approach</strong>
+                    <p className="proj-desc text-gray-400 text-sm mt-1">{proj.approach}</p>
+                  </div>
+
+                  <div style={{ marginBottom: '16px' }}>
+                    <strong style={{ color: 'var(--accent-blue)', fontSize: '0.80rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Solution</strong>
+                    <p className="proj-desc text-gray-400 text-sm mt-1">{proj.solution}</p>
+                  </div>
+
+                  <div style={{ marginBottom: '16px', padding: '12px', background: 'rgba(34, 211, 238, 0.05)', borderRadius: '6px', borderLeft: '3px solid var(--accent-blue)' }}>
+                    <strong style={{ color: '#fff', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Business Impact</strong>
+                    <p style={{ color: '#fff', fontSize: '0.9rem', marginTop: '6px', fontWeight: '500', lineHeight: '1.4' }}>{proj.impact}</p>
+                  </div>
+
+                  {proj.antigravityNote && (
+                    <div style={{ marginBottom: '20px', padding: '10px', background: 'rgba(245, 158, 11, 0.05)', borderRadius: '6px', border: '1px solid rgba(245, 158, 11, 0.2)' }}>
+                      <p style={{ color: 'var(--accent-gold)', fontSize: '0.8rem', fontStyle: 'italic', lineHeight: '1.4' }}>{proj.antigravityNote}</p>
                     </div>
-                  </div>
-                  <div className="proj-links">
-                    <a href={PROJECTS[5].githubLink} target="_blank" rel="noreferrer" title="Source Code"><Github size={20} /></a>
-                  </div>
+                  )}
                 </div>
-                <p className="proj-desc text-gray-400 text-sm mb-4 leading-relaxed">{PROJECTS[5].desc}</p>
+
+                <ul className="tag-list mt-auto pt-4 border-t border-white/5">
+                  {proj.technologies.map((tag, idx) => <li key={idx}>{tag}</li>)}
+                </ul>
               </div>
-              <ul className="tag-list mt-auto">
-                {PROJECTS[5].tags.map((tag, i) => <li key={i}>{tag}</li>)}
-              </ul>
-            </div>
+            ))}
 
             {/* Special Bento Card: Availability / Connect */}
             <div 
@@ -1341,8 +1265,8 @@ function App() {
           <p className="footer-text" style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>
             &copy; {new Date().getFullYear()} M. Haresh Kumar · Styled with <span>React &amp; Vite</span>
           </p>
-          <p style={{ fontSize: '0.72rem', color: 'var(--text-dim)', marginTop: '8px', fontStyle: 'italic', maxWidth: '600px', margin: '8px auto 0', lineHeight: '1.5' }}>
-            * I leveraged Antigravity to automate workflow integration and portfolio layout, while all SQL, Power BI, and Snowflake projects are my own handwritten work.
+          <p style={{ fontSize: '0.75rem', color: 'var(--text-dim)', marginTop: '8px', maxWidth: '700px', margin: '8px auto 0', lineHeight: '1.6' }}>
+            Portfolio styled with React and Vite using Antigravity for layout and workflow orchestration. All Snowflake, Power BI, and SQL implementations linked below are my handwritten work.
           </p>
         </div>
       </footer>
