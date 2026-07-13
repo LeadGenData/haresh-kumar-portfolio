@@ -539,7 +539,7 @@ const PROJECTS = [
     impact: "Reduced end‑to‑end reporting latency from 6 hours to 30 minutes; eliminated manual reconciliation tasks saving ~15 hours/month.",
     tags: ["Snowflake DWH", "SQL", "Power BI", "Antigravity"],
     liveLink: null,
-    githubLink: "https://github.com/LeadGenData/Data-Analytics-Portfolio/tree/main/Snowflake-Medallion-Pipeline"
+    githubLink: "https://github.com/LeadGenData/haresh-kumar-portfolio/tree/main/projects/snowflake-pipeline"
   },
   {
     title: "Revenue Leakage Analysis",
@@ -551,7 +551,7 @@ const PROJECTS = [
     impact: "Achieved 100% automated delivery, saving 10 hours/week in manual execution.",
     tags: ["Antigravity", "Workflow Automation", "API Integration"],
     liveLink: null,
-    githubLink: "https://github.com/LeadGenData/Data-Analytics-Portfolio"
+    githubLink: "https://github.com/LeadGenData/haresh-kumar-portfolio/tree/main/projects/campaigns-automation"
   },
   {
     title: "Chocolate Sales Analytics",
@@ -562,7 +562,7 @@ const PROJECTS = [
     solution: "Interactive Power BI dashboard analyzing global chocolate sales trends with dynamic product filtering.",
     impact: "Provided instant YOY revenue growth metrics, improving strategic decision-making speed by 50%.",
     liveLink: null,
-    githubLink: "https://github.com/LeadGenData/chocolate-sales-dashboard",
+    githubLink: "https://github.com/LeadGenData/haresh-kumar-portfolio/tree/main/projects/powerbi-analytics",
     antigravityNote: null
   },
   {
