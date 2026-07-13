@@ -536,10 +536,10 @@ const PROJECTS = [
     icon: <Database size={24} />,
     image: snowflakePipelineImg,
     problem: "Manual data consolidation caused slow, inconsistent reporting.",
-    approach: "Implemented bronze → silver → gold layers in Snowflake; transformations in SQL; scheduled refresh via Antigravity.",
+    approach: "Implemented bronze → silver → gold layers in Snowflake; transformations in SQL; scheduled refresh via Snowflake Tasks and Cortex AI integration.",
     solution: "Automated ETL pipeline that ingests raw files into bronze, applies cleansing and joins in silver, and produces analytics-ready tables in gold consumed by Power BI.",
     impact: "Reduced end‑to‑end reporting latency from 6 hours to 30 minutes; eliminated manual reconciliation tasks saving ~15 hours/month.",
-    technologies: ["Snowflake DWH", "SQL", "Power BI", "Antigravity"],
+    technologies: ["Snowflake DWH", "SQL", "Power BI", "Cortex AI"],
     liveLink: null,
     githubLink: "https://github.com/LeadGenData/haresh-kumar-portfolio/tree/main/projects/snowflake-pipeline"
   },
