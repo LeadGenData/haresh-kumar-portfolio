@@ -621,7 +621,7 @@ function App() {
   const [activeFilter, setActiveFilter] = useState('All');
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedTitle, setSelectedTitle] = useState(null);
-  const [viewMode, setViewMode] = useState('grid');
+  const [viewMode, setViewMode] = useState('carousel');
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [activeStep, setActiveStep]     = useState(1);
   const [menuOpen, setMenuOpen]         = useState(false);
@@ -1566,86 +1566,6 @@ function App() {
           )}
         </div>
       </section>
-
-      {/* CAREER TIMELINE & MILESTONES */}
-      <section id="timeline" style={{ background: 'var(--bg-secondary)' }}>
-        <div className="container relative">
-          <div className="section-watermark">04 JOURNEY</div>
-          <div style={{ textAlign: 'center', marginBottom: '48px' }} className="reveal">
-            <h2 className="section-title">Career Timeline &amp; Milestones</h2>
-            <p className="section-subtitle" style={{ margin: '0 auto' }}>
-              A progression from operational management to data engineering and intelligent automation.
-            </p>
-          </div>
-
-          <div className="timeline-container reveal">
-            <div className="timeline-line"></div>
-
-            {[
-              {
-                year: '2024 – Present',
-                title: 'Cloud Data Engineering & Automation',
-                desc: 'Building Snowflake medallion pipelines, automated CRM lead systems with Python/Outlook COM, and deploying Power BI dashboards for executive reporting.',
-                tech: ['Snowflake', 'Python', 'Power BI', 'GitHub Actions']
-              },
-              {
-                year: '2022 – 2024',
-                title: 'BI Analytics & Dashboard Architecture',
-                desc: 'Designed clinical analytics dashboards, chocolate sales analytics, and relational schema optimizers. Mastered DAX, Power Query (M), and Star Schema modeling.',
-                tech: ['Power BI', 'DAX', 'SQL Server', 'Power Query']
-              },
-              {
-                year: '2018 – 2022',
-                title: 'Systems Automation & Process Optimization',
-                desc: 'Automated operational workflows, built VBA-driven reporting tools, and managed cross-functional teams delivering logistics and compliance solutions.',
-                tech: ['VBA', 'Excel', 'SharePoint', 'Process Automation']
-              },
-              {
-                year: '2012 – 2018',
-                title: 'Operational Management & SQL Foundations',
-                desc: 'Led large-scale operational teams, developed foundational SQL reporting capabilities, and managed inventory/logistics databases serving 500+ daily transactions.',
-                tech: ['SQL', 'Excel', 'Operations', 'Team Leadership']
-              }
-            ].map((milestone, idx) => (
-              <div className="timeline-item" key={idx}>
-                <div className="timeline-dot"></div>
-                <div className="timeline-card">
-                  <div className="timeline-year">{milestone.year}</div>
-                  <div className="timeline-title">{milestone.title}</div>
-                  <div className="timeline-desc">{milestone.desc}</div>
-                  <div className="timeline-tech">
-                    {milestone.tech.map((t, i) => <span key={i}>{t}</span>)}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Skill Progress Bars */}
-          <div style={{ maxWidth: '700px', margin: '48px auto 0' }} className="reveal">
-            <h3 style={{ textAlign: 'center', fontSize: '1.1rem', fontWeight: '700', color: 'var(--text-main)', marginBottom: '28px', fontFamily: 'var(--font-display)' }}>Core Competency Levels</h3>
-            {[
-              { name: 'Snowflake / Cloud DWH', level: 90 },
-              { name: 'SQL / T-SQL / Stored Procedures', level: 95 },
-              { name: 'Power BI / DAX / Data Modeling', level: 92 },
-              { name: 'Python Automation & Scripting', level: 85 },
-              { name: 'ETL Pipeline Design', level: 88 },
-              { name: 'Systems Automation (Outlook/VBA)', level: 93 }
-            ].map((skill, idx) => (
-              <div className="skill-bar-container" key={idx}>
-                <div className="skill-bar-label">
-                  <span>{skill.name}</span>
-                  <span>{skill.level}%</span>
-                </div>
-                <div className="skill-bar-track">
-                  <div className="skill-bar-fill" style={{ width: skill.level + '%' }}></div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
 
       {/* CONTACT PORTAL */}
       <section id="contact" style={{ background: 'var(--bg-secondary)', borderBottom: 'none' }}>
