@@ -829,22 +829,6 @@ const PROJECTS = [
     githubLink: "https://github.com/LeadGenData/haresh-kumar-portfolio/tree/main/projects/snowflake-pipeline"
   },
   {
-    title: "Campaigns CRM Systems Automation",
-    icon: <Bot size={24} />,
-    image: crmAdminPortalImg,
-    category: "Systems Automation",
-    tagBg: "rgba(234, 179, 8, 0.1)",
-    tagBorder: "rgba(234, 179, 8, 0.2)",
-    tagText: "#fde047",
-    problem: "Manual lead harvesting and email bounce tracking wasted hours of administrative work and polluted outreach databases.",
-    approach: "Developed web scrapers in Python, automated Outlook COM sweeping in PowerShell, and synced logs to Google Sheets.",
-    solution: "An automated lead generation and outreach monitoring system that harvests verified contacts and flags bounced addresses.",
-    impact: "Reduced administrative manual work by 100% and protected outreach domain reputation from email spam blocks.",
-    technologies: ["Python", "PowerShell", "Outlook API", "Google Sheets API"],
-    liveLink: null,
-    githubLink: "https://github.com/LeadGenData/haresh-kumar-portfolio/tree/main/projects/campaigns-automation"
-  },
-  {
     title: "Chocolate Sales Analytics",
     icon: <FileCode size={24} />,
     image: chocolateSalesDashboardImg,
@@ -857,7 +841,7 @@ const PROJECTS = [
     solution: "Interactive Power BI dashboard analyzing global chocolate sales trends with dynamic product filtering.",
     impact: "Provided instant YOY revenue growth metrics, improving strategic decision-making speed by 50%.",
     liveLink: null,
-    githubLink: "https://github.com/LeadGenData/haresh-kumar-portfolio/tree/main/projects/powerbi-analytics",
+    githubLink: "https://github.com/LeadGenData/powerbi-analytics",
     technologies: ["Power BI", "DAX", "Data Modeling", "Business Intelligence"],
     antigravityNote: null
   },
@@ -876,23 +860,6 @@ const PROJECTS = [
     technologies: ["Power BI", "DAX", "Power Query (M)", "Healthcare BI"],
     liveLink: "https://github.com/LeadGenData/hospital-emergency-room-dashboard-Power-BI-",
     githubLink: "https://github.com/LeadGenData/hospital-emergency-room-dashboard-Power-BI-",
-    antigravityNote: null
-  },
-  {
-    title: "Relational Schema Optimizer",
-    icon: <Database size={24} />,
-    image: sqlWarehouseSchemaImg,
-    category: "Database Engineering",
-    tagBg: "rgba(168, 85, 247, 0.1)",
-    tagBorder: "rgba(168, 85, 247, 0.2)",
-    tagText: "#c084fc",
-    problem: "High-volume billing analyses were crippled by unoptimized relational models.",
-    approach: "SQL Server T-SQL; Data Warehousing; Clustered Indexing.",
-    solution: "Optimized relational warehouse modeling transaction logs with high-performance Star schemas.",
-    impact: "Sped up complex reporting queries by 300%.",
-    technologies: ["SQL Server", "T-SQL Engine", "ETL Pipelines", "Star Schema"],
-    liveLink: "https://github.com/LeadGenData/sql_data_warehouse_project",
-    githubLink: "https://github.com/LeadGenData/sql_data_warehouse_project",
     antigravityNote: null
   }
 ];
