@@ -813,18 +813,18 @@ const ProjectCaseStudy = ({ proj, index, onZoom }) => {
 
 const PROJECTS = [
   {
-    title: "Snowflake Medallion Pipeline",
+    title: "Credit Card Fraud End-to-End Analytics Pipeline",
     icon: <Database size={24} />,
     image: snowflakePipelineImg,
-    category: "Cloud Data Engineering",
+    category: "End-to-End Analytics Engineering",
     tagBg: "rgba(59, 130, 246, 0.1)",
     tagBorder: "rgba(59, 130, 246, 0.2)",
     tagText: "#60a5fa",
-    problem: "Manual data consolidation caused slow, inconsistent reporting.",
-    approach: "Implemented bronze → silver → gold layers in Snowflake; transformations in SQL; automated incremental ingestion using Snowflake Streams (CDC) and Tasks.",
-    solution: "Automated ETL pipeline that ingests raw files into bronze, applies cleansing and joins in silver, and produces analytics-ready tables in gold consumed by Power BI.",
-    impact: "Reduced end‑to‑end reporting latency from 6 hours to 30 minutes; eliminated manual reconciliation tasks saving ~15 hours/month.",
-    technologies: ["Snowflake DWH", "SQL", "Snowflake Streams", "Snowflake Tasks"],
+    problem: "Analyzing high-velocity credit card transactions was crippled by duplicate logs, slow visual query latency, and compliance risks exposing PII card numbers.",
+    approach: "Designed a Medallion architecture (Bronze → Silver → Gold) in Snowflake, secured PII with Dynamic Data Masking, orchestrated ETL runs via Streams and Tasks, and created a semantic DAX reporting layer in Power BI.",
+    solution: "A fully automated end-to-end data pipeline that ingests raw variant records into Snowflake tables, transforms them into a high-performance Star Schema, and delivers live insights to an interactive Power BI dashboard.",
+    impact: "Achieved 100% PCI-DSS compliance by masking cardholder PII; optimized dashboard query latency by 60% using Gold dimension tables; eliminated manual ETL runs.",
+    technologies: ["Snowflake DWH", "SQL", "Power BI", "DAX", "Python (Jupyter)", "Snowflake CDC"],
     liveLink: null,
     githubLink: "https://github.com/LeadGenData/haresh-kumar-portfolio/tree/main/projects/snowflake-pipeline"
   },
