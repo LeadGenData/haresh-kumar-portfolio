@@ -544,12 +544,12 @@ const PROJECTS = [
     tags: ["Google Apps Script", "Cloudflare Workers", "Vanilla HTML/CSS/JS", "PDF Engine"]
   },
   {
-    title: "Leads Operations CRM Console",
-    icon: <Layers size={24} />,
-    desc: "Enterprise-grade React CRM portal managing client campaigns. Features custom state-persisted search filters, Google Sheets API synchronization, and real-time dashboard tracking for 1,790+ lead records.",
-    liveLink: "https://jamescluster35.github.io/bdl-leads-pro-live/",
-    githubLink: "https://github.com/jamescluster35/bdl-leads-pro-crm",
-    tags: ["React 19", "Vite", "Zustand State", "REST API", "Vanilla CSS"]
+    title: "Chocolate Sales Dashboard",
+    icon: <BarChart3 size={24} />,
+    desc: "Interactive Power BI dashboard analyzing global chocolate sales trends. Features advanced DAX measures for YOY revenue growth, regional performance mapping, and dynamic product filtering.",
+    liveLink: null,
+    githubLink: "https://github.com/LeadGenData/chocolate-sales-dashboard",
+    tags: ["Power BI", "DAX", "Data Visualization", "Analytics"]
   },
   {
     title: "Relational Schema Optimizer",
@@ -1268,7 +1268,7 @@ function App() {
                 </div>
                 <div className="contact-details">
                   <h4>Focus Areas</h4>
-                  <p>Snowflake, Power BI, SQL Modeling</p>
+                  <p>Snowflake, Power BI, SQL Modeling, Workflow Automation</p>
                 </div>
               </div>
             </div>
