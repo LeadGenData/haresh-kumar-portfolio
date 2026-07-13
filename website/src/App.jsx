@@ -1351,6 +1351,7 @@ function App() {
                 return (
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
                     <div 
+                      key={currentIndex}
                       ref={projectSpotlights[origIdx]?.ref}
                       onMouseMove={projectSpotlights[origIdx]?.onMouseMove}
                       style={{ 
@@ -1359,39 +1360,61 @@ function App() {
                         gap: '32px',
                         minHeight: '480px'
                       }}
-                      className="spotlight-card flex flex-col lg:flex-row gap-8 items-stretch p-8 w-full"
+                      className="spotlight-card flex flex-col lg:flex-row gap-8 items-stretch p-8 w-full slide-enter"
                     >
-                      {/* Left: Image Showcase */}
+                      {/* Left: Image Showcase with Ambient Glow Backdrop */}
                       {activeProj.image && (
                         <div 
                           style={{ 
                             flex: '1.2', 
                             borderRadius: '12px', 
                             overflow: 'hidden', 
-                            border: '1px solid rgba(255,255,255,0.06)', 
-                            backgroundColor: '#070b13',
+                            border: '1px solid rgba(255,255,255,0.08)', 
                             position: 'relative',
                             cursor: 'zoom-in',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            minHeight: '300px'
+                            minHeight: '380px',
+                            background: '#030712'
                           }}
                           onClick={() => { setSelectedImage(activeProj.image); setSelectedTitle(activeProj.title); }}
                           className="group w-full lg:w-auto"
                         >
+                          {/* Ambient Glow Backdrop (Blurred replica of dashboard) */}
+                          <img 
+                            src={activeProj.image} 
+                            alt="" 
+                            style={{ 
+                              position: 'absolute',
+                              inset: 0,
+                              width: '100%', 
+                              height: '100%', 
+                              objectFit: 'cover',
+                              filter: 'blur(30px) opacity(0.38)',
+                              pointerEvents: 'none',
+                              transform: 'scale(1.15)',
+                              transition: 'transform 0.5s ease'
+                            }} 
+                            className="group-hover:scale-[1.22]"
+                          />
+                          {/* Foreground Main Image Floating with Shadow */}
                           <img 
                             src={activeProj.image} 
                             alt={activeProj.title} 
                             style={{ 
-                              width: '100%', 
-                              height: '100%', 
-                              maxHeight: '380px',
+                              position: 'relative',
+                              zIndex: 1,
+                              width: '90%', 
+                              height: 'auto',
+                              maxHeight: '330px',
                               objectFit: 'contain',
-                              display: 'block',
-                              transition: 'transform 0.4s ease'
+                              borderRadius: '8px',
+                              boxShadow: '0 20px 40px rgba(0,0,0,0.65)',
+                              border: '1px solid rgba(255,255,255,0.05)',
+                              transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease'
                             }} 
-                            className="group-hover:scale-[1.02]"
+                            className="group-hover:scale-[1.03] group-hover:translate-y-[-4px]"
                           />
                           <div 
                             style={{
@@ -1405,7 +1428,8 @@ function App() {
                               color: 'var(--accent-blue)',
                               fontWeight: '600',
                               border: '1px solid rgba(34,211,238,0.25)',
-                              boxShadow: '0 4px 12px rgba(0,0,0,0.5)'
+                              boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
+                              zIndex: 2
                             }}
                           >
                             🔍 Click to Zoom Full Image
@@ -1421,7 +1445,7 @@ function App() {
                               <span style={{ padding: '3px 10px', borderRadius: '4px', background: activeProj.tagBg, border: '1px solid ' + activeProj.tagBorder, color: activeProj.tagText, fontSize: '10px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.8px', fontFamily: 'monospace' }}>{activeProj.category}</span>
                               <h3 className="proj-title" style={{ fontSize: '1.4rem', fontWeight: '800', marginTop: '10px', color: '#fff' }}>{activeProj.title}</h3>
                             </div>
-                            <div className="proj-links" style={{ gap: '16px' }}>
+                            <div className="proj-links" style={{ gap: '16px', display: 'flex' }}>
                               {activeProj.githubLink && <a href={activeProj.githubLink} target="_blank" rel="noreferrer" title="Source Code" style={{ color: '#94a3b8' }} className="hover:text-white"><Github size={24} /></a>}
                               {activeProj.liveLink && <a href={activeProj.liveLink} target="_blank" rel="noreferrer" title="Live Site" style={{ color: '#94a3b8' }} className="hover:text-white"><ExternalLink size={24} /></a>}
                             </div>
