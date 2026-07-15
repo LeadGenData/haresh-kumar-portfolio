@@ -1,7 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+﻿@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
 
 /* =======================================================
-   PROFESSIONAL DESIGN SYSTEM — Deep Navy + Sapphire + Gold
+   PROFESSIONAL DESIGN SYSTEM ΓÇö Deep Navy + Sapphire + Gold
    Inspired by: Palantir, Tableau, McKinsey Digital
    ======================================================= */
 :root {
@@ -60,7 +60,7 @@ body { background-color: var(--bg-primary); color: var(--text-main); font-family
 h1,h2,h3,h4,h5,h6 { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; }
 
 .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 28px; }
-section { padding: 160px 0; border-bottom: 1px solid var(--border-color); }
+section { padding: 100px 0; border-bottom: 1px solid var(--border-color); }
 .app-container { position: relative; min-height: 100vh; width: 100%; }
 
 /* Background */
@@ -87,41 +87,20 @@ section { padding: 160px 0; border-bottom: 1px solid var(--border-color); }
 @keyframes pulse-indigo { 0%,100%{box-shadow:0 0 12px rgba(99,102,241,0.15)} 50%{box-shadow:0 0 30px rgba(99,102,241,0.35)} }
 
 /* Section Typography */
-.section-title { font-size:2.6rem; font-weight:800; margin-bottom:18px; background:linear-gradient(135deg,#EFF6FF 40%,#93C5FD 80%,#818CF8 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; display:inline-block; }
-.section-subtitle { color:var(--text-sub); font-size:1.08rem; margin-bottom:72px; max-width:640px; line-height:1.8; }
+.section-title { font-size:2.4rem; font-weight:800; margin-bottom:16px; background:linear-gradient(135deg,#EFF6FF 40%,#93C5FD 80%,#818CF8 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; display:inline-block; }
+.section-subtitle { color:var(--text-sub); font-size:1.05rem; margin-bottom:48px; max-width:620px; line-height:1.7; }
 
-/* Floating Header Dock */
-.header { 
-  position: fixed; 
-  top: 24px; 
-  left: 50%; 
-  transform: translateX(-50%); 
-  width: 90%; 
-  max-width: 960px; 
-  z-index: 1000; 
-  background: rgba(4, 8, 16, 0.65); 
-  backdrop-filter: blur(24px) saturate(180%); 
-  -webkit-backdrop-filter: blur(24px) saturate(180%); 
-  border: 1px solid rgba(255, 255, 255, 0.08); 
-  border-radius: 100px; 
-  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.7); 
-  transition: var(--transition-smooth);
-}
-.nav { 
-  display: flex; 
-  align-items: center; 
-  justify-content: space-between; 
-  height: 56px; 
-  padding: 0 24px;
-}
-.logo { font-family:var(--font-display); font-weight:800; font-size:1.25rem; color:var(--text-main); text-decoration:none; background:linear-gradient(90deg,#60A5FA,#818CF8); -webkit-background-clip:text; -webkit-text-fill-color:transparent; letter-spacing:-0.03em; white-space:nowrap; }
-.nav-links { list-style:none; display:flex; gap:4px; align-items:center; }
-.nav-links a { color:var(--text-muted); text-decoration:none; font-size:0.85rem; font-weight:500; padding:6px 12px; border-radius:100px; transition:var(--transition-fast); }
-.nav-links a:hover { color:var(--text-main); background:rgba(255,255,255,0.06); }
+/* Header */
+.header { position:sticky; top:0; z-index:100; background:rgba(7,11,20,0.88); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border-bottom:1px solid var(--border-color); }
+.nav { display:flex; align-items:center; justify-content:space-between; height:64px; }
+.logo { font-family:var(--font-display); font-weight:800; font-size:1.3rem; color:var(--text-main); text-decoration:none; background:linear-gradient(90deg,#60A5FA,#818CF8); -webkit-background-clip:text; -webkit-text-fill-color:transparent; letter-spacing:-0.03em; white-space:nowrap; }
+.nav-links { list-style:none; display:flex; gap:8px; align-items:center; }
+.nav-links a { color:var(--text-muted); text-decoration:none; font-size:0.9rem; font-weight:500; padding:6px 14px; border-radius:8px; transition:var(--transition-fast); }
+.nav-links a:hover { color:var(--text-main); background:rgba(59,130,246,0.1); }
 
-/* Hero Section with Large Breathing Space */
-.hero-section { min-height: 100vh; display:flex; align-items:center; border-bottom:1px solid var(--border-color); padding: 140px 0 100px 0; }
-.hero-layout { display:grid; grid-template-columns: 1.25fr 1fr; gap: 80px; align-items:center; }
+/* Hero */
+.hero-section { min-height:calc(100vh - 64px); display:flex; align-items:center; border-bottom:1px solid var(--border-color); padding:80px 0; }
+.hero-layout { display:grid; grid-template-columns:1fr 420px; gap:64px; align-items:center; }
 .hero-subtitle { display:inline-flex; align-items:center; gap:8px; color:var(--accent-primary); font-size:0.85rem; font-weight:600; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:20px; padding:6px 14px; background:rgba(59,130,246,0.08); border:1px solid rgba(59,130,246,0.2); border-radius:100px; }
 .hero-title { font-size:clamp(2.4rem,5vw,3.8rem); font-weight:800; line-height:1.1; margin-bottom:24px; background:linear-gradient(135deg,#EFF6FF 50%,#93C5FD 75%,#818CF8); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
 .hero-desc { color:var(--text-sub); font-size:1.05rem; line-height:1.8; margin-bottom:36px; max-width:560px; }
@@ -768,7 +747,7 @@ textarea { resize:vertical; min-height:120px; }
    ENHANCED GLASSMORPHISM & MICRO-ANIMATIONS
    ======================================================= */
 
-/* Glass spotlight cards — frosted glass effect */
+/* Glass spotlight cards ΓÇö frosted glass effect */
 .spotlight-card {
   background: rgba(10, 16, 32, 0.45) !important;
   backdrop-filter: blur(20px) saturate(180%);
@@ -1026,21 +1005,6 @@ textarea { resize:vertical; min-height:120px; }
   border-color: rgba(59, 130, 246, 0.2);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 12px 40px rgba(0, 0, 0, 0.6);
   transform: translateY(-2px);
-}
-
-/* Alternating Case Study Layout Rules */
-.case-study-row {
-  display: flex;
-  align-items: center;
-  gap: 64px;
-  width: 100%;
-}
-
-@media (max-width: 992px) {
-  .case-study-row {
-    flex-direction: column !important;
-    gap: 40px !important;
-  }
 }
 
 
